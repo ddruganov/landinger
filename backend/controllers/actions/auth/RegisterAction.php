@@ -1,13 +1,12 @@
 <?php
 
-namespace api\controllers\actions\auth;
+namespace app\controllers\actions\auth;
 
 use app\actions\ApiAction;
 use app\components\ExecutionResult;
 use app\components\PasswordValidator;
 use app\components\UserRegisterData;
 use app\email\EmailQueueHandler;
-use app\email\EmailSender;
 use app\email\types\user\RegisterEmail;
 use app\models\token\TokenGroupGenerator;
 use app\models\user\User;

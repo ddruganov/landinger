@@ -1,6 +1,6 @@
 <?php
 
-namespace api\controllers\actions\auth;
+namespace app\controllers\actions\auth;
 
 use app\actions\ApiAction;
 use app\components\ExecutionResult;

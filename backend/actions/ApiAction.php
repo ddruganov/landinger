@@ -15,6 +15,8 @@ class ApiAction extends Action
         'logout',
     ];
 
+    private array $requestData = [];
+
     public function beforeRun()
     {
         !in_array($this->id, self::SAFE_ACTIONS) && $this->checkUser();
@@ -23,7 +25,7 @@ class ApiAction extends Action
         $json_data = json_decode($json, true) ?: [];
         $post_data = Yii::$app->request->post() ?: [];
         $get_data = Yii::$app->request->get() ?: [];
-        $this->request_data = array_merge($json_data, $post_data, $get_data);
+        $this->requestData = array_merge($json_data, $post_data, $get_data);
 
         return parent::beforeRun();
     }
@@ -41,21 +43,21 @@ class ApiAction extends Action
         }
     }
 
-    protected function getData(?string $name = null, $default_value = null)
+    protected function getData(?string $name = null, $default = null)
     {
         if (!$name) {
-            return $this->request_data;
+            return $this->requestData;
         }
 
-        $nested_params = explode('.', $name);
-        $value = $this->request_data;
-        foreach ($nested_params as $param) {
+        $nested = explode('.', $name);
+        $value = $this->requestData;
+        foreach ($nested as $param) {
             $value = $value[$param] ?? null;
             if (is_null($value)) {
                 break;
             }
         }
-        return $value ?? $default_value;
+        return $value ?? $default;
     }
 
     protected function apiResponse(ExecutionResult $result)

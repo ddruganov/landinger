@@ -15,10 +15,6 @@
   <button :disabled="requestCommencing" class="btn btn-block btn-primary lh-normal w-100 mb-3" @click="login()">
     Войти
   </button>
-  <div class="d-flex align-items-center justify-content-between">
-    <a href="/auth/restore" class="link-primary">Забыли пароль?</a>
-    <a href="/auth/register" class="link-primary">Регистрация</a>
-  </div>
 </template>
 
 <script lang="ts">
