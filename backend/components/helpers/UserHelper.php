@@ -14,7 +14,7 @@ class UserHelper
         if (self::$currentUser) {
             return self::$currentUser->id;
         }
-        return (new TokenHelper(new User()))->getModelId();
+        return (new TokenHelper())->getUserId();
     }
 
     public static function get(): ?User

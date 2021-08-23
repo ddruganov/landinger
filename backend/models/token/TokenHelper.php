@@ -3,17 +3,9 @@
 namespace app\models\token;
 
 use app\components\helpers\CookieHelper;
-use app\models\user\User;
 
 class TokenHelper
 {
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
     public function getAccessTokenFromCookies(): ?AccessToken
     {
         // проверяем, жив ли access token
@@ -41,8 +33,8 @@ class TokenHelper
         return null;
     }
 
-    public function getModelId(): ?int
+    public function getUserId(): ?int
     {
-        return $this->getAccessTokenFromCookies()?->getModelId();
+        return $this->getAccessTokenFromCookies()?->getUserId();
     }
 }

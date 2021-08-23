@@ -1,8 +1,13 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
-    'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
-    'masterPassword' => 'lkpassadmin'
+    'masterPassword' => 'lkpassadmin',
+    'token' => [
+        'accessTTL' => 1800, // 30 minutes
+        'refreshTTL' => 2592000 // 30 days
+    ],
+    'hosts' => [
+        'api' => 'http://localhost:8001',
+        'admin' => 'http://localhost:8080',
+    ],
 ];

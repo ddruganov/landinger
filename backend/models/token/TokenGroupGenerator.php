@@ -43,7 +43,7 @@ class TokenGroupGenerator
         // save refresh token and kill other active tokens
         $refreshTokenAr = new RefreshToken();
         $refreshTokenAr->setAttributes([
-            'userId' => $user->getId(),
+            'userId' => $user->id,
             'issueDate' => date('Y-m-d H:i:s', $issueDate),
             'expirationDate' => date('Y-m-d H:i:s', $refreshTokenExpirationDate),
             'value' => $refreshToken
