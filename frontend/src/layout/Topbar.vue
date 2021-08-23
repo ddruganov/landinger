@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-0">
       <div class="text-white ps-3">
-        <i class="sidebar-toggler fas fa-bars" />
+        Landinger
       </div>
       <ul class="navbar-nav ms-auto p-3">
         <li class="nav-item position-relative">
