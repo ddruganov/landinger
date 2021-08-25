@@ -13,6 +13,9 @@ export default class Requestor {
   static REQUEST_METHODS = {
     GET: "GET",
     POST: "POST",
+    PUT: "PUT",
+    DELETE: "DELETE",
+    PATCH: "PATCH",
   };
 
   static get(url: string, query?: any, options?: RequestOptions) {
@@ -23,6 +26,18 @@ export default class Requestor {
     return Requestor.makeRequest(Requestor.REQUEST_METHODS.POST, url, form, options);
   }
 
+  static put(url: string, form?: any, options?: RequestOptions) {
+    return Requestor.makeRequest(Requestor.REQUEST_METHODS.PUT, url, form, options);
+  }
+
+  static delete(url: string, form?: any, options?: RequestOptions) {
+    return Requestor.makeRequest(Requestor.REQUEST_METHODS.DELETE, url, form, options);
+  }
+
+  static patch(url: string, form?: any, options?: RequestOptions) {
+    return Requestor.makeRequest(Requestor.REQUEST_METHODS.PATCH, url, form, options);
+  }
+
   static makeRequest(
     method: string,
     url: string,
@@ -31,9 +46,7 @@ export default class Requestor {
   ): Promise<ApiResponse> {
     const params: RequestParams = {
       method: method,
-      headers: {
-        OrganizationId: String(authStore.context(store).getters.userOrganizations.find((uo) => uo.isDefault)?.id),
-      },
+      headers: {},
       credentials: "include",
     };
 

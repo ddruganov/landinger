@@ -1,15 +1,11 @@
 <template>
-  <div v-if="dataLoaded" class="d-flex flex-column">
+  <template v-if="dataLoaded">
     <topbar />
-    <div class="basic-layout d-flex">
-      <div class="content-container d-flex flex-column w-100">
-        <div class="content container p-0">
-          <router-view />
-        </div>
-        <Footer />
-      </div>
+    <div class="container">
+      <router-view />
     </div>
-  </div>
+    <Footer />
+  </template>
 </template>
 
 <style lang="scss">
@@ -50,6 +46,7 @@ import Footer from "./Footer.vue";
 
 import { authStore, GET_CURRENT_USER } from "@/store/modules/auth.store";
 import { Options, Vue } from "vue-class-component";
+import { landingStore, LOAD_ALL_LANDINGS } from "@/store/modules/landing.store";
 
 @Options({
   components: { Topbar, Footer },
@@ -57,16 +54,13 @@ import { Options, Vue } from "vue-class-component";
 export default class MainLayout extends Vue {
   dataLoaded = false;
 
-  mounted() {
-    this.load();
+  async mounted() {
+    await this.load();
   }
-  load() {
-    authStore
-      .context(this.$store)
-      .dispatch(GET_CURRENT_USER)
-      .then(() => {
-        this.dataLoaded = true;
-      });
+  async load() {
+    await authStore.context(this.$store).dispatch(GET_CURRENT_USER);
+    await landingStore.context(this.$store).dispatch(LOAD_ALL_LANDINGS);
+    this.dataLoaded = true;
   }
 }
 </script>

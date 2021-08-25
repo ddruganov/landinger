@@ -4,33 +4,30 @@ namespace app\models\landing;
 
 use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
+use app\components\helpers\DateHelper;
 use app\components\SaveableInterface;
 
+/**
+ * @var int $id
+ * @var string $creation_date
+ * @var int $creator_id
+ * @var string $name
+ * @var string $alias
+ */
 class Landing extends ExtendedActiveRecord implements SaveableInterface
 {
+    public static function tableName()
+    {
+        return 'landing.landing';
+    }
+
     public function rules()
     {
         return [
-            [['name', 'alias', 'creation_date', 'creator_id'], 'required'],
+            [['creation_date', 'creator_id', 'name', 'alias'], 'required'],
             [['name', 'alias'], 'string'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['creator_id'], 'integer'],
-
-            [['links'], 'filter', 'filter' => function (?array $links) {
-
-                if (!$links) {
-                    return;
-                }
-
-                foreach ($links as $linkAttributes) {
-                    $res = LandingLink::saveWithAttributes($linkAttributes);
-                    if (!$res->isSuccessful()) {
-                        $this->addError('links', $res->getErrors());
-                    }
-                }
-
-                return null;
-            }]
         ];
     }
 
@@ -44,6 +41,6 @@ class Landing extends ExtendedActiveRecord implements SaveableInterface
 
         $model->setAttributes($attributes);
 
-        return new ExecutionResult(true);
+        return new ExecutionResult($model->save(), $model->getFirstErrors(), ['id' => $model->id]);
     }
 }

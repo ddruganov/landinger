@@ -12,10 +12,10 @@ const routes: Array<RouteRecordRaw> = [
       },
 
       /* LANDING */
-      // {
-      //   path: "/activities",
-      //   component: () => import("@/pages/landing/Edit.vue"),
-      // },
+      {
+        path: "/landing/:id/edit",
+        component: () => import("@/pages/landing/Edit.vue"),
+      },
     ]
   },
   /* AUTHENTICATION */

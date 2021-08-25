@@ -32,10 +32,4 @@ class UserHelper
 
         return self::$currentUser;
     }
-
-    public static function getOrganizationId(): ?int
-    {
-        $headers = array_change_key_case(getallheaders(), CASE_LOWER);
-        return intval($headers['organizationid']);
-    }
 }
