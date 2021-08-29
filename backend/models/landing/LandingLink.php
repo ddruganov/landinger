@@ -8,13 +8,18 @@ use app\components\SaveableInterface;
 
 class LandingLink extends ExtendedActiveRecord implements SaveableInterface
 {
+    public static function tableName()
+    {
+        return 'landing.landing_link';
+    }
+
     public function rules()
     {
         return [
-            [['name', 'value', 'creation_date', 'creator_id'], 'required'],
+            [['name', 'creation_date', 'creator_id', 'landing_id'], 'required'],
             [['name', 'value'], 'string'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id'], 'integer']
+            [['creator_id', 'landing_id'], 'integer']
         ];
     }
 
@@ -28,6 +33,8 @@ class LandingLink extends ExtendedActiveRecord implements SaveableInterface
 
         $model->setAttributes($attributes);
 
-        return new ExecutionResult(true);
+        return new ExecutionResult($model->save(), [], [
+            'id' => $model->id,
+        ]);
     }
 }

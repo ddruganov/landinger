@@ -2,7 +2,7 @@
 
 namespace app\controllers\actions\auth;
 
-use app\actions\ApiAction;
+use app\controllers\actions\ApiAction;;
 use app\components\ExecutionResult;
 use app\components\PasswordValidator;
 use app\components\UserRegisterData;

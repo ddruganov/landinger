@@ -1,7 +1,7 @@
 <?php
 
 header('Access-Control-Allow-Origin: ' . getallheaders()['Origin']);
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: POST, PATCH, DELETE, PUT, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Accept, Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, OrganizationId');
 header('Access-Control-Allow-Credentials: true');
 

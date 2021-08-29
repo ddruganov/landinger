@@ -11,8 +11,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import notifications from "./plugins/notifications";
 
-createApp(App)
+const appInstance = createApp(App)
   .use(store)
   .use(router)
   .use(notifications)
   .mount("#app");
+
+export default appInstance;

@@ -2,9 +2,9 @@
 
 namespace app\controllers\actions\auth;
 
-use app\actions\ApiAction;
 use app\components\ExecutionResult;
 use app\components\helpers\UserHelper;
+use app\controllers\actions\ApiAction;
 
 class GetCurrentUserAction extends ApiAction
 {

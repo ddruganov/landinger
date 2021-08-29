@@ -2,10 +2,10 @@
 
 namespace app\controllers\actions\landing;
 
-use app\actions\ApiAction;
 use app\collectors\landing\LandingAllCollector;
 use app\components\ExecutionResult;
 use app\components\helpers\UserHelper;
+use app\controllers\actions\ApiAction;
 use Throwable;
 
 class GetAllLandingsAction extends ApiAction

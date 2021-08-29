@@ -2,10 +2,11 @@
 
 namespace app\models\landing;
 
+use app\components\ErrorLog;
 use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
-use app\components\helpers\DateHelper;
 use app\components\SaveableInterface;
+use Exception;
 
 /**
  * @var int $id
@@ -33,6 +34,9 @@ class Landing extends ExtendedActiveRecord implements SaveableInterface
 
     public static function saveWithAttributes(array $attributes): ExecutionResult
     {
+        ErrorLog::log($attributes);
+        throw new Exception('test');
+
         $model = null;
         if ($id = $attributes['id'] ?? null) {
             $model = self::find($id);

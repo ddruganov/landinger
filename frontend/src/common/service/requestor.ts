@@ -59,10 +59,8 @@ export default class Requestor {
 
     if (method === Requestor.REQUEST_METHODS.GET) {
       url += "?" + dataToQueryString(data);
-    } else if (method === Requestor.REQUEST_METHODS.POST) {
-      params.body = options?.stringify ? JSON.stringify(data) : data;
     } else {
-      throw new Error("Unknown RequestMethod: " + method);
+      params.body = options?.stringify ? JSON.stringify(data) : data;
     }
 
     !options.ignoredByState &&

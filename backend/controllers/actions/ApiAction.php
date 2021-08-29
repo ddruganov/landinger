@@ -1,6 +1,6 @@
 <?php
 
-namespace app\actions;
+namespace app\controllers\actions;
 
 use app\components\ExecutionResult;
 use app\components\helpers\UserHelper;
@@ -23,9 +23,9 @@ class ApiAction extends Action
 
         $json = file_get_contents('php://input');
         $json_data = json_decode($json, true) ?: [];
-        $post_data = Yii::$app->request->post() ?: [];
         $get_data = Yii::$app->request->get() ?: [];
-        $this->requestData = array_merge($json_data, $post_data, $get_data);
+
+        $this->requestData = array_merge($json_data, $get_data);
 
         return parent::beforeRun();
     }

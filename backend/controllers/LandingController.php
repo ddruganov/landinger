@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use app\controllers\actions\generic\SaveAction;
 use app\controllers\actions\landing\CreateLandingAction;
+use app\controllers\actions\landing\CreateLandingLinkAction;
 use app\controllers\actions\landing\GetAllLandingsAction;
+use app\models\landing\Landing;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -17,6 +20,8 @@ class LandingController extends Controller
                 'actions' => [
                     'all'  => ['GET'],
                     'create' => ['POST'],
+                    'save' => ['PATCH'],
+                    'create_link' => ['POST'],
                 ],
             ],
         ];
@@ -27,6 +32,11 @@ class LandingController extends Controller
         return [
             'all' => GetAllLandingsAction::class,
             'create' => CreateLandingAction::class,
+            'save' => [
+                'class' => SaveAction::class,
+                'modelClass' => Landing::class,
+            ],
+            'create_link' => CreateLandingLinkAction::class,
         ];
     }
 }

@@ -3,13 +3,8 @@
     <button class="button wfc" @click="() => createLanding()">Добавить лендинг</button>
   </div>
 
-  <div class="block mt-3">
-    <router-link
-      :to="`/landing/${landing.id}/edit`"
-      v-for="landing in landings"
-      :key="landing.id"
-      class="p-3 border rounded"
-    >
+  <div class="landing-grid mt-3">
+    <router-link :to="`/landing/${landing.id}/edit`" v-for="landing in landings" :key="landing.id" class="block">
       {{ landing.name }}
     </router-link>
   </div>
@@ -25,7 +20,12 @@ export default class HomeIndex extends Vue {
   }
 
   createLanding() {
-    landingStore.context(this.$store).dispatch(CREATE_LANDING);
+    landingStore
+      .context(this.$store)
+      .dispatch(CREATE_LANDING)
+      .then((newLandingId) => {
+        newLandingId && this.$router.push({ path: `/landing/${newLandingId}/edit` });
+      });
   }
 }
 </script>

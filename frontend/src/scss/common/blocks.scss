@@ -4,4 +4,8 @@
   padding: 1rem;
   flex: 1;
   display: flex;
+  align-items: center;
+  &.column {
+    flex-direction: column;
+  }
 }

@@ -1,8 +1,8 @@
 <template>
-  <a :href="link" class="w-fit-content d-flex align-items-center link-primary">
+  <router-link :to="link" class="fc d-flex align-items-center link-primary">
     <i class="fas fa-chevron-left" />
     <span class="ms-1">назад</span>
-  </a>
+  </router-link>
 </template>
 
 <script lang="ts">

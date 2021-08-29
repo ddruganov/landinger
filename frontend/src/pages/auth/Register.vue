@@ -41,13 +41,13 @@
 
 <script lang="ts">
 import Api from "@/common/api";
-import CustomSwitch from "@/components/CustomSwitch.vue";
+import FormSwitch from "@/components/form/FormSwitch.vue";
 import RegisterData from "@/types/auth/RegisterData";
 import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 @Options({
-  components: { CustomSwitch },
+  components: { FormSwitch },
 })
 export default class AuthRegister extends Vue {
   @Prop(String) readonly hash?: string;
