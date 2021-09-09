@@ -29,8 +29,8 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
     Api.landing
       .all()
       .then((response) => {
-        if (!response.success) {
-          throw new Error(response.error);
+        if (response.exception) {
+          throw new Error(response.exception);
         }
 
         this.commit(SET_ALL_LANDINGS, response.data);
@@ -42,8 +42,8 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
     return new Promise((resolve) => {
       Api.landing.create()
         .then((response) => {
-          if (!response.success) {
-            throw new Error(response.error);
+          if (response.exception) {
+            throw new Error(response.exception);
           }
 
           this.commit(ADD_LANDING, response.data);
@@ -60,8 +60,8 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
     Api.landing.link
       .create(landingId)
       .then((response) => {
-        if (!response.success) {
-          throw new Error(response.error);
+        if (response.exception) {
+          throw new Error(response.exception);
         }
 
         this.commit(ADD_LINK, { landingId: landingId, link: response.data });
@@ -73,8 +73,8 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
     Api.landing
       .save(landing)
       .then((response) => {
-        if (!response.success) {
-          throw new Error(response.error);
+        if (response.exception) {
+          throw new Error(response.exception);
         }
       })
       .catch((e) => appInstance.$notifications.error("Ошибка сохранения лендинга<br>" + e.message));

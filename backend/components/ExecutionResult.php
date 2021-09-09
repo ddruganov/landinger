@@ -19,7 +19,8 @@ class ExecutionResult
     {
         return [
             'success' => $this->success,
-            'error' => @reset($this->errors) ?: null,
+            'errors' => $this->errors,
+            'exception' => $this->errors['exception'] ?? null,
             'data' => $this->data
         ];
     }

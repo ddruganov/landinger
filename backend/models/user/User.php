@@ -6,9 +6,7 @@ use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
 use app\components\helpers\CookieHelper;
 use app\components\helpers\DateHelper;
-use app\components\SaveableInterface;
 use app\components\UserRegisterData;
-use app\models\common\ModelType;
 use app\models\token\TokenGroupGenerator;
 use Yii;
 
@@ -21,7 +19,7 @@ use Yii;
  * @property string $password
  * @property string $creationDate
  */
-class User extends ExtendedActiveRecord implements SaveableInterface
+class User extends ExtendedActiveRecord
 {
     public static function tableName()
     {
@@ -37,26 +35,9 @@ class User extends ExtendedActiveRecord implements SaveableInterface
         ];
     }
 
-    #region SaveableInterface
-    public static function saveWithAttributes(array $attributes): ExecutionResult
-    {
-        $model = isset($attributes['id']) ? self::findOne($attributes['id']) : new self();
-        $model->setAttributes([
-            'name' => $attributes['name'],
-            'email' => $attributes['email']
-        ]);
-        $model->isNewRecord && $model->setAttributes([
-            'creationDate' => DateHelper::now()
-        ]);
-
-        return new ExecutionResult($model->save(), $model->getFirstErrors());
-    }
-    #endregion
-
     public static function register(UserRegisterData $data): ExecutionResult
     {
-        $user = new self();
-        $user->setAttributes([
+        $user = new self([
             'name' => $data->getName(),
             'email' => $data->getEmail(),
             'password' => Yii::$app->security->generatePasswordHash($data->getPassword()),

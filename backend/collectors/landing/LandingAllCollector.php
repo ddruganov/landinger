@@ -3,7 +3,6 @@
 namespace app\collectors\landing;
 
 use app\collectors\AbstractDataCollector;
-use app\components\ErrorLog;
 use app\models\landing\Landing;
 use app\models\landing\LandingLink;
 use yii\db\Query;
@@ -17,7 +16,7 @@ class LandingAllCollector extends AbstractDataCollector
         $query = (new Query())
             ->select(['id', 'name'])
             ->from(Landing::tableName())
-            ->where(['creator_id' => $this->getParam('creatorId')]);
+            ->where(['creator_id' => $this->getParam('userId')]);
 
         $this->ids && $query->where(['in', 'id', $this->ids]);
 

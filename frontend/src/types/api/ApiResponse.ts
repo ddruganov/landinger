@@ -1,6 +1,7 @@
 type ApiResponse = {
   success: boolean;
-  error: string;
+  errors: { [key: string]: string };
+  exception: string;
   data: any;
   code?: number;
 };

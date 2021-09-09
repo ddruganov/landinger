@@ -2,11 +2,12 @@
 
 namespace app\controllers;
 
+use app\collectors\landing\LandingAllCollector;
+use app\controllers\actions\generic\CollectorAction;
+use app\controllers\actions\generic\CreateAction;
 use app\controllers\actions\generic\SaveAction;
-use app\controllers\actions\landing\CreateLandingAction;
-use app\controllers\actions\landing\CreateLandingLinkAction;
-use app\controllers\actions\landing\GetAllLandingsAction;
 use app\models\landing\Landing;
+use app\models\landing\LandingLink;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -30,13 +31,22 @@ class LandingController extends Controller
     public function actions()
     {
         return [
-            'all' => GetAllLandingsAction::class,
-            'create' => CreateLandingAction::class,
+            'all' => [
+                'class' => CollectorAction::class,
+                'collectorClass' => LandingAllCollector::class
+            ],
+            'create' => [
+                'class' => CreateAction::class,
+                'modelClass' => Landing::class
+            ],
             'save' => [
                 'class' => SaveAction::class,
                 'modelClass' => Landing::class,
             ],
-            'create_link' => CreateLandingLinkAction::class,
+            'create_link' => [
+                'class' => CreateAction::class,
+                'modelClass' => LandingLink::class
+            ]
         ];
     }
 }

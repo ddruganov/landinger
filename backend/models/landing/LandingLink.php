@@ -2,11 +2,12 @@
 
 namespace app\models\landing;
 
+use app\components\CreatableInterface;
 use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
-use app\components\SaveableInterface;
+use app\components\helpers\DateHelper;
 
-class LandingLink extends ExtendedActiveRecord implements SaveableInterface
+class LandingLink extends ExtendedActiveRecord implements CreatableInterface
 {
     public static function tableName()
     {
@@ -23,18 +24,19 @@ class LandingLink extends ExtendedActiveRecord implements SaveableInterface
         ];
     }
 
-    public static function saveWithAttributes(array $attributes): ExecutionResult
+    public static function create(array $attributes): ExecutionResult
     {
-        $model = null;
-        if ($id = $attributes['id'] ?? null) {
-            $model = self::find($id);
-        }
-        $model ??= new self();
-
-        $model->setAttributes($attributes);
-
-        return new ExecutionResult($model->save(), [], [
-            'id' => $model->id,
+        $model = new self([
+            'name' => 'Новая ссылка',
+            'creationDate' => DateHelper::now(),
+            'creatorId' => $attributes['userId'],
+            'landingId' => $attributes['landingId'],
         ]);
+
+        return new ExecutionResult(
+            $model->save(),
+            $model->getFirstErrors(),
+            $model->getAttributes(['id', 'name', 'value'])
+        );
     }
 }

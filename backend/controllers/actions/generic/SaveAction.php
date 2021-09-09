@@ -3,39 +3,32 @@
 namespace app\controllers\actions\generic;
 
 use app\components\ExecutionResult;
-use app\components\SaveableInterface;
 use app\controllers\actions\ApiAction;
-use Exception;
 use Throwable;
 use Yii;
+use yii\db\ActiveRecord;
 
 class SaveAction extends ApiAction
 {
     public string $modelClass;
-
-    public function beforeRun()
-    {
-        if (!is_a($this->modelClass, SaveableInterface::class, true)) {
-            throw new Exception($this->modelClass . ' has to be an instance of SaveableInterface');
-        }
-
-        return parent::beforeRun();
-    }
+    private ActiveRecord $model;
 
     public function run()
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            /** @var \app\components\ExecutionResult $saveRes */
-            $saveRes = $this->modelClass::saveWithAttributes($this->getData());
-            $success = $saveRes->isSuccessful();
+            $this->model = $this->modelClass::findOne($this->getData('id'));
+
+            $this->model->setAttributes($this->getData());
+
+            $success = $this->model->save();
 
             $success ? $transaction->commit() : $transaction->rollBack();
 
-            return $this->apiResponse(new ExecutionResult($success, $saveRes->getErrors(), $saveRes->getData()));
+            return $this->apiResponse(new ExecutionResult($success, $this->model->getFirstErrors()));
         } catch (Throwable $t) {
             $transaction->rollBack();
-            return $this->apiResponse(new ExecutionResult(false, ['common' => $t->getMessage()]));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
     }
 }

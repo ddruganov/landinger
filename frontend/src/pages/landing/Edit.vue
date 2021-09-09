@@ -1,19 +1,20 @@
 <template>
   <go-back link="/" class="mt-5" />
 
-  <div class="block mt-3">
+  <div class="block align-items-center justify-content-between mt-3">
     <h3>Редактирование лендинга</h3>
+    <button class="button wfc" @click="() => save()">Сохранить</button>
   </div>
 
   <template v-if="landing">
     <div class="block mt-3">
-      <form-input v-model="landing.name" label="Название" @change="() => save()" />
+      <form-input v-model="landing.name" label="Название" />
     </div>
 
-    <div class="block mt-3">
+    <div class="block flex-column align-items-start mt-3">
       <button class="button wfc" @click="() => createLink()">Добавить ссылку</button>
 
-      <form-group v-for="(link, i) in landing.links" :key="i" class="mt-3" :label="`Ссылка #${i + 1}`">
+      <form-group v-for="(link, i) in landing.links" :key="i" class="mt-3 w-100" :label="`Ссылка #${i + 1}`">
         <form-input v-model="link.name" label="Название" class="mt-3" />
         <form-input v-model="link.value" label="Значение" class="mt-3" />
       </form-group>
