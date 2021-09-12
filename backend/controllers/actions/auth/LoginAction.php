@@ -15,14 +15,14 @@ class LoginAction extends ApiAction
     {
         $loginValidator = new LoginValidator($this->getData());
         if (!$loginValidator->validate()) {
-            return $this->apiResponse(new ExecutionResult(false, ['common' => 'Поля формы заполнены неверно'], ['errors' => $loginValidator->getFirstErrors()]));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Поля формы заполнены неверно'], ['errors' => $loginValidator->getFirstErrors()]));
         }
 
         $user = $loginValidator->getUser();
 
         $tokens = (new TokenGroupGenerator())->issueTokenGroup($user);
         if (!$tokens) {
-            return $this->apiResponse(new ExecutionResult(false, ['common' => 'Ошибка выдачи токенов']));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Ошибка выдачи токенов']));
         }
 
         return $this->apiResponse(new ExecutionResult($user->login()));

@@ -10,11 +10,13 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import "@fortawesome/fontawesome-free/css/all.css";
 import notifications from "./plugins/notifications";
+import prompt from "./plugins/prompt";
 
 const appInstance = createApp(App)
   .use(store)
   .use(router)
   .use(notifications)
+  .use(prompt)
   .mount("#app");
 
 export default appInstance;

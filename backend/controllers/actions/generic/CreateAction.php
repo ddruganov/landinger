@@ -4,6 +4,7 @@ namespace app\controllers\actions\generic;
 
 use app\components\CreatableInterface;
 use app\components\ExecutionResult;
+use app\components\helpers\UserHelper;
 use app\controllers\actions\ApiAction;
 use Exception;
 use Throwable;
@@ -26,8 +27,12 @@ class CreateAction extends ApiAction
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            $attributes = array_merge($this->getData(), [
+                'userId' => UserHelper::id()
+            ]);
+
             /** @var \app\components\ExecutionResult $saveRes */
-            $saveRes = $this->modelClass::create($this->getData());
+            $saveRes = $this->modelClass::create($attributes);
             $success = $saveRes->isSuccessful();
 
             $success ? $transaction->commit() : $transaction->rollBack();
@@ -35,7 +40,7 @@ class CreateAction extends ApiAction
             return $this->apiResponse(new ExecutionResult($success, $saveRes->getErrors(), $saveRes->getData()));
         } catch (Throwable $t) {
             $transaction->rollBack();
-            return $this->apiResponse(new ExecutionResult(false, ['common' => $t->getMessage()]));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
     }
 }

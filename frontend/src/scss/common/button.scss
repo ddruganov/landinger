@@ -6,6 +6,7 @@ button.button {
   border: 1px solid $primary;
   border-radius: $border-radius;
   transition: 0.25s all linear;
+  text-decoration: none;
 
   &:hover {
     border: 1px solid $dark-primary;

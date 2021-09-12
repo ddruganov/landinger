@@ -40,7 +40,7 @@ class CollectorAction extends ApiAction
 
             return $this->apiResponse(new ExecutionResult(true, [], $this->collector->get()));
         } catch (Throwable $t) {
-            return $this->apiResponse(new ExecutionResult(false, ['common' => $t->getMessage()]));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
     }
 }

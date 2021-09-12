@@ -1,17 +1,24 @@
 <template>
-  <div class="block mt-5">
-    <button class="button wfc" @click="() => createLanding()">Добавить лендинг</button>
-  </div>
+  <div class="landing-grid mt-5">
+    <div class="card-container">
+      <div class="view-card create-landing" @click="() => createLanding()">
+        <h5 class="header">Создать новый</h5>
+        <i class="icon fas fa-plus my-auto" />
+      </div>
+    </div>
 
-  <div class="landing-grid mt-3">
-    <router-link :to="`/landing/${landing.id}/edit`" v-for="landing in landings" :key="landing.id" class="block">
-      {{ landing.name }}
-    </router-link>
+    <div class="card-container" v-for="landing in landings" :key="landing.id">
+      <router-link class="view-card" :to="`/landing/${landing.id}/edit`">
+        <h5 class="header">{{ landing.name }}</h5>
+        <i class="icon fas fa-pen my-auto" />
+      </router-link>
+      <i class="icon corner delete fas fa-times" @click="() => deleteLanding(landing.id)" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { CREATE_LANDING, landingStore } from "@/store/modules/landing.store";
+import { CREATE_LANDING, DELETE_LANDING, landingStore } from "@/store/modules/landing.store";
 import { Vue } from "vue-class-component";
 
 export default class HomeIndex extends Vue {
@@ -26,6 +33,12 @@ export default class HomeIndex extends Vue {
       .then((newLandingId) => {
         newLandingId && this.$router.push({ path: `/landing/${newLandingId}/edit` });
       });
+  }
+
+  deleteLanding(id: number) {
+    this.$prompt("Вы уверены, что хотите удалить лендинг? Это удалить все данные, связанные с ним").then((result) => {
+      result === 1 && landingStore.context(this.$store).dispatch(DELETE_LANDING, id);
+    });
   }
 }
 </script>

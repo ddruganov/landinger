@@ -4,7 +4,6 @@ namespace app\models\landing;
 
 use app\collectors\landing\LandingAllCollector;
 use app\components\CreatableInterface;
-use app\components\ErrorLog;
 use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
 use app\components\helpers\DateHelper;
@@ -20,7 +19,7 @@ use yii\db\Query;
  */
 class Landing extends ExtendedActiveRecord implements CreatableInterface
 {
-    public array $links;
+    public array $links = [];
 
     public static function tableName()
     {
@@ -74,5 +73,26 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
                 ->setIds([$model->id])
                 ->get())
         );
+    }
+
+    public function delete()
+    {
+        foreach ($this->getLinks() as $link) {
+            if ($link->delete() === false) {
+                $this->addErrors($link->getFirstErrors());
+                return false;
+            }
+        }
+
+
+        return parent::delete();
+    }
+
+    /**
+     * @return LandingLink[]
+     */
+    public function getLinks(): array
+    {
+        return LandingLink::findAll(['landing_id' => $this->id]);
     }
 }

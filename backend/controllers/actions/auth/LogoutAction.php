@@ -16,6 +16,6 @@ class LogoutAction extends ApiAction
             return $this->apiResponse(new ExecutionResult(true));
         }
 
-        return $this->apiResponse(new ExecutionResult(false, ['common' => 'Неизвестная  ошибка']));
+        return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Неизвестная  ошибка']));
     }
 }

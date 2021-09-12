@@ -1,52 +1,27 @@
 <template>
-  <div :id="id" @click="closeModal">
-    <transition name="fade">
-      <div v-if="show" class="modal" :class="{ [modalClass]: modalClass }">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <div class="d-flex align-items-center justify-content-between w-100">
-                <slot name="title" />
-                <button class="btn-close btn btn-sm p-0" @click="closeModal">
-                  <i class="close-icon fas fa-times" />
-                </button>
-              </div>
+  <transition name="fade">
+    <div v-if="isShowing" :id="id" @click="closeModal" class="mw" :class="{ show: isShowing }">
+      <div class="backdrop" :class="{ [modalClass]: modalClass }">
+        <div class="content-wrapper">
+          <div v-if="!hideHeader" class="header">
+            <div class="header-wrapper">
+              <slot name="title" />
+              <i class="close-icon fas fa-times" @click="closeModal" />
             </div>
-            <div class="modal-body">
-              <slot name="body" />
-            </div>
-            <div class="modal-footer">
-              <slot name="footer" />
-            </div>
+          </div>
+          <div class="body">
+            <slot name="body" />
+          </div>
+          <div v-if="!hideFooter" class="footer">
+            <slot name="footer" />
           </div>
         </div>
       </div>
-    </transition>
-  </div>
+    </div>
+  </transition>
 </template>
 
 <style lang="scss" scoped>
-.modal {
-  background: rgba(black, 0.5);
-  display: block;
-  .btn-close {
-    line-height: 0;
-    .close-icon {
-      font-size: 1.25rem;
-      color: #999;
-    }
-    &:hover {
-      .close-icon {
-        color: black;
-      }
-    }
-  }
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.125s linear;
@@ -63,8 +38,9 @@ import { Vue } from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 
 export default class ModalWindowComponent extends Vue {
-  show = false;
-  @Prop(String) readonly control!: string;
+  isShowing = false;
+  @Prop(Boolean) readonly hideFooter!: boolean;
+  @Prop(Boolean) readonly hideHeader!: boolean;
   @Prop(String) readonly modalClass = String("modal_" + Date.now());
   @Prop(String) readonly id!: string;
   @Prop(Number) readonly reload!: number;
@@ -73,21 +49,41 @@ export default class ModalWindowComponent extends Vue {
   }
 
   mounted() {
+    const body = document.querySelector("body")!;
+    const app = body.querySelector("#app")!;
+    body.insertBefore(this.$el, app);
+
     this.load();
+
+    window.addEventListener(`modal.${this.id}.close`, () => {
+      this.forceClose();
+    });
+  }
+
+  unmounted() {
+    document.querySelector("body")!.removeChild(this.$el);
   }
 
   load() {
-    document.querySelector(`[modal-trigger="${this.id}"]`)?.addEventListener("click", this.showModal);
+    const trigger = document.querySelector(`[modal-trigger="${this.id}"]`);
+    if (!trigger) {
+      throw new Error(`Modal trigger for ${this.id} was not found`);
+    }
+    trigger.addEventListener("click", () => this.show());
   }
 
-  showModal() {
-    this.show = true;
+  show() {
+    this.isShowing = true;
   }
 
-  closeModal(e: MouseEvent) {
+  close(e: MouseEvent) {
     const containsModelClass = (e.target as HTMLElement).classList.contains(this.modalClass);
     const containsCloseIcon = (e.target as HTMLElement).classList.contains("close-icon");
-    this.show = !(containsModelClass || containsCloseIcon);
+    this.isShowing = !(containsModelClass || containsCloseIcon);
+  }
+
+  forceClose() {
+    this.isShowing = false;
   }
 }
 </script>

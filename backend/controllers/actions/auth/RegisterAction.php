@@ -66,11 +66,11 @@ class RegisterAction extends ApiAction
             $res->isSuccessful() ? $transaction->commit() : $transaction->rollBack();
         } catch (Throwable $t) {
             $transaction->rollBack();
-            return $this->apiResponse(new ExecutionResult(false, ['common' => $t->getMessage()]));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
 
         if (!$user) {
-            return $this->apiResponse(new ExecutionResult(false, ['common' => 'Ошибка завершения регистрации']));
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Ошибка завершения регистрации']));
         }
 
         (new TokenGroupGenerator())->issueTokenGroup($user);

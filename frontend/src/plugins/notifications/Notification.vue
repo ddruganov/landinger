@@ -5,7 +5,7 @@
         <i class="fas fa-times" />
       </div>
       <div class="content">
-        <div v-if="title" class="title h5" v-html="title" />
+        <div v-if="title" class="title" v-html="title" />
         <div class="body" v-html="message" />
       </div>
     </div>
@@ -29,6 +29,7 @@
   position: relative;
   color: white !important;
   opacity: 0.75;
+  border-radius: 1rem;
 
   &:hover {
     opacity: 1;
@@ -36,9 +37,15 @@
 
   &.success {
     background: #28a745 !important;
+    & > .content > * {
+      color: white !important;
+    }
   }
   &.error {
     background: #dc3545 !important;
+    & > .content > * {
+      color: white !important;
+    }
   }
   &.info {
     background: #17a2b8 !important;
@@ -61,13 +68,16 @@
     justify-content: center;
   }
 
-  .title {
-    border-bottom: 1px solid white;
-    padding-bottom: 0.5rem;
-    cursor: default;
-  }
-  .body {
-    cursor: default;
+  & > .content {
+    & > .title {
+      border-bottom: 1px solid white;
+      margin-bottom: 0.5rem;
+      cursor: default;
+      font-weight: bold;
+    }
+    & > .body {
+      cursor: default;
+    }
   }
 }
 </style>

@@ -1,5 +1,6 @@
 import Api from "@/common/api";
 import appInstance from "@/main";
+import ApiResponse from "@/types/api/ApiResponse";
 import Landing from "@/types/landing/Landing";
 import LandingLink from "@/types/landing/LandingLink";
 import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
@@ -22,7 +23,9 @@ class LandingGetters extends Getters<LandingState> {
 // Actions
 export const LOAD_ALL_LANDINGS = 'loadAllLandings';
 export const CREATE_LANDING = 'createLanding';
+export const DELETE_LANDING = 'deleteLanding';
 export const CREATE_LANDING_LINK = 'createLandingLink';
+export const DELETE_LANDING_LINK = 'deleteLandingLink';
 export const SAVE_LANDING = 'saveLanding';
 class LandingActions extends Actions<LandingState, LandingGetters, LandingMutations, LandingActions> {
   [LOAD_ALL_LANDINGS](): void {
@@ -51,7 +54,26 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
         })
         .catch((e) => {
           resolve(undefined);
-          appInstance.$notifications.error("Ошибка создания лендинга<br>" + e.message)
+          appInstance.$notifications.error(e.message, "Ошибка создания лендинга")
+        });
+    });
+  }
+
+  [DELETE_LANDING](id: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      Api.landing.delete(id)
+        .then((response) => {
+          if (response.exception) {
+            throw new Error(response.exception);
+          }
+
+          this.commit(DELETE_LANDING, id);
+          appInstance.$notifications.success("Лендинг успешно удалён")
+          resolve(true);
+        })
+        .catch((e) => {
+          resolve(false);
+          appInstance.$notifications.error(e.message, "Ошибка удаления лендинга")
         });
     });
   }
@@ -66,7 +88,26 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
 
         this.commit(ADD_LINK, { landingId: landingId, link: response.data });
       })
-      .catch((e) => appInstance.$notifications.error("Ошибка создания ссылки<br>" + e.message));
+      .catch((e) => appInstance.$notifications.error(e.message, "Ошибка создания ссылки"))
+  }
+
+  [DELETE_LANDING_LINK](id: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      Api.landing.link.delete(id)
+        .then((response) => {
+          if (response.exception) {
+            throw new Error(response.exception);
+          }
+
+          this.commit(DELETE_LANDING_LINK, id);
+          appInstance.$notifications.success("Ссылка успешно удалена")
+          resolve(true);
+        })
+        .catch((e) => {
+          resolve(false);
+          appInstance.$notifications.error(e.message, "Ошибка удаления ссылки")
+        });
+    });
   }
 
   [SAVE_LANDING](landing: Landing): void {
@@ -76,8 +117,10 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
         if (response.exception) {
           throw new Error(response.exception);
         }
+
+        appInstance.$notifications.success("Сохранено");
       })
-      .catch((e) => appInstance.$notifications.error("Ошибка сохранения лендинга<br>" + e.message));
+      .catch((e) => appInstance.$notifications.error(e.message, "Ошибка сохранения лендинга"))
   }
 }
 
@@ -92,6 +135,15 @@ class LandingMutations extends Mutations<LandingState> {
 
   [ADD_LANDING](payload: Landing): void {
     this.state.landings.push(payload);
+  }
+
+  [DELETE_LANDING](payload: number): void {
+    this.state.landings = this.state.landings.filter(landing => landing.id !== payload);
+  }
+
+  [DELETE_LANDING_LINK](payload: number): void {
+    //  search for it here
+    // this.state.landings = this.state.landings.filter(landing => landing.id !== payload);
   }
 
   [ADD_LINK](payload: { landingId: number, link: LandingLink }): void {

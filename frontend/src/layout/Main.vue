@@ -1,7 +1,7 @@
 <template>
   <template v-if="dataLoaded">
     <topbar />
-    <div class="container">
+    <div class="container w-100 h-100">
       <router-view />
     </div>
     <Footer />

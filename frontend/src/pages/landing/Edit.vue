@@ -11,19 +11,27 @@
       <form-input v-model="landing.name" label="Название" />
     </div>
 
-    <div class="block flex-column align-items-start mt-3">
-      <button class="button wfc" @click="() => createLink()">Добавить ссылку</button>
+    <div class="d-flex flex-wrap h-100 mt-3">
+      <div class="card-container">
+        <div class="view-card create-link" @click="() => createLink()">
+          <h5 class="header">Создать ссылку</h5>
+          <i class="icon fas fa-plus my-auto" />
+        </div>
+      </div>
 
-      <form-group v-for="(link, i) in landing.links" :key="i" class="mt-3 w-100" :label="`Ссылка #${i + 1}`">
-        <form-input v-model="link.name" label="Название" class="mt-3" />
-        <form-input v-model="link.value" label="Значение" class="mt-3" />
-      </form-group>
+      <div class="card-container" v-for="(link, i) in landing.links" :key="i">
+        <div class="view-card">
+          <form-input v-model="link.name" label="Название" class="mt-3" />
+          <form-input v-model="link.value" label="Значение" class="mt-3 h-100" type="textarea" />
+        </div>
+        <i class="icon corner delete fas fa-times" @click="() => deleteLink(landing.id)" />
+      </div>
     </div>
   </template>
 </template>
 
 <script lang="ts">
-import { CREATE_LANDING_LINK, landingStore, SAVE_LANDING } from "@/store/modules/landing.store";
+import { CREATE_LANDING_LINK, DELETE_LANDING_LINK, landingStore, SAVE_LANDING } from "@/store/modules/landing.store";
 import { Options, Vue } from "vue-class-component";
 import FormInput from "@/components/form/FormInput.vue";
 import FormGroup from "@/components/form/FormGroup.vue";
@@ -43,6 +51,10 @@ export default class LandingEdit extends Vue {
 
   createLink() {
     landingStore.context(this.$store).dispatch(CREATE_LANDING_LINK, this.id);
+  }
+
+  deleteLink(id: number) {
+    landingStore.context(this.$store).dispatch(DELETE_LANDING_LINK, id);
   }
 
   save() {
