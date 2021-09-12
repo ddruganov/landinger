@@ -1,7 +1,7 @@
 <template>
   <go-back link="/" class="mt-5" />
 
-  <div class="block align-items-center justify-content-between mt-3">
+  <div class="block justify-content-between mt-3">
     <h3>Редактирование лендинга</h3>
     <button class="button wfc" @click="() => save()">Сохранить</button>
   </div>
@@ -11,21 +11,21 @@
       <form-input v-model="landing.name" label="Название" />
     </div>
 
-    <div class="d-flex flex-wrap h-100 mt-3">
-      <div class="card-container">
-        <div class="view-card create-link" @click="() => createLink()">
-          <h5 class="header">Создать ссылку</h5>
-          <i class="icon fas fa-plus my-auto" />
-        </div>
+    <div class="links">
+      <div class="block create" @click="() => createLink()" role="button">
+        <h5 class="header">Создать ссылку</h5>
+        <i class="icon fas fa-plus my-auto" />
       </div>
 
-      <div class="card-container" v-for="(link, i) in landing.links" :key="i">
-        <div class="view-card">
+      <template v-for="(link, i) in landing.links" :key="i">
+        <div class="block">
           <form-input v-model="link.name" label="Название" class="mt-3" />
           <form-input v-model="link.value" label="Значение" class="mt-3 h-100" type="textarea" />
         </div>
-        <i class="icon corner delete fas fa-times" @click="() => deleteLink(landing.id)" />
-      </div>
+        <div class="spacer">
+          <div class="border" />
+        </div>
+      </template>
     </div>
   </template>
 </template>

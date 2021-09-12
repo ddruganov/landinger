@@ -142,8 +142,9 @@ class LandingMutations extends Mutations<LandingState> {
   }
 
   [DELETE_LANDING_LINK](payload: number): void {
-    //  search for it here
-    // this.state.landings = this.state.landings.filter(landing => landing.id !== payload);
+    this.state.landings.forEach(landing => {
+      landing.links = landing.links.filter(link => link.id !== payload);
+    });
   }
 
   [ADD_LINK](payload: { landingId: number, link: LandingLink }): void {

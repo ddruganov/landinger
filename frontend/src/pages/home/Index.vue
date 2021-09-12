@@ -17,6 +17,13 @@
   </div>
 </template>
 
+<style lang="scss" scoped>
+.card-container {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+</style>
+
 <script lang="ts">
 import { CREATE_LANDING, DELETE_LANDING, landingStore } from "@/store/modules/landing.store";
 import { Vue } from "vue-class-component";
