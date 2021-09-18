@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\collectors\landing\LandingAllCollector;
+use app\collectors\landing\LandingCommonCollector;
 use app\controllers\actions\generic\CollectorAction;
 use app\controllers\actions\generic\CreateAction;
 use app\controllers\actions\generic\DeleteAction;
@@ -32,6 +33,10 @@ class LandingController extends Controller
     public function actions()
     {
         return [
+            'common' => [
+                'class' => CollectorAction::class,
+                'collectorClass' => LandingCommonCollector::class
+            ],
             'all' => [
                 'class' => CollectorAction::class,
                 'collectorClass' => LandingAllCollector::class

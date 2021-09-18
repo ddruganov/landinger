@@ -1,7 +1,7 @@
 <template>
   <template v-if="dataLoaded">
     <topbar />
-    <div class="container w-100 h-100">
+    <div class="container main h-100">
       <router-view />
     </div>
     <Footer />
@@ -46,7 +46,7 @@ import Footer from "./Footer.vue";
 
 import { authStore, GET_CURRENT_USER } from "@/store/modules/auth.store";
 import { Options, Vue } from "vue-class-component";
-import { landingStore, LOAD_ALL_LANDINGS } from "@/store/modules/landing.store";
+import { landingStore, LOAD_COMMON, LOAD_ALL_LANDINGS } from "@/store/modules/landing.store";
 
 @Options({
   components: { Topbar, Footer },
@@ -59,7 +59,10 @@ export default class MainLayout extends Vue {
   }
   async load() {
     await authStore.context(this.$store).dispatch(GET_CURRENT_USER);
+    await landingStore.context(this.$store).dispatch(LOAD_COMMON);
+    await new Promise((resolve) => setTimeout(resolve, 100));
     await landingStore.context(this.$store).dispatch(LOAD_ALL_LANDINGS);
+    await new Promise((resolve) => setTimeout(resolve, 100));
     this.dataLoaded = true;
   }
 }

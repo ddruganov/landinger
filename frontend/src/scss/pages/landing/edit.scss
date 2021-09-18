@@ -1,42 +1,76 @@
-.links {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .block {
-    width: 100%;
-    flex-direction: column;
-    &.create {
-      margin-bottom: 1rem;
-      border: 1px solid $white !important;
-      & > .header {
-        margin-bottom: 1rem !important;
+.landing-edit-container {
+  height: 100%;
+  padding: 1rem;
+
+  & > .block {
+    &.topbar {
+      margin-top: 3rem;
+      justify-content: space-between;
+    }
+    &.edit {
+      margin-top: 1rem;
+      justify-content: space-between;
+      $choose-background-button-size: 110px;
+      & > .input-wrapper {
+        margin-right: 1rem;
+        width: calc(100% - #{$choose-background-button-size} - 1rem);
       }
-      & > .icon {
-        color: $light-gray;
-        font-size: 4rem;
-      }
-      &:hover {
-        border: 1px solid $primary !important;
-        & > .icon {
-          color: $primary;
-        }
+      & > .button {
+        width: $choose-background-button-size !important;
       }
     }
   }
 
-  .spacer {
-    height: 1rem;
-    width: 100%;
-    transition: all 0.1s linear;
-    &:hover {
-      height: calc(200px + 2rem);
-      & > .border {
-        height: 200px;
-        margin: 1rem 0;
-        transition: all 0.1s linear;
-        border: 1px solid $primary !important;
-        border-radius: $border-radius-smooth;
+  .links {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .block {
+      width: 100%;
+      flex-direction: column;
+      &.create {
+        justify-content: space-between;
+        border: 1px solid $white !important;
+        & > .header {
+          margin-bottom: 1rem !important;
+        }
+        & > .icon {
+          color: $light-gray;
+          font-size: 4rem;
+        }
+        &:hover {
+          border: 1px solid $primary !important;
+          & > .icon {
+            color: $primary;
+          }
+        }
+      }
+    }
+  }
+}
+
+#chooseBackground {
+  .body {
+    & > .button {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &[disabled] {
+        & > .icon {
+          color: $white !important;
+        }
+      }
+
+      & > .icon {
+        color: transparent !important;
+      }
+
+      & > .display {
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid white;
       }
     }
   }

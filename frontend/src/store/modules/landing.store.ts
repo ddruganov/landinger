@@ -1,6 +1,5 @@
 import Api from "@/common/api";
 import appInstance from "@/main";
-import ApiResponse from "@/types/api/ApiResponse";
 import Landing from "@/types/landing/Landing";
 import LandingLink from "@/types/landing/LandingLink";
 import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
@@ -8,10 +7,14 @@ import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
 // State
 class LandingState {
   landings: Landing[] = [];
+  common: any;
 }
 
 // Getters
 class LandingGetters extends Getters<LandingState> {
+  get common() {
+    return this.state.common;
+  }
   get landings() {
     return this.state.landings;
   }
@@ -21,6 +24,7 @@ class LandingGetters extends Getters<LandingState> {
 }
 
 // Actions
+export const LOAD_COMMON = 'loadCommon';
 export const LOAD_ALL_LANDINGS = 'loadAllLandings';
 export const CREATE_LANDING = 'createLanding';
 export const DELETE_LANDING = 'deleteLanding';
@@ -28,6 +32,19 @@ export const CREATE_LANDING_LINK = 'createLandingLink';
 export const DELETE_LANDING_LINK = 'deleteLandingLink';
 export const SAVE_LANDING = 'saveLanding';
 class LandingActions extends Actions<LandingState, LandingGetters, LandingMutations, LandingActions> {
+  [LOAD_COMMON](): void {
+    Api.landing
+      .common()
+      .then((response) => {
+        if (response.exception) {
+          throw new Error(response.exception);
+        }
+
+        this.commit(SET_COMMON, response.data);
+      })
+      .catch((e) => e);
+  }
+
   [LOAD_ALL_LANDINGS](): void {
     Api.landing
       .all()
@@ -125,10 +142,15 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
 }
 
 // Mutations
+export const SET_COMMON = "setCommon";
 export const SET_ALL_LANDINGS = "setAllLandings";
 export const ADD_LANDING = "addLanding";
 export const ADD_LINK = "addLink";
 class LandingMutations extends Mutations<LandingState> {
+  [SET_COMMON](payload: any): void {
+    this.state.common = payload;
+  }
+
   [SET_ALL_LANDINGS](payload: Landing[]): void {
     this.state.landings = payload;
   }

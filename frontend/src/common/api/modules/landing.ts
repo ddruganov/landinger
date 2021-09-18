@@ -2,6 +2,7 @@ import Requestor from "@/common/service/requestor";
 import Landing from "@/types/landing/Landing";
 
 export default class LandingApi {
+  common = () => Requestor.get("/landing/common");
   all = () => Requestor.get("/landing/all");
   create = () => Requestor.post("/landing/create");
   delete = (id: number) => Requestor.delete("/landing/delete", { id: id });

@@ -14,26 +14,27 @@ class LandingAllCollector extends AbstractDataCollector
     public function get(): array
     {
         $query = (new Query())
-            ->select(['id', 'name'])
+            ->select(['id', 'name', 'alias', 'backgroundId' => 'background_id'])
             ->from(Landing::tableName())
-            ->where(['creator_id' => $this->getParam('userId')]);
+            ->where(['creator_id' => $this->getParam('userId')])
+            ->orderBy(['id' => SORT_DESC]);
 
         $this->ids && $query->where(['in', 'id', $this->ids]);
 
         $landings = $query->all();
 
         foreach ($landings as $idx => $landing) {
-            $links = (new Query())
+            $landings[$idx]['links'] = (new Query())
                 ->select([
                     'id',
                     'name',
-                    'value'
+                    'value',
+                    'weight'
                 ])
                 ->from(LandingLink::tableName())
                 ->where(['landing_id' => $landing['id']])
+                ->orderBy(['weight' => SORT_ASC])
                 ->all();
-
-            $landings[$idx]['links'] = $links;
         }
 
         return $landings;

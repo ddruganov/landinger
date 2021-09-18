@@ -12,10 +12,11 @@ use yii\db\Query;
 
 /**
  * @property int $id
- * @property string $creation_date
- * @property int $creator_id
+ * @property string $creationDate
+ * @property int $creatorId
  * @property string $name
  * @property string $alias
+ * @property int $backgroundId
  */
 class Landing extends ExtendedActiveRecord implements CreatableInterface
 {
@@ -29,10 +30,10 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creation_date', 'creator_id', 'name', 'alias'], 'required'],
+            [['creation_date', 'creator_id', 'name', 'alias', 'background_id'], 'required'],
             [['name', 'alias'], 'string'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id'], 'integer'],
+            [['creator_id', 'background_id'], 'integer'],
             [['links'], 'filter', 'filter' => function (array $value) {
                 $current_model_ids = (new Query())
                     ->select(['id'])
@@ -64,6 +65,7 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
             'alias' => md5(microtime() . rand()),
             'creationDate' => DateHelper::now(),
             'creatorId' => $attributes['userId'],
+            'backgroundId' => LandingBackground::NEUTRAL
         ]);
 
         return new ExecutionResult(

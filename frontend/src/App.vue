@@ -13,5 +13,11 @@ import PromptModal from "./plugins/prompt/PromptModal.vue";
 @Options({
   components: { Notifications, PromptModal },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  mounted() {
+    window.addEventListener("dragover", (e: DragEvent) => {
+      e.preventDefault();
+    });
+  }
+}
 </script>

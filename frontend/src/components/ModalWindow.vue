@@ -1,12 +1,12 @@
 <template>
   <transition name="fade">
-    <div v-if="isShowing" :id="id" @click="closeModal" class="mw" :class="{ show: isShowing }">
+    <div v-if="isShowing" :id="id" @click="(e) => close(e)" class="mw" :class="{ show: isShowing }">
       <div class="backdrop" :class="{ [modalClass]: modalClass }">
         <div class="content-wrapper">
           <div v-if="!hideHeader" class="header">
             <div class="header-wrapper">
               <slot name="title" />
-              <i class="close-icon fas fa-times" @click="closeModal" />
+              <i class="close-icon fas fa-times" @click="(e) => close(e)" />
             </div>
           </div>
           <div class="body">
@@ -77,9 +77,9 @@ export default class ModalWindowComponent extends Vue {
   }
 
   close(e: MouseEvent) {
-    const containsModelClass = (e.target as HTMLElement).classList.contains(this.modalClass);
+    const containsModalClass = (e.target as HTMLElement).classList.contains(this.modalClass);
     const containsCloseIcon = (e.target as HTMLElement).classList.contains("close-icon");
-    this.isShowing = !(containsModelClass || containsCloseIcon);
+    (containsModalClass || containsCloseIcon) && this.forceClose();
   }
 
   forceClose() {

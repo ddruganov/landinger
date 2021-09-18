@@ -1,8 +1,8 @@
 <template>
-  <div class="landing-grid mt-5">
+  <div class="landing-grid">
     <div class="card-container">
       <div class="view-card create-landing" @click="() => createLanding()">
-        <h5 class="header">Создать новый</h5>
+        <h5 class="header">Новый лендинг</h5>
         <i class="icon fas fa-plus my-auto" />
       </div>
     </div>
