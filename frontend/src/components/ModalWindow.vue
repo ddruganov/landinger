@@ -74,6 +74,7 @@ export default class ModalWindowComponent extends Vue {
 
   show() {
     this.isShowing = true;
+    this.$emit("show");
   }
 
   close(e: MouseEvent) {

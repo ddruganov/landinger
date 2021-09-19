@@ -108,15 +108,15 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
       .catch((e) => appInstance.$notifications.error(e.message, "Ошибка создания ссылки"))
   }
 
-  [DELETE_LANDING_LINK](id: number): Promise<boolean> {
+  [DELETE_LANDING_LINK]({ landingId, id }: { landingId: number; id: number }): Promise<boolean> {
     return new Promise((resolve) => {
-      Api.landing.link.delete(id)
+      Api.landing.link.delete(landingId, id)
         .then((response) => {
           if (response.exception) {
             throw new Error(response.exception);
           }
 
-          this.commit(DELETE_LANDING_LINK, id);
+          this.commit(DELETE_LANDING_LINK, { landingId: landingId, id: id });
           appInstance.$notifications.success("Ссылка успешно удалена")
           resolve(true);
         })
@@ -163,10 +163,9 @@ class LandingMutations extends Mutations<LandingState> {
     this.state.landings = this.state.landings.filter(landing => landing.id !== payload);
   }
 
-  [DELETE_LANDING_LINK](payload: number): void {
-    this.state.landings.forEach(landing => {
-      landing.links = landing.links.filter(link => link.id !== payload);
-    });
+  [DELETE_LANDING_LINK]({ landingId, id }: { landingId: number; id: number }): void {
+    const landing = this.state.landings.find(landing => landing.id === landingId)!;
+    landing.links = landing.links.filter(link => link.id !== id);
   }
 
   [ADD_LINK](payload: { landingId: number, link: LandingLink }): void {

@@ -3,18 +3,17 @@
 namespace app\collectors\landing;
 
 use app\collectors\AbstractDataCollector;
-use app\models\landing\LandingBackground;
-use yii\db\Query;
 
 class LandingCommonCollector extends AbstractDataCollector
 {
     public function get(): array
     {
         return [
-            'backgrounds' => (new Query())
-                ->select(['id', 'name', 'value'])
-                ->from(LandingBackground::tableName())
-                ->all()
+            'backgroundPresets' => [
+                'color' => '#dddddd',
+                'gradient' => 'linear-gradient(0deg, rgb(0, 0, 0) 0%, rgb(1, 122, 200) 100%)',
+                'image' => 'url(https://picsum.photos/100/100) no-repeat'
+            ]
         ];
     }
 }

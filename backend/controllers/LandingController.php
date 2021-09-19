@@ -21,10 +21,13 @@ class LandingController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'common'  => ['GET'],
                     'all'  => ['GET'],
                     'create' => ['POST'],
                     'save' => ['PATCH'],
+                    'delete' => ['DELETE'],
                     'create_link' => ['POST'],
+                    'delete_link' => ['DELETE'],
                 ],
             ],
         ];

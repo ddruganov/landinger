@@ -10,6 +10,6 @@ export default class LandingApi {
 
   link = {
     create: (landingId: number) => Requestor.post("/landing/create_link", { landingId: landingId }),
-    delete: (id: number) => Requestor.post("/landing/delete_link", { id: id })
+    delete: (landingId: number, id: number) => Requestor.delete("/landing/delete_link", { landingId: landingId, id: id })
   }
 }

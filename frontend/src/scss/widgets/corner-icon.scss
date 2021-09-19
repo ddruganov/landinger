@@ -1,0 +1,23 @@
+.corner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: 0.5s all ease;
+  background-color: $primary;
+  border-radius: 0 $border-radius-smooth 0 $border-radius-smooth;
+  &:hover {
+    background-color: $dark-primary;
+  }
+
+  & > .icon {
+    font-size: 1rem;
+    color: $white;
+  }
+}

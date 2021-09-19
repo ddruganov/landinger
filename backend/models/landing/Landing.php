@@ -16,7 +16,7 @@ use yii\db\Query;
  * @property int $creatorId
  * @property string $name
  * @property string $alias
- * @property int $backgroundId
+ * @property string $background
  */
 class Landing extends ExtendedActiveRecord implements CreatableInterface
 {
@@ -30,10 +30,10 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creation_date', 'creator_id', 'name', 'alias', 'background_id'], 'required'],
-            [['name', 'alias'], 'string'],
+            [['creation_date', 'creator_id', 'name', 'alias', 'background'], 'required'],
+            [['name', 'alias', 'background'], 'string'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id', 'background_id'], 'integer'],
+            [['creator_id'], 'integer'],
             [['links'], 'filter', 'filter' => function (array $value) {
                 $current_model_ids = (new Query())
                     ->select(['id'])
@@ -65,15 +65,15 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
             'alias' => md5(microtime() . rand()),
             'creationDate' => DateHelper::now(),
             'creatorId' => $attributes['userId'],
-            'backgroundId' => LandingBackground::NEUTRAL
+            'background' => LandingBackground::NEUTRAL
         ]);
 
         return new ExecutionResult(
             $model->save(),
             $model->getFirstErrors(),
-            @reset((new LandingAllCollector())
+            (new LandingAllCollector())
                 ->setIds([$model->id])
-                ->get())
+                ->one()
         );
     }
 

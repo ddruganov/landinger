@@ -2,21 +2,9 @@
 
 namespace app\models\landing;
 
-use app\components\ExtendedActiveRecord;
-
-/**
- * @property int $id
- * @property string $name
- * @property string $value
- */
-class LandingBackground extends ExtendedActiveRecord
+class LandingBackground
 {
-    public const STANDART = 1;
-    public const GRADIENT = 2;
-    public const NEUTRAL = 3;
-
-    public static function tableName()
-    {
-        return 'landing.landing_background';
-    }
+    public const STANDART = '#000';
+    public const GRADIENT = 'linear-gradient(0deg, rgb(0, 0, 0) 0%, rgb(1, 122, 200) 100%)';
+    public const NEUTRAL = '#ddd';
 }

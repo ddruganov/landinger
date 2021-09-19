@@ -6,7 +6,6 @@
     <template v-for="(item, i) in items" :key="i">
       <div
         class="block"
-        :data-block-index="i"
         draggable="true"
         @dragstart="() => onDragStart(i)"
         @dragover="(e) => onDragOver(e, i)"
@@ -22,14 +21,20 @@
     </template>
   </div>
 </template>
+
 <script lang="ts">
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
-export default class DraggableList extends Vue {
-  @Prop(Array) readonly modelValue!: any[];
+type DraggableItem = {
+  [key: string]: any;
+  weight: number;
+};
 
-  private items: any[] = [];
+export default class DraggableList extends Vue {
+  @Prop(Array) readonly modelValue!: DraggableItem[];
+
+  private items: DraggableItem[] = [];
   mounted() {
     this.items = this.modelValue;
   }
@@ -62,8 +67,7 @@ export default class DraggableList extends Vue {
     this.draggedOverItemIndex = draggedOverItemIndex;
 
     this.insertAfter = newValue;
-    const blockIndex = Number(target.dataset.blockIndex) + (newValue ? 0 : -1);
-    this.highlightSpacer(blockIndex);
+    this.highlightSpacer(draggedOverItemIndex + (newValue ? 0 : -1));
   }
 
   private onDragEnd() {
@@ -74,13 +78,19 @@ export default class DraggableList extends Vue {
   }
 
   private recalcWeights() {
+    // cannot place item before/after itself
     if (this.draggedItemIndex === this.draggedOverItemIndex) {
+      return;
+    }
+
+    // cannot place item before next or after previous item
+    if (this.draggedItemIndex === this.draggedOverItemIndex + (this.insertAfter ? 1 : -1)) {
       return;
     }
 
     const draggedItem = this.items[this.draggedItemIndex];
     this.items.splice(this.draggedItemIndex, 1);
-    this.items.splice(this.draggedOverItemIndex, 0, draggedItem);
+    this.items.splice(this.draggedOverItemIndex + (this.insertAfter ? 1 : 0), 0, draggedItem);
     this.items.forEach((item, index) => {
       item.weight = (index + 1) * 10;
     });
@@ -95,6 +105,10 @@ export default class DraggableList extends Vue {
       ?.querySelectorAll(".spacer")
       .forEach((spacer) => {
         spacer.classList.remove("active");
+        if (index === undefined) {
+          return;
+        }
+
         const spacerIndex = Number((spacer as HTMLDivElement).dataset.spacerIndex);
         spacerIndex === index && spacer.classList.add("active");
       });

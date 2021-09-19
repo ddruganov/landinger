@@ -14,7 +14,7 @@ class LandingAllCollector extends AbstractDataCollector
     public function get(): array
     {
         $query = (new Query())
-            ->select(['id', 'name', 'alias', 'backgroundId' => 'background_id'])
+            ->select(['id', 'name', 'alias', 'background'])
             ->from(Landing::tableName())
             ->where(['creator_id' => $this->getParam('userId')])
             ->orderBy(['id' => SORT_DESC]);
@@ -38,6 +38,11 @@ class LandingAllCollector extends AbstractDataCollector
         }
 
         return $landings;
+    }
+
+    public function one(): array
+    {
+        return @reset($this->get());
     }
 
     public function setIds(array $value): static

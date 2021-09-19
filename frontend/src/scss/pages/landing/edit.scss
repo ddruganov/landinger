@@ -29,9 +29,13 @@
     .block {
       width: 100%;
       flex-direction: column;
+      transition: 0.25s all linear;
       &.create {
         justify-content: space-between;
         border: 1px solid $white !important;
+        * {
+          transition: 0.25s all linear;
+        }
         & > .header {
           margin-bottom: 1rem !important;
         }
@@ -45,6 +49,12 @@
             color: $primary;
           }
         }
+      }
+    }
+
+    .draggable-list {
+      & > .block {
+        position: relative;
       }
     }
   }
@@ -72,6 +82,14 @@
         height: 2rem;
         border: 1px solid white;
       }
+    }
+  }
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .button:last-child {
+      margin-left: 1rem;
     }
   }
 }

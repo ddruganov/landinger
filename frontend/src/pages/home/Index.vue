@@ -12,7 +12,7 @@
         <h5 class="header">{{ landing.name }}</h5>
         <i class="icon fas fa-pen my-auto" />
       </router-link>
-      <i class="icon corner delete fas fa-times" @click="() => deleteLanding(landing.id)" />
+      <corner-icon icon="fas fa-times" @click="() => deleteLanding(landing.id)" />
     </div>
   </div>
 </template>
@@ -25,9 +25,13 @@
 </style>
 
 <script lang="ts">
+import CornerIcon from "@/components/CornerIcon.vue";
 import { CREATE_LANDING, DELETE_LANDING, landingStore } from "@/store/modules/landing.store";
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 
+@Options({
+  components: { CornerIcon },
+})
 export default class HomeIndex extends Vue {
   get landings() {
     return landingStore.context(this.$store).getters.landings;

@@ -1,7 +1,7 @@
 <template>
-  <router-link :to="link" class="fc d-flex align-items-center link-primary">
-    <i class="fas fa-chevron-left" />
-    <span class="ms-1">назад</span>
+  <router-link :to="link" class="go-back fc">
+    <i class="icon fas fa-chevron-left" />
+    <span class="caption">&nbsp;назад</span>
   </router-link>
 </template>
 

@@ -1,0 +1,28 @@
+.go-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > * {
+    color: $primary;
+    cursor: pointer;
+    transition: 0.25s linear all;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &:hover {
+    & > * {
+      color: $dark-primary;
+      text-decoration: underline !important;
+    }
+  }
+  &:active {
+    & > * {
+      color: $darker-primary;
+    }
+  }
+}

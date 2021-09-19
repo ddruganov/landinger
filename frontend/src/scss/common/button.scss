@@ -35,4 +35,16 @@ button.button {
       border-color: $dark-red;
     }
   }
+
+  &.white {
+    background: $white;
+    color: $primary;
+    &:hover {
+      background: $primary;
+      color: $white;
+    }
+    &:active {
+      background: $darker-primary;
+    }
+  }
 }
