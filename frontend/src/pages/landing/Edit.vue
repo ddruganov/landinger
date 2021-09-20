@@ -35,22 +35,21 @@
     <modal-window id="chooseBackground" @show="() => (newBackground = landing.background)">
       <template #title>Выберите фон лендинга</template>
       <template #body>
-        <tabs
-          :items="[{ name: 'Цвет' }, { name: 'Градиент' }, { name: 'Изображение' }]"
-          @switch="(index) => onTabSwitch(index)"
-        >
-          <template #tab0>
+        <tabs :items="backgroundTypes" @switch="(item) => onTabSwitch(item)">
+          <template #tab0="{item}">
             <div class="p-3 mt-3">
               <input type="color" v-model="newBackground" />
             </div>
           </template>
-          <template #tab1
+          <template #tab1="{item}"
             ><div class="p-3 mt-3">
+              {{ item }}
               tab 2
             </div></template
           >
-          <template #tab2
+          <template #tab2="{item}"
             ><div class="p-3 mt-3">
+              {{ item }}
               tab 3
             </div></template
           >
@@ -74,6 +73,7 @@ import DraggableList from "@/components/DraggableList.vue";
 import ModalWindow from "@/components/ModalWindow.vue";
 import CornerIcon from "@/components/CornerIcon.vue";
 import Tabs from "@/components/Tabs.vue";
+import LandingBackgroundType from "@/types/landing/LandingBackgroundType";
 
 @Options({
   components: { FormInput, FormGroup, GoBack, DraggableList, ModalWindow, CornerIcon, Tabs },
@@ -117,16 +117,12 @@ export default class LandingEdit extends Vue {
     this.newBackground = this.landing.background;
   }
 
-  get backgroundPresets() {
-    return landingStore.context(this.$store).getters.common.backgroundPresets;
+  get backgroundTypes() {
+    return landingStore.context(this.$store).getters.common.background.types;
   }
 
-  get backgroundTabDictionary() {
-    return ["color", "gradient", "image"];
-  }
-
-  private onTabSwitch(index: number) {
-    this.newBackground = this.backgroundPresets[this.backgroundTabDictionary[index]];
+  private onTabSwitch(tabItem: LandingBackgroundType) {
+    this.newBackground = tabItem.default;
   }
 }
 </script>

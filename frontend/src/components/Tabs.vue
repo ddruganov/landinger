@@ -11,7 +11,7 @@
       >
     </div>
     <div class="body">
-      <slot :name="`tab${activeTab}`" />
+      <slot :name="`tab${activeTab}`" :item="items[activeTab]" />
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ export default class Tabs extends Vue {
 
   private setActiveTab(index: number) {
     this.activeTab = index;
-    this.$emit("switch", index);
+    this.$emit("switch", this.items[this.activeTab]);
   }
 }
 </script>

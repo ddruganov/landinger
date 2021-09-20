@@ -1,19 +1,36 @@
 import Api from "@/common/api";
 import appInstance from "@/main";
 import Landing from "@/types/landing/Landing";
+import LandingBackgroundType from "@/types/landing/LandingBackgroundType";
 import LandingLink from "@/types/landing/LandingLink";
 import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
+
+type LandingCommon = {
+  background: {
+    types: LandingBackgroundType[]
+  }
+};
 
 // State
 class LandingState {
   landings: Landing[] = [];
-  common: any;
+  common: LandingCommon = {
+    background: {
+      types: []
+    }
+  };
 }
 
 // Getters
 class LandingGetters extends Getters<LandingState> {
   get common() {
     return this.state.common;
+  }
+  get backgroundIds() {
+    return this.state.common.background.types.map(type => type.id);
+  }
+  backgroundById(id: number) {
+    return this.state.common.background.types.find(type => type.id === id);
   }
   get landings() {
     return this.state.landings;

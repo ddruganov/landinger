@@ -4,7 +4,9 @@ namespace app\models\landing;
 
 class LandingBackground
 {
-    public const STANDART = '#000';
-    public const GRADIENT = 'linear-gradient(0deg, rgb(0, 0, 0) 0%, rgb(1, 122, 200) 100%)';
-    public const NEUTRAL = '#ddd';
+    public const DEFAULT = '#ddd';
+
+    public const COLOR_TYPE = 1;
+    public const GRADIENT_TYPE = 2;
+    public const IMAGE_TYPE = 3;
 }

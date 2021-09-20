@@ -14,7 +14,7 @@ class LandingAllCollector extends AbstractDataCollector
     public function get(): array
     {
         $query = (new Query())
-            ->select(['id', 'name', 'alias', 'background'])
+            ->select(['id', 'name', 'alias', 'background', 'backgroundTypeId' => 'background_type_id'])
             ->from(Landing::tableName())
             ->where(['creator_id' => $this->getParam('userId')])
             ->orderBy(['id' => SORT_DESC]);
