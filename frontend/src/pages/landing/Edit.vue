@@ -36,9 +36,9 @@
       <template #title>Выберите фон лендинга</template>
       <template #body>
         <tabs :items="backgroundTypes" @switch="(item) => onTabSwitch(item)">
-          <template #tab0="{item}">
+          <template #tab0>
             <div class="p-3 mt-3">
-              <input type="color" v-model="newBackground" />
+              <color-picker v-model="newBackground" />
             </div>
           </template>
           <template #tab1="{item}"
@@ -74,9 +74,10 @@ import ModalWindow from "@/components/ModalWindow.vue";
 import CornerIcon from "@/components/CornerIcon.vue";
 import Tabs from "@/components/Tabs.vue";
 import LandingBackgroundType from "@/types/landing/LandingBackgroundType";
+import ColorPicker from "@/components/ColorPicker.vue";
 
 @Options({
-  components: { FormInput, FormGroup, GoBack, DraggableList, ModalWindow, CornerIcon, Tabs },
+  components: { FormInput, FormGroup, GoBack, DraggableList, ModalWindow, CornerIcon, Tabs, ColorPicker },
 })
 export default class LandingEdit extends Vue {
   private newBackground: string = "";

@@ -55,6 +55,10 @@ export default class DraggableList extends Vue {
   }
 
   private onDragOver(e: DragEvent, draggedOverItemIndex: number) {
+    if (!this.isDragging) {
+      return;
+    }
+
     const target = e.target as HTMLDivElement;
     const boundingRect = target.getBoundingClientRect();
     const centerY = boundingRect.y + boundingRect.height / 2;
