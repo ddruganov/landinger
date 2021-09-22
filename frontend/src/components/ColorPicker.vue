@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex align-items-center">
-    <div class="color-fields" @mousemove="(e) => placeDot(e)">
+  <div class="color-picker">
+    <div class="color-fields" @click="(e) => placeDot(e)" @mousemove="(e) => placeDot(e)">
       <div
         class="color-field"
         :style="`background: linear-gradient(to right, white 0%, hsl(${hue}, 100%, 50%) 100%);`"
@@ -11,71 +11,81 @@
 
     <div class="color-slider ml-5">
       <input class="input" type="range" min="0" max="360" v-model="hue" />
-      <div class="handle" :style="`left: ${(hue / 360) * 100}%`" />
+      <div class="handle" :style="`left: calc(${(hue / 360) * 100}% - 0.25rem)`" />
     </div>
 
-    {{ hue }} {{ saturation }} {{ lightness }}
     <div class="output-color" :style="`background-color: hsl(${hue}, ${saturation}%, ${lightness}%)`" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.color-fields {
-  position: relative;
-  width: 200px;
+.color-picker {
+  display: flex;
+  align-items: center;
   height: 200px;
-  .color-field {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  user-select: none !important;
+  * {
+    user-select: none !important;
   }
-  .dot {
-    border: 3px solid yellow;
-    border-radius: 100%;
-    width: 1rem;
-    height: 1rem;
-    position: absolute;
-    pointer-events: none;
-  }
-}
-.color-slider {
-  width: 200px;
-  height: 30px;
-  transform-origin: 100px 15px;
-  transform: rotate(-90deg);
-  background: linear-gradient(to right, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 66%, #f0f 83%, red 100%);
-  position: relative;
 
-  & > .input {
-    width: 100%;
+  .color-fields {
+    position: relative;
+    width: 200px;
     height: 100%;
-    appearance: none;
-    opacity: 0;
-
-    &::-webkit-slider-runnable-track {
-      opacity: 0;
+    .color-field {
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
-    &::-moz-range-track {
-      opacity: 0;
-    }
-    &::-ms-track {
-      opacity: 0;
+    .dot {
+      border: 3px solid yellow;
+      border-radius: 100%;
+      width: 1rem;
+      height: 1rem;
+      position: absolute;
+      pointer-events: none;
     }
   }
-  & > .handle {
-    position: absolute;
-    height: 100%;
-    width: 0.5rem;
-    border: 1px solid #666;
-    border-radius: 5px;
-    top: 0;
-    pointer-events: none;
-  }
-}
+  .color-slider {
+    width: 200px;
+    height: 30px;
+    transform-origin: 100px 15px;
+    transform: rotate(-90deg);
+    background: linear-gradient(to right, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 66%, #f0f 83%, red 100%);
+    position: relative;
 
-.output-color {
-  width: 50px;
-  height: 50px;
+    & > .input {
+      width: 100%;
+      height: 100%;
+      appearance: none;
+      opacity: 0;
+
+      &::-webkit-slider-runnable-track {
+        opacity: 0;
+      }
+      &::-moz-range-track {
+        opacity: 0;
+      }
+      &::-ms-track {
+        opacity: 0;
+      }
+    }
+    & > .handle {
+      position: absolute;
+      height: 100%;
+      width: 0.5rem;
+      border: 1px solid #666;
+      border-radius: 5px;
+      top: 0;
+      pointer-events: none;
+    }
+  }
+
+  .output-color {
+    width: 50px;
+    height: 50px;
+  }
 }
 </style>
 
@@ -104,7 +114,7 @@ export default class ColorPicker extends Vue {
   }
 
   private placeDot(e: PointerEvent) {
-    if (!e.buttons || e.button !== 0) {
+    if ((e.type === "mousemove" && !e.buttons) || e.button !== 0) {
       return;
     }
 
@@ -112,8 +122,18 @@ export default class ColorPicker extends Vue {
       x: e.offsetX,
       y: e.offsetY,
     };
+
     const target = e.target as HTMLDivElement;
-    this.saturation = Math.round((this.dotCoords.x / target.getBoundingClientRect().width) * 100);
+
+    const boundingRect = target.getBoundingClientRect();
+    const xNormalized = this.dotCoords.x / boundingRect.width;
+    const yNormalized = this.dotCoords.y / boundingRect.height;
+
+    this.saturation = Math.round(xNormalized * 100);
+
+    const leftRange = 100 - Math.round(yNormalized * 100);
+    const rightRange = 50 - Math.round(yNormalized * 50);
+    this.lightness = Math.round(leftRange - xNormalized * rightRange);
   }
 }
 </script>
