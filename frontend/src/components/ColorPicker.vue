@@ -14,7 +14,7 @@
       <div class="handle" :style="`left: calc(${(hue / 360) * 100}% - 0.25rem)`" />
     </div>
 
-    <div class="output-color" :style="`background-color: hsl(${hue}, ${saturation}%, ${lightness}%)`" />
+    <div class="output-color" :style="`background-color: hsl(${hue}, ${saturation}%, ${luminocity}%)`" />
   </div>
 </template>
 
@@ -22,8 +22,11 @@
 .color-picker {
   display: flex;
   align-items: center;
-  height: 200px;
-  width: 100%;
+  flex-direction: column;
+  // height: 200px;
+  // width: 100%;
+  width: 200px;
+  height: 100%;
   user-select: none !important;
   * {
     user-select: none !important;
@@ -31,8 +34,11 @@
 
   .color-fields {
     position: relative;
-    width: 200px;
-    height: 100%;
+    // width: 200px;
+    // height: 100%;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 1rem;
     .color-field {
       position: absolute;
       width: 100%;
@@ -50,8 +56,9 @@
   .color-slider {
     width: 200px;
     height: 30px;
-    transform-origin: 100px 15px;
-    transform: rotate(-90deg);
+    margin-bottom: 1rem;
+    // transform-origin: 100px 15px;
+    // transform: rotate(-90deg);
     background: linear-gradient(to right, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 66%, #f0f 83%, red 100%);
     position: relative;
 
@@ -91,27 +98,23 @@
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 
 export default class ColorPicker extends Vue {
   @Prop(String) modelValue!: string;
 
+  @Watch("hue") onHueChanged() {
+    this.emitUpdate();
+  }
+
   private hue: number = 0;
   private saturation: number = 0;
-  private lightness: number = 0;
+  private luminocity: number = 0;
 
   private dotCoords: { x: number; y: number } = {
     x: 0,
     y: 0,
   };
-
-  private hexToDec(hex: string) {
-    return parseInt(hex, 16);
-  }
-
-  private decToHex(dec: number) {
-    return dec.toString(16);
-  }
 
   private placeDot(e: PointerEvent) {
     if ((e.type === "mousemove" && !e.buttons) || e.button !== 0) {
@@ -133,7 +136,13 @@ export default class ColorPicker extends Vue {
 
     const leftRange = 100 - Math.round(yNormalized * 100);
     const rightRange = 50 - Math.round(yNormalized * 50);
-    this.lightness = Math.round(leftRange - xNormalized * rightRange);
+    this.luminocity = Math.round(leftRange - xNormalized * rightRange);
+
+    this.emitUpdate();
+  }
+
+  private emitUpdate() {
+    this.$emit("update:modelValue", `hsl(${this.hue}, ${this.saturation}%, ${this.luminocity}%)`);
   }
 }
 </script>
