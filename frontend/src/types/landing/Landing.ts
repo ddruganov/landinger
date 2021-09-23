@@ -5,6 +5,7 @@ type Landing = {
     name: string;
     alias: string;
     background: string;
+    backgroundTypeId: number;
     links: LandingLink[];
 };
 export default Landing;

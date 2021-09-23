@@ -3,7 +3,7 @@
     <div
       class="landing-edit-container"
       :key="reloadPageKey"
-      :style="`background: ${newBackground || landing.background}`"
+      :style="`background: ${newBackground.value || landing.background}`"
       style="background-size: cover"
     >
       <div class="block topbar">
@@ -32,21 +32,24 @@
       </div>
     </div>
 
-    <modal-window id="chooseBackground" @show="() => (newBackground = landing.background)">
+    <modal-window id="chooseBackground" @show="() => resetBackground()">
       <template #title>Выберите фон лендинга</template>
       <template #body>
-        <tabs :items="backgroundTypes" @switch="(item) => onTabSwitch(item)">
+        <tabs :items="backgroundTypes" @switch="(item) => onTabSwitch(item)" :startValue="this.newBackground.typeId">
           <template #tab0>
             <div class="p-3 mt-3">
-              <color-picker v-model="newBackground" />
+              <color-picker v-model="newBackground.value" />
             </div>
           </template>
-          <template #tab1="{item}"
-            ><div class="p-3 mt-3">
-              {{ item }}
-              tab 2
-            </div></template
-          >
+          <template #tab1>
+            <div class="p-3 mt-3">
+              <span>Начальный цвет</span>
+              <color-picker @change="(hsl) => handleGradientChange('start', hsl)" />
+
+              <span>Конечный цвет</span>
+              <color-picker @change="(hsl) => handleGradientChange('end', hsl)" />
+            </div>
+          </template>
           <template #tab2="{item}"
             ><div class="p-3 mt-3">
               {{ item }}
@@ -80,7 +83,11 @@ import ColorPicker from "@/components/ColorPicker.vue";
   components: { FormInput, FormGroup, GoBack, DraggableList, ModalWindow, CornerIcon, Tabs, ColorPicker },
 })
 export default class LandingEdit extends Vue {
-  private newBackground: string = "";
+  private newBackground: { typeId: number; value: string; params: { [key: string]: any } } = {
+    typeId: 1,
+    value: "",
+    params: {},
+  };
 
   private reloadPageKey: number = 0;
 
@@ -110,12 +117,19 @@ export default class LandingEdit extends Vue {
   }
 
   private applyBackground() {
-    this.landing.background = this.newBackground;
+    this.landing.background = this.newBackground.value;
+    this.landing.backgroundTypeId = this.newBackground.typeId;
     this.resetBackground();
+
+    window.dispatchEvent(new CustomEvent("modal.chooseBackground.close"));
   }
 
   private resetBackground() {
-    this.newBackground = this.landing.background;
+    this.newBackground = {
+      typeId: this.landing.backgroundTypeId,
+      value: this.landing.background,
+      params: {},
+    };
   }
 
   get backgroundTypes() {
@@ -123,7 +137,23 @@ export default class LandingEdit extends Vue {
   }
 
   private onTabSwitch(tabItem: LandingBackgroundType) {
-    this.newBackground = tabItem.default;
+    this.newBackground = {
+      typeId: tabItem.id,
+      value: this.landing.backgroundTypeId === tabItem.id ? this.landing.background : tabItem.default,
+      params:
+        tabItem.id === 2
+          ? {
+              start: "rgb(1, 122, 200)",
+              end: "rgb(0, 0, 0)",
+            }
+          : {},
+    };
+  }
+
+  handleGradientChange(point: string, hsl: string) {
+    this.newBackground.params[point] = hsl;
+
+    this.newBackground.value = `linear-gradient(${this.newBackground.params["start"]} 0%, ${this.newBackground.params["end"]} 100%)`;
   }
 }
 </script>

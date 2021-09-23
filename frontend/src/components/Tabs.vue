@@ -26,11 +26,12 @@ type Tab = {
 
 export default class Tabs extends Vue {
   @Prop(Array) readonly items!: Tab[];
+  @Prop(Number) readonly startValue!: number;
 
   private activeTab: number = 0;
 
   mounted() {
-    this.setActiveTab(0);
+    this.setActiveTab((this.startValue || 1) - 1);
   }
 
   private setActiveTab(index: number) {
