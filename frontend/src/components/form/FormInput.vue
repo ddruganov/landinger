@@ -12,7 +12,7 @@
     <input
       v-else
       class="input"
-      type="text"
+      :type="type"
       v-model="input"
       @input.stop="() => onInput()"
       @change.stop="() => onChange()"
@@ -30,7 +30,7 @@ import { Prop, Watch } from "vue-property-decorator";
 
 export default class FormInput extends Vue {
   @Prop({ type: [String, Number] }) readonly modelValue!: string;
-  @Prop(String) readonly type!: string;
+  @Prop({ type: String, default: "text" }) readonly type!: string;
   @Prop(String) readonly label!: string;
   @Prop(String) readonly error!: string;
   @Prop(Number) readonly inputEventDelay!: number;

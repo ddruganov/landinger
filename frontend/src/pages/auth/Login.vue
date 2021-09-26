@@ -1,28 +1,30 @@
 <template>
-  <h3 class="text-center">Вход</h3>
-  <div class="email mb-1">
-    <input class="form-control" type="email" placeholder="Введите email" v-model="credentials.email" />
-    <div class="error" v-if="errors.email">
-      {{ errors.email }}
+  <div class="login block column">
+    <h3 class="caption">Вход в Flinq</h3>
+
+    <form-input v-model="credentials.email" label="email" :error="errors.email" />
+    <form-input v-model="credentials.password" label="пароль" :error="errors.password" type="password" />
+
+    <button :disabled="requestCommencing" class="login button" @click="() => login()">
+      Войти
+    </button>
+
+    <div class="links">
+      <router-link class="link" to="/auth/register">регистрация</router-link>
     </div>
   </div>
-  <div class="password mb-1">
-    <input class="form-control" placeholder="Введите пароль" type="password" v-model="credentials.password" />
-    <div class="error" v-if="errors.password">
-      {{ errors.password }}
-    </div>
-  </div>
-  <button :disabled="requestCommencing" class="btn btn-block btn-primary lh-normal w-100 mb-3" @click="login()">
-    Войти
-  </button>
 </template>
 
 <script lang="ts">
 import Api from "@/common/api";
+import FormInput from "@/components/form/FormInput.vue";
 import { authStore, SET_AUTHENTICATED } from "@/store/modules/auth.store";
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
+@Options({
+  components: { FormInput },
+})
 export default class AuthLogin extends Vue {
   @Prop(String) readonly backurl?: string;
 

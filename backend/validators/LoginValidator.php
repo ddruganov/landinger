@@ -42,4 +42,11 @@ class LoginValidator extends Model
     {
         return User::findOne(['email' => $this->email]);
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'password' => 'Пароль'
+        ];
+    }
 }

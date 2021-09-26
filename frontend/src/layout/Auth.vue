@@ -1,9 +1,7 @@
 <template>
-  <div class="root">
-    <div class="container content d-flex align-items-center justify-content-center">
-      <div class="login-wrapper rounded-10 p-5 bg-white">
-        <router-view />
-      </div>
+  <div class="auth-layout">
+    <div class="auth-wrapper">
+      <router-view />
     </div>
   </div>
 </template>

@@ -9,4 +9,7 @@
   &.column {
     flex-direction: column;
   }
+  &.no-flex {
+    flex: unset;
+  }
 }
