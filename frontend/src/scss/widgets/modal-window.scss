@@ -11,7 +11,7 @@
   }
 
   .backdrop {
-    background: rgba($black, 0.25);
+    // background: rgba($black, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,6 +21,9 @@
       padding: 1rem;
       background: $white;
       border-radius: $border-radius-smooth;
+      border: 1px solid rgba($primary, 0.5);
+      box-shadow: 0px 0px 3rem 1rem rgba($black, 0.5);
+
       width: 100%;
       max-width: 500px;
       display: flex;
@@ -50,6 +53,7 @@
       & > .body {
         display: flex;
         flex-direction: column;
+        width: 100%;
       }
 
       & > * {

@@ -3,6 +3,7 @@
 namespace app\controllers\actions\generic;
 
 use app\collectors\AbstractDataCollector;
+use app\components\ErrorLog;
 use app\components\ExecutionResult;
 use app\components\helpers\UserHelper;
 use app\controllers\actions\ApiAction;
@@ -40,6 +41,7 @@ class CollectorAction extends ApiAction
 
             return $this->apiResponse(new ExecutionResult(true, [], $this->collector->get()));
         } catch (Throwable $t) {
+            ErrorLog::log($t->getMessage(), $t->getTraceAsString());
             return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
     }

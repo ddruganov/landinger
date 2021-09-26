@@ -1,50 +1,78 @@
 <template>
   <div class="color-picker">
-    <div class="color-fields" @click="(e) => placeDot(e)" @mousemove="(e) => placeDot(e)">
-      <div
-        class="color-field"
-        :style="`background: linear-gradient(to right, white 0%, hsl(${hue}, 100%, 50%) 100%);`"
-      />
-      <div class="color-field" :style="`background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, black 100%);`" />
-      <div class="dot" :style="`top: calc(${dotCoords.y}px - 0.5rem); left: calc(${dotCoords.x}px - 0.5rem)`" />
-    </div>
+    <div class="top-row">
+      <div class="color-fields" @click="(e) => placeDot(e)" @mousemove="(e) => placeDot(e)">
+        <div
+          class="color-field"
+          :style="`background: linear-gradient(to right, white 0%, hsl(${hsl.h}, 100%, 50%) 100%);`"
+        />
+        <div class="color-field" :style="`background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, black 100%);`" />
+        <div class="dot" :style="`top: calc(${dotCoords.y}% - 0.5rem); left: calc(${dotCoords.x}% - 0.5rem)`" />
+      </div>
 
-    <div class="color-slider" @click="(e) => placeHandle(e)" @mousemove="(e) => placeHandle(e)">
-      <div class="handle" :style="`top: calc(${(hue / 360) * 100}% - 0.25rem)`" />
+      <div class="color-slider" @click="(e) => placeHandle(e)" @mousemove="(e) => placeHandle(e)">
+        <div class="handle" :style="`top: calc(${(hsl.h / 360) * 100}% - 0.25rem)`" />
+      </div>
     </div>
-
-    <div class="output-color" :style="`background-color: hsl(${hue}, ${saturation}%, ${luminocity}%)`" />
+    <div class="rgb-inputs">
+      <form-input v-model="rgb.r" label="R" @change="() => handleRGBChange()" />
+      <form-input v-model="rgb.g" label="G" @change="() => handleRGBChange()" />
+      <form-input v-model="rgb.b" label="B" @change="() => handleRGBChange()" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop, Watch } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+import FormInput from "./form/FormInput.vue";
+import RGB from "@/types/color/RGB";
+import HSL from "@/types/color/HSL";
+import { hslToRgb, rgbToHsl } from "@/common/service/color.helper";
 
+@Options({
+  components: { FormInput },
+})
 export default class ColorPicker extends Vue {
   @Prop(String) modelValue!: string;
 
-  @Watch("hue") onHueChanged() {
-    this.emitUpdate();
-  }
+  private rgb: RGB = {
+    r: 0,
+    g: 0,
+    b: 0,
+  };
 
-  private hue: number = 0;
-  private saturation: number = 0;
-  private luminocity: number = 0;
+  private hsl: HSL = {
+    h: 0,
+    s: 0,
+    l: 0,
+  };
 
   mounted() {
-    // parse modelValue hsl and set initial values
-    const values = this.modelValue
-      .replaceAll("%", "")
-      .replace("hsl(", "")
-      .replace(")", "")
-      .split(",")
-      .map((val) => Number(val.trim()));
-    this.hue = values[0];
-    this.saturation = values[1];
-    this.luminocity = values[2];
+    this.parseModelValue();
+  }
 
-    this.dotCoords.x = this.saturation;
+  private parseModelValue() {
+    // parse modelValue hsl and set initial values
+    // most likely not the best way to do so
+    const values = this.modelValue.split(",").map((val) => Number(val));
+    this.setHSL({
+      h: values[0],
+      s: values[1],
+      l: values[2],
+    });
+  }
+
+  private setHSL(newValue: HSL) {
+    this.hsl = newValue;
+
+    const xNormalized = this.hsl.s / 100;
+    // not checking for xNormalized being 2 because it cant be more than one; the name implies it
+    const yNormalized = (50 * xNormalized + this.hsl.l - 100) / (50 * (xNormalized - 2));
+
+    this.dotCoords.x = xNormalized * 100;
+    this.dotCoords.y = yNormalized * 100;
+    this.rgb = hslToRgb(this.hsl);
   }
 
   private dotCoords: { x: number; y: number } = {
@@ -53,49 +81,57 @@ export default class ColorPicker extends Vue {
   };
 
   private placeDot(e: PointerEvent) {
-    if ((e.type === "mousemove" && !e.buttons) || e.button !== 0) {
+    if (e.type === "mousemove" && (!e.buttons || e.button !== 0)) {
       return;
     }
-
-    this.dotCoords = {
-      x: e.offsetX,
-      y: e.offsetY,
-    };
 
     const target = e.target as HTMLDivElement;
 
     const boundingRect = target.getBoundingClientRect();
-    const xNormalized = this.dotCoords.x / boundingRect.width;
-    const yNormalized = this.dotCoords.y / boundingRect.height;
+    const xNormalized = e.offsetX / boundingRect.width;
+    const yNormalized = e.offsetY / boundingRect.height;
 
-    this.saturation = Math.round(xNormalized * 100);
+    this.dotCoords = {
+      x: xNormalized * 100,
+      y: yNormalized * 100,
+    };
+
+    this.hsl.s = Math.round(xNormalized * 100);
 
     const leftRange = 100 - Math.round(yNormalized * 100);
     const rightRange = leftRange / 2;
-    this.luminocity = Math.round(leftRange - xNormalized * rightRange);
+    this.hsl.l = Math.round(leftRange - xNormalized * rightRange);
 
+    this.rgb = hslToRgb(this.hsl);
     this.emitUpdate();
   }
 
   private placeHandle(e: PointerEvent) {
-    if ((e.type === "mousemove" && !e.buttons) || e.button !== 0) {
+    if (e.type === "mousemove" && (!e.buttons || e.button !== 0)) {
       return;
     }
 
     const target = e.target as HTMLDivElement;
 
     const boundingRect = target.getBoundingClientRect();
-    const yNormalized = e.offsetY / boundingRect.height;
+    const yNormalized = Math.max(e.offsetY / boundingRect.height, 0);
 
-    this.hue = yNormalized * 360;
+    this.hsl.h = yNormalized * 360;
 
+    this.rgb = hslToRgb(this.hsl);
     this.emitUpdate();
   }
 
   private emitUpdate() {
-    const outputValue = `hsl(${this.hue}, ${this.saturation}%, ${this.luminocity}%)`;
+    const outputValue = Object.values(this.hsl).join(",");
     this.$emit("update:modelValue", outputValue);
-    this.$emit("change", outputValue);
+    this.$emit("pick", outputValue);
+  }
+
+  private handleRGBChange() {
+    this.setHSL(rgbToHsl(this.rgb));
+
+    this.emitUpdate();
   }
 }
 </script>

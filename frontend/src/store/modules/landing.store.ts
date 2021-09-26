@@ -1,23 +1,17 @@
 import Api from "@/common/api";
 import appInstance from "@/main";
 import Landing from "@/types/landing/Landing";
-import LandingBackgroundType from "@/types/landing/LandingBackgroundType";
-import LandingLink from "@/types/landing/LandingLink";
+import LandingEntity from "@/types/landing/LandingEntity";
+import LandingLink from "@/types/landing/LandingEntity";
 import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
 
 type LandingCommon = {
-  background: {
-    types: LandingBackgroundType[]
-  }
 };
 
 // State
 class LandingState {
   landings: Landing[] = [];
   common: LandingCommon = {
-    background: {
-      types: []
-    }
   };
 }
 
@@ -25,12 +19,6 @@ class LandingState {
 class LandingGetters extends Getters<LandingState> {
   get common() {
     return this.state.common;
-  }
-  get backgroundIds() {
-    return this.state.common.background.types.map(type => type.id);
-  }
-  backgroundById(id: number) {
-    return this.state.common.background.types.find(type => type.id === id);
   }
   get landings() {
     return this.state.landings;
@@ -45,8 +33,8 @@ export const LOAD_COMMON = 'loadCommon';
 export const LOAD_ALL_LANDINGS = 'loadAllLandings';
 export const CREATE_LANDING = 'createLanding';
 export const DELETE_LANDING = 'deleteLanding';
-export const CREATE_LANDING_LINK = 'createLandingLink';
-export const DELETE_LANDING_LINK = 'deleteLandingLink';
+export const CREATE_LANDING_ENTITY = 'createLandingEntity';
+export const DELETE_LANDING_ENTITY = 'deleteLandingEntity';
 export const SAVE_LANDING = 'saveLanding';
 class LandingActions extends Actions<LandingState, LandingGetters, LandingMutations, LandingActions> {
   [LOAD_COMMON](): void {
@@ -112,28 +100,28 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
     });
   }
 
-  [CREATE_LANDING_LINK](landingId: number): void {
-    Api.landing.link
-      .create(landingId)
+  [CREATE_LANDING_ENTITY]({ landingId, modelTypeId, parentId }: { landingId: number, modelTypeId: number, parentId: number | undefined }): void {
+    Api.landing.entity
+      .create(landingId, modelTypeId, parentId)
       .then((response) => {
         if (response.exception) {
           throw new Error(response.exception);
         }
 
-        this.commit(ADD_LINK, { landingId: landingId, link: response.data });
+        this.commit(ADD_ENTITY, { landingId: landingId, entity: response.data });
       })
       .catch((e) => appInstance.$notifications.error(e.message, "Ошибка создания ссылки"))
   }
 
-  [DELETE_LANDING_LINK]({ landingId, id }: { landingId: number; id: number }): Promise<boolean> {
+  [DELETE_LANDING_ENTITY]({ landingId, id }: { landingId: number; id: number }): Promise<boolean> {
     return new Promise((resolve) => {
-      Api.landing.link.delete(landingId, id)
+      Api.landing.entity.delete(landingId, id)
         .then((response) => {
           if (response.exception) {
             throw new Error(response.exception);
           }
 
-          this.commit(DELETE_LANDING_LINK, { landingId: landingId, id: id });
+          this.commit(DELETE_LANDING_ENTITY, { landingId: landingId, id: id });
           appInstance.$notifications.success("Ссылка успешно удалена")
           resolve(true);
         })
@@ -162,7 +150,7 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
 export const SET_COMMON = "setCommon";
 export const SET_ALL_LANDINGS = "setAllLandings";
 export const ADD_LANDING = "addLanding";
-export const ADD_LINK = "addLink";
+export const ADD_ENTITY = "addLink";
 class LandingMutations extends Mutations<LandingState> {
   [SET_COMMON](payload: any): void {
     this.state.common = payload;
@@ -180,18 +168,18 @@ class LandingMutations extends Mutations<LandingState> {
     this.state.landings = this.state.landings.filter(landing => landing.id !== payload);
   }
 
-  [DELETE_LANDING_LINK]({ landingId, id }: { landingId: number; id: number }): void {
+  [DELETE_LANDING_ENTITY]({ landingId, id }: { landingId: number; id: number }): void {
     const landing = this.state.landings.find(landing => landing.id === landingId)!;
-    landing.links = landing.links.filter(link => link.id !== id);
+    landing.entities = landing.entities.filter(entity => entity.id !== id);
   }
 
-  [ADD_LINK](payload: { landingId: number, link: LandingLink }): void {
+  [ADD_ENTITY](payload: { landingId: number, entity: LandingEntity }): void {
     const landing = this.state.landings.find(l => l.id === payload.landingId);
     if (!landing) {
       throw new Error(`Landing #${payload.landingId} not found`);
     }
 
-    landing.links.push(payload.link);
+    landing.entities.push(payload.entity);
   }
 }
 

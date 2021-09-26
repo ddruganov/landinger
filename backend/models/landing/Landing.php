@@ -7,8 +7,6 @@ use app\components\CreatableInterface;
 use app\components\ExecutionResult;
 use app\components\ExtendedActiveRecord;
 use app\components\helpers\DateHelper;
-use app\components\helpers\UserHelper;
-use yii\db\Query;
 
 /**
  * @property int $id
@@ -16,12 +14,11 @@ use yii\db\Query;
  * @property int $creatorId
  * @property string $name
  * @property string $alias
- * @property string $background
- * @property int $backgroundTypeId
  */
 class Landing extends ExtendedActiveRecord implements CreatableInterface
 {
-    public array $links = [];
+    public array $entities = [];
+    public array $background = [];
 
     public static function tableName()
     {
@@ -31,32 +28,38 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creation_date', 'creator_id', 'name', 'alias', 'background', 'background_type_id'], 'required'],
-            [['name', 'alias', 'background'], 'string'],
+            [['creation_date', 'creator_id', 'name', 'alias'], 'required'],
+            [['name', 'alias'], 'string'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id', 'background_type_id'], 'integer'],
-            [['links'], 'filter', 'filter' => function (array $value) {
-                $current_model_ids = (new Query())
-                    ->select(['id'])
-                    ->from(LandingLink::tableName())
-                    ->where(['landing_id' => $this->id])
-                    ->column();
-
-                foreach ($value as $link) {
-                    $model = in_array($link['id'], $current_model_ids) ? LandingLink::findOne($link['id']) : new LandingLink([
-                        'creator_id' => UserHelper::id(),
-                        'creation_date' => DateHelper::now(),
-                        'landing_id' => $this->id
-                    ]);
-                    $model->setAttributes($link);
-                    if (!$model->save()) {
-                        $this->addError('links', @reset($model->getFirstErrors()));
-                    }
-                }
-
-                return [];
-            }]
+            [['creator_id'], 'integer'],
+            [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
+            [['background'], 'filter', 'filter' => [$this, 'saveBackground']]
         ];
+    }
+
+    public function saveEntities(array $entities)
+    {
+        foreach ($entities as $entity) {
+            $model = LandingEntity::findOne($entity['id']);
+            $model->setAttributes($entity);
+            !$model->save() && $this->addError('entities', @reset($model->getFirstErrors()));
+        }
+
+        return [];
+    }
+
+    public function saveBackground()
+    {
+        $background = LandingBackground::findOne($this->id) ?? new LandingBackground(['id' => $this->id]);
+        $background->setAttributes([
+            'value' => $this->background['value'],
+            'params' => $this->background['params'] ?? ''
+        ]);
+        if (!$background->save()) {
+            $this->addError('background', @reset($background->getFirstErrors()));
+        }
+
+        return [];
     }
 
     public static function create(array $attributes): ExecutionResult
@@ -66,24 +69,26 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
             'alias' => md5(microtime() . rand()),
             'creationDate' => DateHelper::now(),
             'creatorId' => $attributes['userId'],
-            'background' => LandingBackground::DEFAULT,
-            'backgroundTypeId' => LandingBackground::COLOR_TYPE,
+            'background' => [
+                'value' => LandingBackground::DEFAULT_VALUE,
+                'params' => LandingBackground::DEFAULT_PARAMS
+            ]
         ]);
 
         return new ExecutionResult(
             $model->save(),
             $model->getFirstErrors(),
             (new LandingAllCollector())
-                ->setIds([$model->id])
+                ->setParam('ids', [$model->id])
                 ->one()
         );
     }
 
     public function delete()
     {
-        foreach ($this->getLinks() as $link) {
-            if ($link->delete() === false) {
-                $this->addErrors($link->getFirstErrors());
+        foreach ($this->getEntities() as $entity) {
+            if ($entity->delete() === false) {
+                $this->addErrors($entity->getFirstErrors());
                 return false;
             }
         }
@@ -93,10 +98,10 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     }
 
     /**
-     * @return LandingLink[]
+     * @return LandingEntity[]
      */
-    public function getLinks(): array
+    public function getEntities(): array
     {
-        return LandingLink::findAll(['landing_id' => $this->id]);
+        return LandingEntity::findAll(['landing_id' => $this->id]);
     }
 }

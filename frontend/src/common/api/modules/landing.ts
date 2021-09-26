@@ -8,8 +8,8 @@ export default class LandingApi {
   delete = (id: number) => Requestor.delete("/landing/delete", { id: id });
   save = (landing: Landing) => Requestor.patch("/landing/save", landing);
 
-  link = {
-    create: (landingId: number) => Requestor.post("/landing/create_link", { landingId: landingId }),
-    delete: (landingId: number, id: number) => Requestor.delete("/landing/delete_link", { landingId: landingId, id: id })
+  entity = {
+    create: (landingId: number, modelTypeId: number, parentId: number | undefined) => Requestor.post("/landing/create_entity", { landingId: landingId, modelTypeId: modelTypeId, parentId: parentId }),
+    delete: (landingId: number, id: number) => Requestor.delete("/landing/delete_entity", { landingId: landingId, id: id })
   }
 }

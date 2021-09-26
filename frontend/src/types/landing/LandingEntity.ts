@@ -1,6 +1,6 @@
-type LandingLink = {
+type LandingEntity = {
     id: number;
     name: string;
     value: string;
 };
-export default LandingLink;
+export default LandingEntity;

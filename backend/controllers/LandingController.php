@@ -9,6 +9,7 @@ use app\controllers\actions\generic\CreateAction;
 use app\controllers\actions\generic\DeleteAction;
 use app\controllers\actions\generic\SaveAction;
 use app\models\landing\Landing;
+use app\models\landing\LandingEntity;
 use app\models\landing\LandingLink;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -56,13 +57,13 @@ class LandingController extends Controller
                 'class' => DeleteAction::class,
                 'modelClass' => Landing::class
             ],
-            'create_link' => [
+            'create_entity' => [
                 'class' => CreateAction::class,
-                'modelClass' => LandingLink::class
+                'modelClass' => LandingEntity::class
             ],
-            'delete_link' => [
+            'delete_entity' => [
                 'class' => DeleteAction::class,
-                'modelClass' => LandingLink::class
+                'modelClass' => LandingEntity::class
             ]
         ];
     }

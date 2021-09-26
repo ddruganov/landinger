@@ -1,10 +1,6 @@
 <template>
   <header class="topbar">
-    <router-link to="/"><h3 class="brand">Landinger</h3></router-link>
-
-    <button class="button wfc ms-auto">
-      {{ authenticatedUser.name }}
-    </button>
+    <router-link to="/"><h3 class="brand">Flinq</h3></router-link>
   </header>
 </template>
 

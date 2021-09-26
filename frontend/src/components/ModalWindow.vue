@@ -56,7 +56,7 @@ export default class ModalWindowComponent extends Vue {
     this.load();
 
     window.addEventListener(`modal.${this.id}.close`, () => {
-      this.forceClose();
+      this.forceClose(true);
     });
   }
 
@@ -69,6 +69,7 @@ export default class ModalWindowComponent extends Vue {
     if (!trigger) {
       throw new Error(`Modal trigger for ${this.id} was not found`);
     }
+    trigger.removeEventListener("click", () => this.show());
     trigger.addEventListener("click", () => this.show());
   }
 
@@ -80,11 +81,16 @@ export default class ModalWindowComponent extends Vue {
   close(e: MouseEvent) {
     const containsModalClass = (e.target as HTMLElement).classList.contains(this.modalClass);
     const containsCloseIcon = (e.target as HTMLElement).classList.contains("close-icon");
-    (containsModalClass || containsCloseIcon) && this.forceClose();
+    if (!containsModalClass && !containsCloseIcon) {
+      return;
+    }
+
+    this.forceClose(containsCloseIcon);
   }
 
-  forceClose() {
+  forceClose(graceful: boolean) {
     this.isShowing = false;
+    this.$emit("close", graceful);
   }
 }
 </script>

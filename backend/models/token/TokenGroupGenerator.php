@@ -3,7 +3,6 @@
 namespace app\models\token;
 
 use app\components\helpers\CookieHelper;
-use app\models\common\ModelType;
 use app\models\user\User;
 use Yii;
 use Firebase\JWT\JWT;

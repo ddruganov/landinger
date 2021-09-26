@@ -4,9 +4,9 @@
       v-if="type === 'textarea'"
       class="input"
       v-model="input"
-      @input="() => onInput()"
-      @change="() => onChange()"
-      @keypress="(e) => handleKeyPress(e)"
+      @input.stop="() => onInput()"
+      @change.stop="() => onChange()"
+      @keypress.stop="(e) => handleKeyPress(e)"
       required
     />
     <input
@@ -14,9 +14,9 @@
       class="input"
       type="text"
       v-model="input"
-      @input="() => onInput()"
-      @change="() => onChange()"
-      @keypress="(e) => handleKeyPress(e)"
+      @input.stop="() => onInput()"
+      @change.stop="() => onChange()"
+      @keypress.stop="(e) => handleKeyPress(e)"
       required
     />
     <label class="label">{{ label }}</label>
@@ -29,7 +29,7 @@ import { Vue } from "vue-class-component";
 import { Prop, Watch } from "vue-property-decorator";
 
 export default class FormInput extends Vue {
-  @Prop(String) readonly modelValue!: string;
+  @Prop({ type: [String, Number] }) readonly modelValue!: string;
   @Prop(String) readonly type!: string;
   @Prop(String) readonly label!: string;
   @Prop(String) readonly error!: string;

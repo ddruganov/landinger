@@ -4,37 +4,31 @@ namespace app\collectors\landing;
 
 use app\collectors\AbstractDataCollector;
 use app\models\landing\Landing;
-use app\models\landing\LandingLink;
+use app\models\landing\LandingBackground;
 use yii\db\Query;
 
 class LandingAllCollector extends AbstractDataCollector
 {
-    private array $ids = [];
-
     public function get(): array
     {
         $query = (new Query())
-            ->select(['id', 'name', 'alias', 'background', 'backgroundTypeId' => 'background_type_id'])
+            ->select(['id', 'name', 'alias'])
             ->from(Landing::tableName())
             ->where(['creator_id' => $this->getParam('userId')])
             ->orderBy(['id' => SORT_DESC]);
 
-        $this->ids && $query->where(['in', 'id', $this->ids]);
+        $this->getParam('ids') && $query->where(['in', 'id', $this->getParam('ids')]);
 
         $landings = $query->all();
 
         foreach ($landings as $idx => $landing) {
-            $landings[$idx]['links'] = (new Query())
-                ->select([
-                    'id',
-                    'name',
-                    'value',
-                    'weight'
-                ])
-                ->from(LandingLink::tableName())
-                ->where(['landing_id' => $landing['id']])
-                ->orderBy(['weight' => SORT_ASC])
-                ->all();
+            $landings[$idx]['entities'] = (new LandingLinkCollector())->setParam('landingId', $landing['id'])->get();
+
+            $landings[$idx]['background'] = (new Query())
+                ->select(['value', 'params'])
+                ->from(LandingBackground::tableName())
+                ->where(['id' => $landing['id']])
+                ->one();
         }
 
         return $landings;
@@ -43,11 +37,5 @@ class LandingAllCollector extends AbstractDataCollector
     public function one(): array
     {
         return @reset($this->get());
-    }
-
-    public function setIds(array $value): static
-    {
-        $this->ids = $value;
-        return $this;
     }
 }

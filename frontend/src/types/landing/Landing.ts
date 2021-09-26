@@ -1,11 +1,11 @@
-import LandingLink from "./LandingLink";
+import LandingBackground from "./LandingBackground";
+import LandingEntity from "./LandingEntity";
 
 type Landing = {
     id: number;
     name: string;
     alias: string;
-    background: string;
-    backgroundTypeId: number;
-    links: LandingLink[];
+    background: LandingBackground;
+    entities: LandingEntity[];
 };
 export default Landing;

@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;dbname=landinger',
+    'dsn' => 'pgsql:host=localhost;dbname=flinq',
     'username' => 'ddruganov',
     'password' => 'admin',
     'charset' => 'utf8'

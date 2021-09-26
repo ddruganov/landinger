@@ -15,6 +15,12 @@ abstract class AbstractDataCollector
         return $this;
     }
 
+    public function setParam(string $key, mixed $value): static
+    {
+        $this->params[$key] = $value;
+        return $this;
+    }
+
     public function addParams(array $params): static
     {
         $this->params = array_merge($this->params, $params);

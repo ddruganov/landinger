@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <span class="text-muted">{{ fullYear }} landinger</span>
+    <span class="text-muted">{{ fullYear }} Flinq</span>
   </footer>
 </template>
 

@@ -61,7 +61,9 @@ export default class MainLayout extends Vue {
     await authStore.context(this.$store).dispatch(GET_CURRENT_USER);
     await landingStore.context(this.$store).dispatch(LOAD_COMMON);
     await landingStore.context(this.$store).dispatch(LOAD_ALL_LANDINGS);
-    this.dataLoaded = true;
+    setTimeout(() => {
+      this.dataLoaded = true;
+    }, 500);
   }
 }
 </script>

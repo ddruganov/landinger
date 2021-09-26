@@ -3,40 +3,44 @@
     <div class="header">
       <span
         class="tab-name"
-        v-for="(item, i) in items"
-        :key="i"
-        :class="{ active: i === activeTab }"
-        @click="() => setActiveTab(i)"
+        v-for="item in items"
+        :key="item.id"
+        :class="{ active: item.id === activeTabId }"
+        @click="() => setActiveTabId(item.id)"
         >{{ item.name }}</span
       >
     </div>
-    <div class="body">
-      <slot :name="`tab${activeTab}`" :item="items[activeTab]" />
+    <div v-if="activeTabId" class="body">
+      <slot :name="`${activeTabId}Tab`" :item="items[activeTabIndex]" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-
-type Tab = {
-  name: string;
-};
+import { Prop, Watch } from "vue-property-decorator";
+import Tab from "@/types/tabs/Tab";
 
 export default class Tabs extends Vue {
   @Prop(Array) readonly items!: Tab[];
-  @Prop(Number) readonly startValue!: number;
-
-  private activeTab: number = 0;
-
-  mounted() {
-    this.setActiveTab((this.startValue || 1) - 1);
+  @Prop(String) readonly startValue!: string;
+  @Watch("startValue") onStartValueChanged() {
+    !this.activeTabId && this.setActiveTabId(this.startValue);
   }
 
-  private setActiveTab(index: number) {
-    this.activeTab = index;
-    this.$emit("switch", this.items[this.activeTab]);
+  private get activeTabIndex() {
+    return this.items.findIndex((i) => i.id === this.activeTabId);
+  }
+
+  private activeTabId: string = "";
+
+  mounted() {
+    this.onStartValueChanged();
+  }
+
+  private setActiveTabId(id: string) {
+    this.activeTabId = id;
+    this.$emit("switch", this.items[this.activeTabIndex]);
   }
 }
 </script>

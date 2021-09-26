@@ -2,6 +2,8 @@
 
 namespace app\components;
 
+use yii\helpers\ArrayHelper;
+
 class ExecutionResult
 {
     private bool $success = false;
@@ -52,5 +54,11 @@ class ExecutionResult
             }
         }
         return $value;
+    }
+
+    public function appendData(array $value): static
+    {
+        $this->data = ArrayHelper::merge($this->data, $value);
+        return $this;
     }
 }

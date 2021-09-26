@@ -1,7 +1,7 @@
 .landing-edit-container {
   height: 100%;
   padding: 1rem;
-
+  background-size: cover !important;
   & > .block {
     &.topbar {
       margin-top: 3rem;
@@ -21,40 +21,39 @@
     }
   }
 
-  .links {
+  & > .controls {
     margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .block {
+    .button {
       width: 100%;
-      flex-direction: column;
       transition: 0.25s all linear;
       &.create {
-        justify-content: space-between;
-        border: 1px solid $white !important;
+        display: flex;
+        align-items: center;
+        &:not(:first-child) {
+          margin-left: 1rem;
+        }
         * {
           transition: 0.25s all linear;
         }
         & > .header {
-          margin-bottom: 1rem !important;
-        }
-        & > .icon {
-          color: $light-gray;
-          font-size: 4rem;
-        }
-        &:hover {
-          border: 1px solid $primary !important;
-          & > .icon {
-            color: $primary;
-          }
+          margin-left: 1rem !important;
         }
       }
     }
+  }
+
+  .entities {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .draggable-list {
       & > .block {
         position: relative;
+        width: 100%;
+        flex-direction: column;
+        transition: 0.25s all linear;
       }
     }
   }
