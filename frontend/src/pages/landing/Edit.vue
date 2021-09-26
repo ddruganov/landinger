@@ -22,13 +22,15 @@
     </div>
 
     <div class="entities">
-      <draggable-list v-model="landing.entities">
-        <template #block="{item}">
-          <form-input v-model="item.name" class="mb-3" />
-          <form-input v-model="item.value" />
+      <tree v-model="landing.entities">
+        <template #item="{item}">
+          <form-input v-model="item.name" />
+          <template v-if="item.modelTypeId === 5">
+            <form-input v-model="item.value" class="mt-3" />
+          </template>
           <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
         </template>
-      </draggable-list>
+      </tree>
     </div>
   </div>
 
@@ -49,9 +51,10 @@ import GoBack from "@/components/GoBack.vue";
 import DraggableList from "@/components/DraggableList.vue";
 import CornerIcon from "@/components/CornerIcon.vue";
 import BackgroundEditor from "@/components/BackgroundEditor.vue";
+import Tree from "@/components/Tree.vue";
 
 @Options({
-  components: { FormInput, FormGroup, GoBack, DraggableList, CornerIcon, BackgroundEditor },
+  components: { FormInput, FormGroup, GoBack, DraggableList, CornerIcon, BackgroundEditor, Tree },
 })
 export default class LandingEdit extends Vue {
   private reloadKey: number = 0;

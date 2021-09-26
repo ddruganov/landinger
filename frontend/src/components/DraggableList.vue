@@ -5,15 +5,13 @@
     </div>
     <template v-for="(item, i) in items" :key="i">
       <div
-        class="block"
+        class="w-100"
         draggable="true"
         @dragstart="() => onDragStart(i)"
         @dragover="(e) => onDragOver(e, i)"
         @dragend="(e) => onDragEnd(e)"
       >
-        <div class="block-container" :class="{ 'no-pointer-events': isDragging }">
-          <slot name="block" :item="item" />
-        </div>
+        <slot name="block" :item="item" :class="{ 'no-pointer-events': isDragging }" />
       </div>
       <div class="spacer" :data-spacer-index="i">
         <div class="border" />
