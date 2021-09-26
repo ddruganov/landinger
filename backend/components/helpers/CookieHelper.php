@@ -4,7 +4,7 @@ namespace app\components\helpers;
 
 class CookieHelper
 {
-    public static function setCookie(string $name, string $value, string $expirationDate)
+    public static function setCookie(string $name, string $value, int $expirationDate)
     {
         $name = self::filterCookieName($name);
         $cookieOptions = array(
@@ -30,7 +30,7 @@ class CookieHelper
     public static function getCookie(string $name): ?string
     {
         $name = self::filterCookieName($name);
-        return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null;
+        return $_COOKIE[$name] ?? null;
     }
 
     private static function filterCookieName(string $name): string

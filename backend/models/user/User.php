@@ -47,9 +47,9 @@ class User extends ExtendedActiveRecord
         return new ExecutionResult($user->save(), $user->getFirstErrors(), ['id' => $user->id]);
     }
 
-    public function login(): bool
+    public function login(?array $tokens = null): bool
     {
-        $tokens = (new TokenGroupGenerator())->issueTokenGroup($this);
+        $tokens ??= (new TokenGroupGenerator())->issueTokenGroup($this);
         if (!$tokens) {
             return false;
         }

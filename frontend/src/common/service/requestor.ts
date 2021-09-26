@@ -8,6 +8,7 @@ import { authStore, SET_AUTHENTICATED, SET_VERIFIED } from "@/store/modules/auth
 import ApiResponse from "@/types/api/ApiResponse";
 import RequestParams from "@/types/api/RequestParams";
 import RequestOptions from "@/types/api/RequestOptions";
+import Api from "../api";
 
 export default class Requestor {
   static REQUEST_METHODS = {
@@ -38,7 +39,7 @@ export default class Requestor {
     return Requestor.makeRequest(Requestor.REQUEST_METHODS.PATCH, url, form, options);
   }
 
-  static makeRequest(
+  static async makeRequest(
     method: string,
     url: string,
     data: any,

@@ -9,6 +9,7 @@ export default class AuthApi {
 
   login = (data: LoginData) => Requestor.post("/auth/login", data);
   logout = () => Requestor.post("/auth/logout");
+  refresh = () => Requestor.post("/auth/refresh");
 
   restore = (email: string) => Requestor.post("/auth/restore", { email: email });
   resetPassword = (data: ResetPasswordData) => Requestor.post("/auth/resetPassword", data);
