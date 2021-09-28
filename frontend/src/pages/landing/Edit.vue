@@ -23,12 +23,22 @@
 
     <div class="entities">
       <tree v-model="landing.entities">
+        <template #fold="{value, click}">
+          <i
+            class="link me-3"
+            :class="{ 'fas fa-chevron-right': value, 'fas fa-chevron-down': !value }"
+            style="width: 1rem; height: 1rem"
+            @click="() => click()"
+          />
+        </template>
         <template #item="{item}">
-          <form-input v-model="item.name" />
-          <template v-if="item.modelTypeId === 5">
-            <form-input v-model="item.value" class="mt-3" />
-          </template>
-          <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
+          <div class="d-flex align-items-center flex-column w-100">
+            <form-input v-model="item.name" />
+            <template v-if="item.modelTypeId === 5">
+              <form-input v-model="item.value" class="mt-3" />
+            </template>
+            <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
+          </div>
         </template>
       </tree>
     </div>
@@ -36,6 +46,8 @@
 
   <background-editor v-model="landing.background" @change="++reloadKey" />
 </template>
+
+<style lang="scss"></style>
 
 <script lang="ts">
 import {

@@ -7,7 +7,7 @@
       <div
         class="w-100"
         draggable="true"
-        @dragstart="() => onDragStart(i)"
+        @dragstart="(e) => onDragStart(e, i)"
         @dragover="(e) => onDragOver(e, i)"
         @dragend="(e) => onDragEnd(e)"
       >
@@ -47,12 +47,15 @@ export default class DraggableList extends Vue {
     return this.draggedItemIndex !== -1;
   }
 
-  private onDragStart(draggedItemIndex: number) {
+  private onDragStart(e: DragEvent, draggedItemIndex: number) {
+    e.stopImmediatePropagation();
+    e.stopPropagation();
     this.draggedItemIndex = draggedItemIndex;
     this.insertAfter = false;
   }
 
   private onDragOver(e: DragEvent, draggedOverItemIndex: number) {
+    e.preventDefault();
     if (!this.isDragging) {
       return;
     }
@@ -72,7 +75,10 @@ export default class DraggableList extends Vue {
     this.highlightSpacer(draggedOverItemIndex + (newValue ? 0 : -1));
   }
 
-  private onDragEnd() {
+  private onDragEnd(e: DragEvent) {
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+
     this.recalcWeights();
     this.draggedItemIndex = -1;
     this.draggedOverItemIndex = -1;
