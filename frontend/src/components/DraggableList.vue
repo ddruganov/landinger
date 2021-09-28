@@ -8,10 +8,10 @@
         class="w-100"
         draggable="true"
         @dragstart="(e) => onDragStart(e, i)"
-        @dragover="(e) => onDragOver(e, i)"
+        @dragover="(e) => onDragOver(e, i, item)"
         @dragend="(e) => onDragEnd(e)"
       >
-        <slot name="block" :item="item" :class="{ 'no-pointer-events': isDragging }" />
+        <slot name="block" :item="item" :class="{'no-pointer-events': isDragging}" />
       </div>
       <div class="spacer" :data-spacer-index="i">
         <div class="border" />
@@ -21,16 +21,19 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import {Vue} from "vue-class-component";
+import {Prop} from "vue-property-decorator";
 
 type DraggableItem = {
   [key: string]: any;
+  id: number;
   weight: number;
 };
 
 export default class DraggableList extends Vue {
   @Prop(Array) readonly modelValue!: DraggableItem[];
+
+  private lastDragOverTimestamp: number = 0;
 
   private items: DraggableItem[] = [];
   mounted() {
@@ -48,17 +51,42 @@ export default class DraggableList extends Vue {
   }
 
   private onDragStart(e: DragEvent, draggedItemIndex: number) {
+    e.target;
     e.stopImmediatePropagation();
     e.stopPropagation();
     this.draggedItemIndex = draggedItemIndex;
     this.insertAfter = false;
   }
 
-  private onDragOver(e: DragEvent, draggedOverItemIndex: number) {
+  counter = 0;
+
+  private onDragOver(e: DragEvent, draggedOverItemIndex: number, item: DraggableItem) {
     e.preventDefault();
-    if (!this.isDragging) {
+    if (Date.now() - this.lastDragOverTimestamp < 100) {
       return;
     }
+    this.lastDragOverTimestamp = Date.now();
+
+    const closestDraggableList = (e.target as HTMLElement).closest(".draggable-list");
+    console.log(this.counter++, closestDraggableList);
+    if (!closestDraggableList) {
+      return;
+    }
+    if (closestDraggableList.id !== this.id) {
+      return;
+    }
+
+    item.id;
+    // if (this.items.length <= draggedOverItemIndex) {
+    //   return;
+    // }
+    // if (!this.items.find((i) => i.id === item.id)) {
+    //   return;
+    // }
+
+    // if (!this.isDragging) {
+    //   return;
+    // }
 
     const target = e.target as HTMLDivElement;
     const boundingRect = target.getBoundingClientRect();
@@ -76,6 +104,7 @@ export default class DraggableList extends Vue {
   }
 
   private onDragEnd(e: DragEvent) {
+    e.target;
     e.stopImmediatePropagation();
     e.stopPropagation();
 
@@ -98,7 +127,7 @@ export default class DraggableList extends Vue {
 
     const draggedItem = this.items[this.draggedItemIndex];
     this.items.splice(this.draggedItemIndex, 1);
-    this.items.splice(this.draggedOverItemIndex + (this.insertAfter ? 1 : 0), 0, draggedItem);
+    this.items.splice(this.draggedOverItemIndex, 0, draggedItem);
     this.items.forEach((item, index) => {
       item.weight = (index + 1) * 10;
     });

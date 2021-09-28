@@ -6,15 +6,7 @@
         <slot name="item" :item="item" />
       </div>
       <grow-transition>
-        <tree
-          v-if="item.children.length"
-          v-show="!isItemFolded(item)"
-          v-model="item.children"
-          :depth="depth + 1"
-          @dragover.prevent
-          @dragstart.stop
-          @dragend.stop
-        >
+        <tree v-if="item.children.length" v-show="!isItemFolded(item)" v-model="item.children" :depth="depth + 1">
           <template #item="{item}">
             <slot name="item" :item="item" />
           </template>
@@ -25,8 +17,8 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { Prop } from "vue-property-decorator";
+import {Options, Vue} from "vue-class-component";
+import {Prop} from "vue-property-decorator";
 import CornerIcon from "./CornerIcon.vue";
 import DraggableList from "./DraggableList.vue";
 import FormInput from "./form/FormInput.vue";
@@ -40,11 +32,11 @@ type TreeItem = {
 };
 
 @Options({
-  components: { FormInput, CornerIcon, DraggableList, GrowTransition },
+  components: {FormInput, CornerIcon, DraggableList, GrowTransition},
 })
 export default class Tree extends Vue {
   @Prop(Array) readonly modelValue!: TreeItem[];
-  @Prop({ type: Number, default: 0 }) readonly depth!: number;
+  @Prop({type: Number, default: 0}) readonly depth!: number;
 
   private items: TreeItem[] = [];
   mounted() {
