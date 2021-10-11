@@ -2,6 +2,7 @@
   <div class="landing-edit-container" :style="`background: ${landing.background.value}`" :key="reloadKey">
     <div class="block topbar">
       <go-back link="/" />
+      <form-input class="link-display" v-model="landing.alias" label="Алиас" prefix="flinq.me/" />
       <button class="button wfc" @click="() => save()">Сохранить</button>
     </div>
 

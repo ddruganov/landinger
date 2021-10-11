@@ -5,7 +5,13 @@
   & > .block {
     &.topbar {
       margin-top: 3rem;
-      justify-content: space-between;
+      .link-display {
+        margin-left: 1rem;
+        width: 100%;
+      }
+      .button {
+        margin-left: 1rem;
+      }
     }
     &.edit {
       margin-top: 1rem;

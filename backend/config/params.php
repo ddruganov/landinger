@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'masterPassword' => 'lkpassadmin',
     'token' => [
         'accessTTL' => 1800, // 30 minutes
         'refreshTTL' => 2592000 // 30 days

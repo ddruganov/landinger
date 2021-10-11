@@ -32,6 +32,7 @@ export default class FormInput extends Vue {
   @Prop({ type: [String, Number] }) readonly modelValue!: string;
   @Prop({ type: String, default: "text" }) readonly type!: string;
   @Prop(String) readonly label!: string;
+  @Prop({ type: String, default: "" }) readonly prefix!: string;
   @Prop(String) readonly error!: string;
   @Prop(Number) readonly inputEventDelay!: number;
 

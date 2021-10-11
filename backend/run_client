@@ -1,0 +1,1 @@
+cd client/web && php -S localhost:8005
