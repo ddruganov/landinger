@@ -20,7 +20,7 @@ use yii\db\Query;
  */
 class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 {
-    public array $children = [];
+    public array $entities = [];
 
     public static function tableName()
     {
@@ -33,16 +33,16 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
             [['creation_date', 'creator_id', 'landing_id', 'weight'], 'required'],
             [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['creator_id', 'landing_id', 'weight'], 'integer'],
-            [['children'], 'filter', 'filter' => [$this, 'saveChildren']],
+            [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
         ];
     }
 
-    public function saveChildren(array $children)
+    public function saveEntities(array $entities)
     {
-        foreach ($children as $child) {
+        foreach ($entities as $child) {
             $model = self::findOne($child['id']);
             $model->setAttributes($child);
-            !$model->save() && $this->addError('children', @reset($model->getFirstErrors()));
+            !$model->save() && $this->addError('entities', @reset($model->getFirstErrors()));
         }
 
         return [];
@@ -52,7 +52,7 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
     {
         $landingId = $attributes['landingId'];
         $modelTypeId = $attributes['modelTypeId'];
-        $weight =  ((new Query())
+        $weight = ((new Query())
             ->select(['max(weight)'])
             ->from(self::tableName())
             ->where(['landing_id' => $landingId])
@@ -73,8 +73,20 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 
         return $model->getBoundModelClass()::create([
             'id' => $model->id,
-            'name' => 'Новая ' . ($modelTypeId === ModelType::LANDING_LINK_GROUP ? 'группа' : 'ссылка')
+            'name' => 'Новая ' . match ($modelTypeId) {
+                ModelType::LANDING_LINK_GROUP => 'группа',
+                ModelType::LANDING_LINK => 'ссылка'
+            }
         ]);
+    }
+
+    public function saveAttributes(array $attributes): ExecutionResult
+    {
+        $this->setAttributes($attributes);
+        $boundModel = $this->getBoundModel();
+        $boundModel->setAttributes($attributes);
+
+        return new ExecutionResult($this->save() && $boundModel->save(), array_merge($this->getFirstErrors(), $boundModel->getFirstErrors()));
     }
 
     public function delete()

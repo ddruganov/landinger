@@ -7,19 +7,20 @@ const rename = require("gulp-rename");
 
 const ts = require("gulp-typescript");
 const babel = require("gulp-babel");
-const concat = require("gulp-concat");
 const uglify = require("gulp-uglify");
 
-const outputFolder = "dist";
+const baseOutputFolder = "dist";
+const cssOutputFolder = baseOutputFolder + "/css";
+const jsOutputFolder = baseOutputFolder + "/js";
 
 const cleanWorkload = (cb) => {
-  del.sync([outputFolder]);
+  del.sync([baseOutputFolder]);
   cb();
 };
 
 /* WORKLOADS */
 const scssWorkload = async () => {
-  gulp.src("src/scss/index.scss").pipe(sass()).pipe(csso()).pipe(gulp.dest(outputFolder));
+  gulp.src("src/scss/index.scss").pipe(sass()).pipe(csso()).pipe(rename("main.css")).pipe(gulp.dest(cssOutputFolder));
 };
 const tsWorkload = async () => {
   gulp
@@ -32,9 +33,8 @@ const tsWorkload = async () => {
       })
     )
     // .pipe(babel({ presets: ["@babel/env"] }))
-    .pipe(concat("knob.js"))
     .pipe(uglify())
-    .pipe(gulp.dest(outputFolder));
+    .pipe(gulp.dest(jsOutputFolder));
 };
 
 /* DEFAULT */

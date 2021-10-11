@@ -3,15 +3,13 @@
 namespace core\models\landing;
 
 use core\components\CreatableInterface;
-use core\components\ErrorLog;
 use core\components\ExecutionResult;
-use core\components\ExtendedActiveRecord;
 
 /**
  * @property int $id
  * @property string $name
  */
-class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface
+class LandingLinkGroup extends LandingEntity implements CreatableInterface
 {
     public static function tableName()
     {
@@ -42,8 +40,6 @@ class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterfac
 
     public function delete()
     {
-        ErrorLog::log($this->id);
-        ErrorLog::log($this->getChildren());
         foreach ($this->getChildren() as $child) {
             if ($child->delete() === false) {
                 $this->addErrors($child->getErrors());
@@ -59,7 +55,6 @@ class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterfac
      */
     public function getChildren(): array
     {
-        return [];
-        // return LandingEntity::findAll(['parent_id' => $this->id]);
+        return LandingEntity::findAll(['parent_id' => $this->id]);
     }
 }

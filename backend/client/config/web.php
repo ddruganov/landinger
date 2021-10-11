@@ -13,6 +13,9 @@ $config = [
         ],
         'urlManager' => [
             'rules' => require __DIR__ . '/routes.php',
+        ],
+        'assetManager' => [
+            'forceCopy' => true
         ]
     ],
     'defaultRoute' => 'landing/view',

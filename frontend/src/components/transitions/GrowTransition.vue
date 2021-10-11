@@ -16,11 +16,13 @@
   transition: all 0.25s linear;
   height: 100%;
   overflow: hidden;
+  opacity: 1;
 }
 
 .grow-enter-from,
 .grow-leave-to {
   height: 0;
+  opacity: 0;
 }
 </style>
 

@@ -43,7 +43,7 @@ class ErrorLog
 
         $data = join(' ', array_map(function ($piece) {
             $doNotExport = is_string($piece) || is_numeric($piece);
-            return $doNotExport ? $piece : var_export($piece, true);
+            return $doNotExport ? $piece : @var_export($piece, true);
         }, $dataPieces));
 
         error_log(sprintf(self::$format, PHP_EOL . $data));

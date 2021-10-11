@@ -4,14 +4,13 @@ namespace core\models\landing;
 
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
-use core\components\ExtendedActiveRecord;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $value
  */
-class LandingLink extends ExtendedActiveRecord implements CreatableInterface
+class LandingLink extends LandingEntity implements CreatableInterface
 {
     public static function tableName()
     {
@@ -23,6 +22,14 @@ class LandingLink extends ExtendedActiveRecord implements CreatableInterface
         return [
             [['name'], 'required'],
             [['name', 'value'], 'string'],
+            [['value'], 'filter', 'filter' => function (string $value) {
+
+                if (!parse_url($value, PHP_URL_SCHEME)) {
+                    $this->addError('value', 'Ссылка должна начинаться с http:// или https://');
+                }
+
+                return $value;
+            }]
         ];
     }
 

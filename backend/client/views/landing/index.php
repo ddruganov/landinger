@@ -21,16 +21,19 @@
  * ]
  */
 
-use client\widgets\landing\EntityDisplay;
+use client\assets\landing\EntityDisplayAsset;
+use client\widgets\landing\EntityDisplayWidget;
+
+EntityDisplayAsset::register($this);
 
 ?>
 
-<div style="background:<?= $landing_data['background']['value'] ?>; width: 100%; display: flex; flex-direction: column; padding: 1rem;">
-    <div style="width: 100%; max-width: 768px; margin: 0 auto">
-        <h3 style="text-align: center;"><?= $landing_data['name'] ?></h3>
+<div class="landing" style="background:<?= $landing_data['background']['value'] ?>">
+    <div class="container">
+        <h1 class="page-title"><?= $landing_data['name'] ?></h1>
 
         <?php foreach ($landing_data['entities'] as $entity) : ?>
-            <?= EntityDisplay::widget([
+            <?= EntityDisplayWidget::widget([
                 'entity' => $entity
             ]) ?>
         <?php endforeach ?>

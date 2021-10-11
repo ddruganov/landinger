@@ -4,7 +4,7 @@ namespace client\widgets\landing;
 
 use yii\base\Widget;
 
-class EntityDisplay extends Widget
+class EntityDisplayWidget extends Widget
 {
     public array $entity;
     public int $depth = 0;

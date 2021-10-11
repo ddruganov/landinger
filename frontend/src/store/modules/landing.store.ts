@@ -140,6 +140,11 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
           throw new Error(response.exception);
         }
 
+        if (!response.success) {
+          const errors = response.errors;
+          throw new Error(errors[Object.keys(errors)[0]]);
+        }
+
         appInstance.$notifications.success("Сохранено");
       })
       .catch((e) => appInstance.$notifications.error(e.message, "Ошибка сохранения лендинга"))

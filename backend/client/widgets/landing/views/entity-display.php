@@ -13,37 +13,37 @@
  * @var int $depth
  */
 
-use client\widgets\landing\EntityDisplay;
+use client\widgets\landing\EntityDisplayWidget;
 use core\models\common\ModelType;
 use yii\web\View;
 
 $id = 'EntityDisplay_' . md5(microtime());
 
-$this->registerJs("
+if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) {
+    $this->registerJs("
     new EntityDisplayWidget({
-        seletor: '#$id'
+        selector: '#$id'
     })
 ", View::POS_END);
+}
 
 ?>
 
-<div id="<?= $id ?>" style="display: flex; flex-direction: column; margin-top: 1rem; padding-left: <?= $depth * 2 ?>rem">
+<div id="<?= $id ?>" class="entity-display-widget" style="padding-left: <?= $depth * 2 ?>rem">
 
-    <div style="border: 1px solid black; padding: 1rem; display: flex; align-items: center; justify-content: space-between">
-        <?php if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) : ?>
-            <span><?= $entity['name'] ?></span>
-        <?php else : ?>
-            <a href="<?= $entity['value'] ?>"><?= $entity['name'] ?></a>
-        <?php endif ?>
-        <?php if ($entity['children']) : ?>
-            <button class="child-toggler">+</button>
-        <?php endif ?>
-    </div>
+    <?php if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) : ?>
+        <div class="group">
+            <span class="name"><?= $entity['name'] ?></span>
+            <div class="arrow left"></div>
+        </div>
+    <?php else : ?>
+        <a class="link" href="<?= $entity['value'] ?>"><?= $entity['name'] ?></a>
+    <?php endif ?>
 
     <?php if ($entity['children']) : ?>
-        <div class="children" style="display: none">
+        <div class="children" hidden>
             <?php foreach ($entity['children'] as $child) : ?>
-                <?= EntityDisplay::widget([
+                <?= EntityDisplayWidget::widget([
                     'entity' => $child,
                     'depth' => $depth + 1
                 ]) ?>

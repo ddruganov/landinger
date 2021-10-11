@@ -1,0 +1,71 @@
+.entity-display-widget {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  user-select: none;
+  * {
+    user-select: none;
+  }
+
+  & > .group,
+  & > .link {
+    background: $white;
+    border: 1px solid $white;
+    border-radius: $border-radius-smooth;
+    padding: 1rem;
+    &:hover {
+      border-color: $dark-primary;
+    }
+  }
+
+  & > .group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: default;
+    cursor: pointer;
+
+    & > .arrow {
+      width: 0.5rem;
+      height: 0.5rem;
+      border: 3px solid $primary;
+      border-left: none;
+      border-top: none;
+      transition: 0.25s all linear;
+
+      &.left {
+        transform: rotate(135deg);
+        margin-bottom: 0;
+      }
+      &.down {
+        transform: rotate(45deg);
+        margin-bottom: 0.25rem;
+      }
+
+      &:hover {
+        border-color: $dark-primary;
+      }
+    }
+  }
+
+  & > .link {
+    text-decoration: none;
+    color: $primary;
+    &:hover {
+      color: $dark-primary;
+    }
+  }
+
+  & > .children {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: 0.25s all linear;
+    opacity: 1;
+
+    &[hidden] {
+      height: 0;
+      opacity: 0;
+    }
+  }
+}

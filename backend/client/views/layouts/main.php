@@ -5,14 +5,17 @@
  * @var string $content
  */
 
+use client\assets\AppAsset;
 use yii\helpers\Html;
+
+AppAsset::register($this);
 
 ?>
 
 <?php $this->beginPage() ?>
 
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->charset ?>" style="width: 100%; min-height: 100vh; margin: 0; padding: 0; display: flex;">
+<html lang="<?= Yii::$app->charset ?>">
 
 <head>
     <meta charset="<?= Yii::$app->charset ?>" />
@@ -24,7 +27,7 @@ use yii\helpers\Html;
 
 </head>
 
-<body style="width: 100%; min-height: 100vh; margin: 0; padding: 0; display: flex;">
+<body>
     <?php $this->beginBody() ?>
 
     <?= $content ?>

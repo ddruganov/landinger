@@ -41,8 +41,9 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     {
         foreach ($entities as $entity) {
             $model = LandingEntity::findOne($entity['id']);
-            $model->setAttributes($entity);
-            !$model->save() && $this->addError('entities', @reset($model->getFirstErrors()));
+            $saveRes = $model->saveAttributes($entity);
+
+            !$saveRes->isSuccessful() && $this->addError('entities', @reset($saveRes->getErrors()));
         }
 
         return [];
