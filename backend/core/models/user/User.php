@@ -2,6 +2,7 @@
 
 namespace core\models\user;
 
+use core\components\ErrorLog;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\CookieHelper;
@@ -29,8 +30,8 @@ class User extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'password', 'creation_date'], 'required'],
-            [['name', 'email', 'password', 'creation_date'], 'string'],
+            [['name', 'email', 'password', 'creationDate'], 'required'],
+            [['name', 'email', 'password', 'creationDate'], 'string'],
             [['password'], 'string', 'max' => 64],
         ];
     }

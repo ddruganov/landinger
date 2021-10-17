@@ -24,9 +24,9 @@ class RefreshToken extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'issue_date', 'expiration_date', 'value'], 'required'],
-            [['user_id'], 'integer'],
-            [['issue_date', 'expiration_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['userId', 'issueDate', 'expirationDate', 'value'], 'required'],
+            [['userId'], 'integer'],
+            [['issueDate', 'expirationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['value'], 'string'],
         ];
     }
@@ -41,9 +41,10 @@ class RefreshToken extends ExtendedActiveRecord
     {
         $list =
             self::find()
-            ->where('user_id = :user_id and expiration_date > :now', [
-                ':user_id' => $this->userId,
-                ':now' => DateHelper::now()
+            ->where([
+                'and',
+                ['user_id' => $this->userId],
+                ['>', 'expiration_date', DateHelper::now()]
             ])
             ->all();
 

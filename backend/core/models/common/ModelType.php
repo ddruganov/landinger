@@ -34,8 +34,8 @@ class ModelType extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['table_name', 'class', 'name', 'table_alias'], 'required'],
-            [['table_name', 'class', 'name', 'table_alias'], 'string']
+            [['tableName', 'class', 'name', 'tableAlias'], 'required'],
+            [['tableName', 'class', 'name', 'tableAlias'], 'string']
         ];
     }
 

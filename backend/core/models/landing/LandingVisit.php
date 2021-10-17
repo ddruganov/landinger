@@ -23,8 +23,8 @@ class LandingVisit extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['landing_id', 'datetime'], 'required'],
-            [['landing_id'], 'integer'],
+            [['landingId', 'datetime'], 'required'],
+            [['landingId'], 'integer'],
             [['datetime', 'ip'], 'string'],
             [['datetime'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['ip'], 'ip']

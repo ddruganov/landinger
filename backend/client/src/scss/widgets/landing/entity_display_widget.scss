@@ -7,8 +7,8 @@
     user-select: none;
   }
 
-  & > .group,
-  & > .link {
+  & > .entity-group,
+  & > .entity-link {
     background: $white;
     border: 1px solid $white;
     border-radius: $border-radius-smooth;
@@ -18,7 +18,7 @@
     }
   }
 
-  & > .group {
+  & > .entity-group {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -26,21 +26,8 @@
     cursor: pointer;
 
     & > .arrow {
-      width: 0.5rem;
-      height: 0.5rem;
-      border: 3px solid $primary;
-      border-left: none;
-      border-top: none;
+      color: $primary;
       transition: 0.25s all linear;
-
-      &.left {
-        transform: rotate(135deg);
-        margin-bottom: 0;
-      }
-      &.down {
-        transform: rotate(45deg);
-        margin-bottom: 0.25rem;
-      }
 
       &:hover {
         border-color: $dark-primary;
@@ -48,11 +35,12 @@
     }
   }
 
-  & > .link {
-    text-decoration: none;
-    color: $primary;
+  & > .entity-link {
+    cursor: pointer;
+    color: $primary !important;
+    text-decoration: none !important;
     &:hover {
-      color: $dark-primary;
+      color: $dark-primary !important;
     }
   }
 

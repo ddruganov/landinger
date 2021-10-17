@@ -28,10 +28,10 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creation_date', 'creator_id', 'name', 'alias'], 'required'],
+            [['creationDate', 'creatorId', 'name', 'alias'], 'required'],
             [['name', 'alias'], 'string'],
-            [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id'], 'integer'],
+            [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['creatorId'], 'integer'],
             [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
             [['background'], 'filter', 'filter' => [$this, 'saveBackground']]
         ];
@@ -93,7 +93,6 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
                 return false;
             }
         }
-
 
         return parent::delete();
     }

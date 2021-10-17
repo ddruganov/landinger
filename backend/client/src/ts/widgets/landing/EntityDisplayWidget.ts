@@ -9,7 +9,7 @@ class EntityDisplayWidget {
 
     constructor(config: EntityDisplayWidgetConfig) {
         this.$el = document.querySelector(config.selector);
-        this.group = this.$el.querySelector('.group') as HTMLDivElement;
+        this.group = this.$el.querySelector('.entity-group') as HTMLDivElement;
         this.childrenContainer = this.$el.querySelector('.children') as HTMLDivElement;
 
         this.init();
@@ -25,8 +25,8 @@ class EntityDisplayWidget {
             this.animateChildren(childrenAreHidden);
 
             const classMap = {
-                'false': 'down',
-                'true': 'left'
+                'false': 'fa-chevron-down',
+                'true': 'fa-chevron-left'
             };
             toggleArrow.classList.remove(classMap[String(childrenAreHidden)]);
             toggleArrow.classList.add(classMap[String(!childrenAreHidden)]);

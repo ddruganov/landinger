@@ -23,9 +23,9 @@ class AccessToken extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['value', 'is_blacklisted'], 'required'],
+            [['value', 'isBlacklisted'], 'required'],
             [['value'], 'string'],
-            [['is_blacklisted'], 'boolean'],
+            [['isBlacklisted'], 'boolean'],
         ];
     }
 

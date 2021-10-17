@@ -32,12 +32,17 @@ if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) {
 <div id="<?= $id ?>" class="entity-display-widget" style="padding-left: <?= $depth * 2 ?>rem">
 
     <?php if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) : ?>
-        <div class="group">
+        <div class="entity-group">
             <span class="name"><?= $entity['name'] ?></span>
-            <div class="arrow left"></div>
+            <i class="arrow fas fa-chevron-left"></i>
         </div>
     <?php else : ?>
-        <a class="link" href="<?= $entity['value'] ?>"><?= $entity['name'] ?></a>
+        <a class="entity-link" href="<?= $entity['value'] ?>">
+            <i class="fas fa-link me-3"></i>
+            <span class="name">
+                <?= $entity['name'] ?>
+            </span>
+        </a>
     <?php endif ?>
 
     <?php if ($entity['children']) : ?>

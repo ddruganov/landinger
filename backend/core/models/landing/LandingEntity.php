@@ -20,7 +20,7 @@ use yii\db\Query;
  */
 class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 {
-    public array $entities = [];
+    // public array $entities = [];
 
     public static function tableName()
     {
@@ -30,10 +30,10 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creation_date', 'creator_id', 'landing_id', 'weight'], 'required'],
-            [['creation_date'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creator_id', 'landing_id', 'weight'], 'integer'],
-            [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
+            [['creationDate', 'creatorId', 'landingId', 'weight'], 'required'],
+            [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['creatorId', 'landingId', 'weight'], 'integer'],
+            // [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
         ];
     }
 

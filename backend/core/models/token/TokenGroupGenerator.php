@@ -27,8 +27,7 @@ class TokenGroupGenerator
             'expirationDate' => date('Y-m-d H:i:s', $accessTokenExpirationDate)
         ], $user->password);
         // save access token
-        $accessTokenAr = new AccessToken();
-        $accessTokenAr->setAttributes([
+        $accessTokenAr = new AccessToken([
             'value' => $accessToken,
             'isBlacklisted' => false
         ]);
@@ -40,8 +39,7 @@ class TokenGroupGenerator
         // generate refresh token
         $refreshToken = $this->generateRefreshToken($accessToken);
         // save refresh token and kill other active tokens
-        $refreshTokenAr = new RefreshToken();
-        $refreshTokenAr->setAttributes([
+        $refreshTokenAr = new RefreshToken([
             'userId' => $user->id,
             'issueDate' => date('Y-m-d H:i:s', $issueDate),
             'expirationDate' => date('Y-m-d H:i:s', $refreshTokenExpirationDate),
