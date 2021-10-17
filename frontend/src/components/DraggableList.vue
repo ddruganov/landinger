@@ -8,10 +8,10 @@
         class="w-100"
         draggable="true"
         @dragstart="(e) => onDragStart(e, i)"
-        @dragover="(e) => onDragOver(e, i, item)"
+        @dragover="(e) => onDragOver(e, i)"
         @dragend="(e) => onDragEnd(e)"
       >
-        <slot name="block" :item="item" :class="{'no-pointer-events': isDragging}" />
+        <slot name="block" :item="item" :class="{ 'no-pointer-events': isDragging }" />
       </div>
       <div class="spacer" :data-spacer-index="i">
         <div class="border" />
@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import {Vue} from "vue-class-component";
-import {Prop} from "vue-property-decorator";
+import { Vue } from "vue-class-component";
+import { Prop } from "vue-property-decorator";
 
 type DraggableItem = {
   [key: string]: any;
@@ -58,9 +58,7 @@ export default class DraggableList extends Vue {
     this.insertAfter = false;
   }
 
-  counter = 0;
-
-  private onDragOver(e: DragEvent, draggedOverItemIndex: number, item: DraggableItem) {
+  private onDragOver(e: DragEvent, draggedOverItemIndex: number) {
     e.preventDefault();
     if (Date.now() - this.lastDragOverTimestamp < 100) {
       return;
@@ -68,25 +66,12 @@ export default class DraggableList extends Vue {
     this.lastDragOverTimestamp = Date.now();
 
     const closestDraggableList = (e.target as HTMLElement).closest(".draggable-list");
-    console.log(this.counter++, closestDraggableList);
     if (!closestDraggableList) {
       return;
     }
     if (closestDraggableList.id !== this.id) {
       return;
     }
-
-    item.id;
-    // if (this.items.length <= draggedOverItemIndex) {
-    //   return;
-    // }
-    // if (!this.items.find((i) => i.id === item.id)) {
-    //   return;
-    // }
-
-    // if (!this.isDragging) {
-    //   return;
-    // }
 
     const target = e.target as HTMLDivElement;
     const boundingRect = target.getBoundingClientRect();
