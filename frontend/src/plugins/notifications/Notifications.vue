@@ -4,7 +4,7 @@
 
 <style lang="scss" scoped>
 #notifications {
-  position: absolute;
+  position: fixed;
   width: fit-content;
   height: fit-content;
   top: 0;

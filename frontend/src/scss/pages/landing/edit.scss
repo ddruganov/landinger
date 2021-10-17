@@ -2,65 +2,59 @@
   height: 100%;
   padding: 1rem;
   background-size: cover !important;
-  & > .block {
-    &.topbar {
-      margin-top: 3rem;
-      .link-display {
-        margin-left: 1rem;
-        width: 100%;
-      }
-      .button {
-        margin-left: 1rem;
-      }
-    }
-    &.edit {
-      margin-top: 1rem;
+
+  & > .container {
+    &>.topbar{
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      $choose-background-button-size: 110px;
-      & > .input-wrapper {
-        margin-right: 1rem;
-        width: calc(100% - #{$choose-background-button-size} - 1rem);
-      }
-      & > .button {
-        width: $choose-background-button-size !important;
-      }
     }
-  }
-
-  & > .controls {
-    margin-top: 1rem;
-    .button {
-      width: 100%;
-      transition: 0.25s all linear;
-      &.create {
-        display: flex;
-        align-items: center;
-        &:not(:first-child) {
-          margin-left: 1rem;
-        }
-        * {
-          transition: 0.25s all linear;
-        }
-        & > .header {
-          margin-left: 1rem !important;
+    & > .controls {
+      margin-bottom: 0.5rem;
+      .button {
+        width: 100%;
+        transition: 0.25s all linear;
+        &.create {
+          display: flex;
+          align-items: center;
+          &:not(:first-child) {
+            margin-left: 1rem;
+          }
+          * {
+            transition: 0.25s all linear;
+          }
+          & > .header {
+            margin-left: 1rem !important;
+          }
         }
       }
     }
   }
-
   .entities {
-    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    .draggable-list {
-      & > .block {
-        position: relative;
-        width: 100%;
-        flex-direction: column;
-        transition: 0.25s all linear;
+    .subtree {
+      & > .subtree-middle {
+        & > .block {
+          position: relative;
+          width: 100%;
+          // flex-direction: column;
+          transition: 0.25s all linear;
+          .input-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+          }
+        }
       }
+    }
+
+    .link-icon {
+      margin-right: 1rem;
     }
   }
 }

@@ -1,54 +1,61 @@
 <template>
   <div class="landing-edit-container" :style="`background: ${landing.background.value}`" :key="reloadKey">
-    <div class="block topbar">
-      <go-back link="/" />
-      <form-input class="link-display" v-model="landing.alias" label="Алиас" prefix="flinq.me/" />
-      <button class="button wfc" @click="() => save()">Сохранить</button>
-    </div>
-
-    <div class="block edit">
-      <form-input v-model="landing.name" label="Название" />
-      <button class="button fc" modal-trigger="chooseBackground">Выбрать фон</button>
-    </div>
-
-    <div class="block controls">
-      <button class="button create fc" @click="() => createEntity(5)">
-        <i class="icon fas fa-plus" />
-        <div class="header">Создать ссылку</div>
-      </button>
-      <button class="button create fc" @click="() => createEntity(4)">
-        <i class="icon fas fa-plus" />
-        <div class="header">Создать группу</div>
-      </button>
-    </div>
-
-    <div class="entities">
-      <tree v-model="landing.entities">
-        <template #fold="{value, click}">
-          <i
-            class="link me-3"
-            :class="{ 'fas fa-chevron-right': value, 'fas fa-chevron-down': !value }"
-            style="width: 1rem; height: 1rem"
-            @click="() => click()"
-          />
-        </template>
-        <template #item="{item}">
-          <div class="d-flex align-items-center flex-column w-100">
-            <form-input v-model="item.name" />
-            <template v-if="item.modelTypeId === 5">
-              <form-input v-model="item.value" class="mt-3" />
-            </template>
-            <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
-          </div>
-        </template>
-      </tree>
+    <div class="container">
+      <div class="block topbar">
+        <go-back link="/" />
+        <button class="button wfc" @click="() => save()">Сохранить</button>
+      </div>
+      <div class="block column mb-3">
+        <form-input class="mb-3" v-model="landing.name" label="Название" />
+        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="flinq.me/" />
+        <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
+      </div>
+      <div class="block controls">
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK)">
+          <i class="icon fas fa-plus" />
+          <div class="header">Создать ссылку</div>
+        </button>
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK_GROUP)">
+          <i class="icon fas fa-plus" />
+          <div class="header">Создать группу</div>
+        </button>
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_IMAGE)">
+          <i class="icon fas fa-plus" />
+          <div class="header">Добавить фото</div>
+        </button>
+      </div>
+      <div class="entities">
+        <tree v-model="landing.entities" @change="++reloadKey">
+          <template #fold="{value, click}">
+            <i
+              class="link-icon"
+              :class="{ 'fas fa-chevron-right': value, 'fas fa-chevron-down': !value }"
+              style="width: 1rem; height: 1rem"
+              @click="() => click()"
+            />
+          </template>
+          <template #item="{item}">
+            <div class="input-container">
+              <template v-if="item.modelTypeId === modelTypes.LANDING_LINK_GROUP">
+                <form-input v-model="item.name" label="Название группы" />
+              </template>
+              <template v-else-if="item.modelTypeId === modelTypes.LANDING_LINK">
+                <form-input v-model="item.name" label="Текст" />
+                <form-input v-model="item.value" class="mt-3" label="Значение" />
+              </template>
+              <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
+                <form-input v-model="item.url" label="Изображение" />
+                <img :src="item.url" style="width: 100%; max-width: 100%" class="mt-3" />
+              </template>
+              <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
+            </div>
+          </template>
+        </tree>
+      </div>
     </div>
   </div>
-
   <background-editor v-model="landing.background" @change="++reloadKey" />
 </template>
-
-<style lang="scss"></style>
 
 <script lang="ts">
 import {
@@ -61,13 +68,13 @@ import { Options, Vue } from "vue-class-component";
 import FormInput from "@/components/form/FormInput.vue";
 import FormGroup from "@/components/form/FormGroup.vue";
 import GoBack from "@/components/GoBack.vue";
-import DraggableList from "@/components/DraggableList.vue";
 import CornerIcon from "@/components/CornerIcon.vue";
 import BackgroundEditor from "@/components/BackgroundEditor.vue";
 import Tree from "@/components/Tree.vue";
+import ModelType from "@/common/service/model.type";
 
 @Options({
-  components: { FormInput, FormGroup, GoBack, DraggableList, CornerIcon, BackgroundEditor, Tree },
+  components: { FormInput, FormGroup, GoBack, CornerIcon, BackgroundEditor, Tree },
 })
 export default class LandingEdit extends Vue {
   private reloadKey: number = 0;
@@ -78,6 +85,10 @@ export default class LandingEdit extends Vue {
 
   get landing() {
     return landingStore.context(this.$store).getters.landingById(this.id)!;
+  }
+
+  get modelTypes() {
+    return ModelType;
   }
 
   createEntity(modelTypeId: number, parentId: number | undefined) {

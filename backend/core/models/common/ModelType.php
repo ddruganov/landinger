@@ -6,6 +6,7 @@ use core\components\ExtendedActiveRecord;
 use core\models\landing\Landing;
 use core\models\landing\LandingBackground;
 use core\models\landing\LandingEntity;
+use core\models\landing\LandingImage;
 use core\models\landing\LandingLink;
 use core\models\landing\LandingLinkGroup;
 
@@ -25,6 +26,7 @@ class ModelType extends ExtendedActiveRecord
     public const LANDING_ENTITY = 3;
     public const LANDING_LINK_GROUP = 4;
     public const LANDING_LINK = 5;
+    public const LANDING_IMAGE = 6;
 
     public static function tableName()
     {
@@ -52,6 +54,8 @@ class ModelType extends ExtendedActiveRecord
                 return LandingLinkGroup::class;
             case self::LANDING_LINK:
                 return LandingLink::class;
+            case self::LANDING_IMAGE:
+                return LandingImage::class;
         }
     }
 }

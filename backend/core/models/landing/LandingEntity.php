@@ -3,6 +3,7 @@
 namespace core\models\landing;
 
 use core\components\CreatableInterface;
+use core\components\ErrorLog;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
@@ -20,7 +21,7 @@ use yii\db\Query;
  */
 class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 {
-    // public array $entities = [];
+    public array $children = [];
 
     public static function tableName()
     {
@@ -30,19 +31,19 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['creationDate', 'creatorId', 'landingId', 'weight'], 'required'],
+            [['creationDate', 'creatorId', 'landingId', 'modelTypeId', 'weight'], 'required'],
             [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creatorId', 'landingId', 'weight'], 'integer'],
-            // [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
+            [['creatorId', 'landingId', 'modelTypeId', 'weight', 'parentId'], 'integer'],
+            [['children'], 'filter', 'filter' => [$this, 'saveChildren']],
         ];
     }
 
-    public function saveEntities(array $entities)
+    public function saveChildren(array $children)
     {
-        foreach ($entities as $child) {
+        foreach ($children as $child) {
             $model = self::findOne($child['id']);
-            $model->setAttributes($child);
-            !$model->save() && $this->addError('entities', @reset($model->getFirstErrors()));
+            $model->saveAttributes($child);
+            !$model->save() && $this->addError('children', @reset($model->getFirstErrors()));
         }
 
         return [];
@@ -71,13 +72,14 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
             return new ExecutionResult(false, $model->getFirstErrors());
         }
 
-        return $model->getBoundModelClass()::create([
-            'id' => $model->id,
-            'name' => 'Новая ' . match ($modelTypeId) {
-                ModelType::LANDING_LINK_GROUP => 'группа',
-                ModelType::LANDING_LINK => 'ссылка'
-            }
+        $boundModelCreateRes = $model->getBoundModelClass()::create([
+            'id' => $model->id
         ]);
+        if (!$boundModelCreateRes->isSuccessful()) {
+            return $boundModelCreateRes;
+        }
+
+        return new ExecutionResult(true, [], array_merge($model->getAttributes(), $model->getBoundModel()->getAttributes()));
     }
 
     public function saveAttributes(array $attributes): ExecutionResult
@@ -91,6 +93,8 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 
     public function delete()
     {
+        ErrorLog::log($this->getBoundModelClass()::find()->all());
+
         $boundModel = $this->getBoundModel();
         if ($boundModel->delete() === false) {
             $this->addErrors($boundModel->getErrors());
@@ -105,7 +109,7 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
         return ModelType::getModelClassById($this->modelTypeId);
     }
 
-    public function getBoundModel(): LandingLink|LandingLinkGroup
+    public function getBoundModel(): LandingLink|LandingLinkGroup|LandingImage
     {
         return $this->getBoundModelClass()::findOne($this->id);
     }

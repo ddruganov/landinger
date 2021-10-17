@@ -4,13 +4,14 @@ namespace core\models\landing;
 
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
+use core\components\ExtendedActiveRecord;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $value
  */
-class LandingLink extends LandingEntity implements CreatableInterface
+class LandingLink extends ExtendedActiveRecord implements CreatableInterface
 {
     public static function tableName()
     {
@@ -37,13 +38,13 @@ class LandingLink extends LandingEntity implements CreatableInterface
     {
         $model = new self([
             'id' => $attributes['id'],
-            'name' => $attributes['name']
+            'name' => 'Новая ссылка',
+            'value' => 'https://example.com'
         ]);
 
         return new ExecutionResult(
             $model->save(),
-            $model->getFirstErrors(),
-            $model->getAttributes(['id', 'name', 'value'])
+            $model->getFirstErrors()
         );
     }
 }

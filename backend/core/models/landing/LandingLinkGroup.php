@@ -4,12 +4,13 @@ namespace core\models\landing;
 
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
+use core\components\ExtendedActiveRecord;
 
 /**
  * @property int $id
  * @property string $name
  */
-class LandingLinkGroup extends LandingEntity implements CreatableInterface
+class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface
 {
     public static function tableName()
     {
@@ -28,13 +29,12 @@ class LandingLinkGroup extends LandingEntity implements CreatableInterface
     {
         $model = new self([
             'id' => $attributes['id'],
-            'name' => $attributes['name']
+            'name' => 'Новая группа ссылок'
         ]);
 
         return new ExecutionResult(
             $model->save(),
-            $model->getFirstErrors(),
-            $model->getAttributes(['id', 'name'])
+            $model->getFirstErrors()
         );
     }
 

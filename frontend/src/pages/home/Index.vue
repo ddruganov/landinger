@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-grid">
+  <div class="landing-grid container">
     <div class="card-container">
       <div class="view-card create-landing" @click="() => createLanding()">
         <h5 class="header">Новый лендинг</h5>
