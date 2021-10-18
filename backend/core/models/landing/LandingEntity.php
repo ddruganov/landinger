@@ -3,7 +3,6 @@
 namespace core\models\landing;
 
 use core\components\CreatableInterface;
-use core\components\ErrorLog;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
@@ -93,8 +92,6 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
 
     public function delete()
     {
-        ErrorLog::log($this->getBoundModelClass()::find()->all());
-
         $boundModel = $this->getBoundModel();
         if ($boundModel->delete() === false) {
             $this->addErrors($boundModel->getErrors());
