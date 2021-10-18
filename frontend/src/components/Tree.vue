@@ -1,38 +1,41 @@
 <template>
-  <subtree
-    :id="id"
+  <div
     v-if="items.length"
-    :items="items"
+    :id="id"
+    class="subtree"
     :style="`padding-left: ${depth * 2}rem;`"
     @dragstart="(e) => onDragStart(e)"
     @dragover="(e) => onDragOver(e)"
     @dragend="() => onDragEnd()"
   >
-    <template #block="{item}">
-      <div class="block" :data-item-id="item.id">
-        <slot v-if="item.children.length" name="fold" :value="isItemFolded(item)" :click="() => toggleFold(item)" />
-        <slot name="item" :item="item" />
-      </div>
-      <tree
-        v-if="item.children.length"
-        v-show="!isItemFolded(item)"
-        v-model="item.children"
-        :depth="depth + 1"
-        :isTopLevel="false"
-      >
-        <template #item="{item}">
+    <template v-for="(item, i) in items" :key="i">
+      <div class="subtree-middle" :draggable="true">
+        <div class="spacer top fas" :data-spacer-item-id="item.id" :data-insert-after="-1" />
+        <div class="block" :data-item-id="item.id">
+          <slot v-if="item.children.length" name="fold" :value="isItemFolded(item)" :click="() => toggleFold(item)" />
           <slot name="item" :item="item" />
-        </template>
-      </tree>
+        </div>
+        <tree
+          v-if="item.children.length"
+          v-show="!isItemFolded(item)"
+          v-model="item.children"
+          :depth="depth + 1"
+          :isTopLevel="false"
+        >
+          <template #item="{item}">
+            <slot name="item" :item="item" />
+          </template>
+        </tree>
+        <div class="spacer bottom fas" :data-spacer-item-id="item.id" :data-insert-after="1" />
+      </div>
     </template>
-  </subtree>
+  </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import CornerIcon from "./CornerIcon.vue";
-import Subtree from "./Subtree.vue";
 import FormInput from "./form/FormInput.vue";
 import GrowTransition from "./transitions/GrowTransition.vue";
 import ArrayHelper from "@/common/service/array.helper";
@@ -46,7 +49,7 @@ type TreeItem = {
 };
 
 @Options({
-  components: { FormInput, CornerIcon, Subtree, GrowTransition },
+  components: { FormInput, CornerIcon, GrowTransition },
 })
 export default class Tree extends Vue {
   @Prop(Array) readonly modelValue!: TreeItem[];

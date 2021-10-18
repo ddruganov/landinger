@@ -1,10 +1,12 @@
 <template>
   <header class="topbar">
-    <router-link to="/"><h3 class="brand">Flinq</h3></router-link>
+    <div class="container">
+      <router-link to="/"><h3 class="brand">LinkToMe</h3></router-link>
 
-    <button class="button wfc ms-auto" @click="() => logout()">
-      Выйти
-    </button>
+      <button class="button wfc ms-auto" @click="() => logout()">
+        Выйти
+      </button>
+    </div>
   </header>
 </template>
 

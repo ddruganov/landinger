@@ -1,6 +1,6 @@
 <template>
   <div class="login block column">
-    <h3 class="caption">Вход в Flinq</h3>
+    <h3 class="caption">Вход в LinkToMe</h3>
 
     <form-input v-model="credentials.email" label="email" :error="errors.email" />
     <form-input v-model="credentials.password" label="пароль" :error="errors.password" type="password" />

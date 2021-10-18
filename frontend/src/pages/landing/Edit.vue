@@ -7,7 +7,7 @@
       </div>
       <div class="block column mb-3">
         <form-input class="mb-3" v-model="landing.name" label="Название" />
-        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="flinq.me/" />
+        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
         <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
       </div>
       <div class="block controls">
@@ -45,7 +45,7 @@
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
                 <form-input v-model="item.url" label="Изображение" />
-                <img :src="item.url" style="width: 100%; max-width: 100%" class="mt-3" />
+                <img class="landing-image" :src="item.url" />
               </template>
               <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
             </div>
