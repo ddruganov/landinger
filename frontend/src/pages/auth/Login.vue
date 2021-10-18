@@ -2,12 +2,9 @@
   <div class="login block column">
     <h3 class="caption">Вход в LinkToMe</h3>
 
-    <form-input v-model="credentials.email" label="email" :error="errors.email" />
-    <form-input v-model="credentials.password" label="пароль" :error="errors.password" type="password" />
-
-    <button :disabled="requestCommencing" class="login button" @click="() => login()">
-      Войти
-    </button>
+    <a v-for="socialLink in socialLinks" :key="socialLink.alias" :href="socialLink.value">
+      {{ socialLink.alias }}
+    </a>
 
     <div class="links">
       <router-link class="link" to="/auth/register">регистрация</router-link>
@@ -18,9 +15,13 @@
 <script lang="ts">
 import Api from "@/common/api";
 import FormInput from "@/components/form/FormInput.vue";
-import { authStore, SET_AUTHENTICATED } from "@/store/modules/auth.store";
 import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
+
+type SocialLink = {
+  alias: string;
+  value: string;
+};
 
 @Options({
   components: { FormInput },
@@ -28,29 +29,19 @@ import { Prop } from "vue-property-decorator";
 export default class AuthLogin extends Vue {
   @Prop(String) readonly backurl?: string;
 
-  credentials = {
-    email: "",
-    password: "",
-  };
-  errors = [];
-  requestCommencing = false;
+  socialLinks: SocialLink[] = [];
 
-  get isAuthenticated() {
-    return authStore.context(this.$store).getters.isAuthenticated;
-  }
-
-  login() {
-    this.errors = [];
-    this.requestCommencing = true;
+  mounted() {
     Api.auth
-      .login(this.credentials)
+      .getSocialLinks()
       .then((response) => {
-        authStore.context(this.$store).dispatch(SET_AUTHENTICATED, response.success);
-        this.isAuthenticated ? this.$router.push({ path: this.backurl || "/" }) : (this.errors = response.data.errors);
+        if (!response.success) {
+          throw new Error(response.exception);
+        }
+
+        this.socialLinks = response.data;
       })
-      .finally(() => {
-        this.requestCommencing = false;
-      });
+      .catch(() => this.$notifications.error("Ошибка получения ссылок на соцсети"));
   }
 }
 </script>

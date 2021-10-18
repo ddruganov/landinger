@@ -2,12 +2,11 @@
 
 namespace core\models\user;
 
-use core\components\ErrorLog;
+use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\CookieHelper;
 use core\components\helpers\DateHelper;
-use core\components\UserRegisterData;
 use core\models\token\TokenGroupGenerator;
 use Yii;
 
@@ -20,7 +19,7 @@ use Yii;
  * @property string $password
  * @property string $creationDate
  */
-class User extends ExtendedActiveRecord
+class User extends ExtendedActiveRecord implements CreatableInterface
 {
     public static function tableName()
     {
@@ -30,18 +29,17 @@ class User extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['name', 'email', 'password', 'creationDate'], 'required'],
-            [['name', 'email', 'password', 'creationDate'], 'string'],
-            [['password'], 'string', 'max' => 64],
+            [['name', 'email', 'creationDate', 'password'], 'required'],
+            [['name', 'email', 'creationDate', 'password'], 'string'],
         ];
     }
 
-    public static function register(UserRegisterData $data): ExecutionResult
+    public static function create(array $attributes): ExecutionResult
     {
         $user = new self([
-            'name' => $data->getName(),
-            'email' => $data->getEmail(),
-            'password' => Yii::$app->security->generatePasswordHash($data->getPassword()),
+            'name' => $attributes['name'],
+            'email' => $attributes['email'],
+            'password' => Yii::$app->getSecurity()->generatePasswordHash(md5(microtime())),
             'creationDate' => DateHelper::now()
         ]);
 
