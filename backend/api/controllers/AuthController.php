@@ -18,7 +18,7 @@ class AuthController extends Controller
 
             'getCurrentUser' => GetCurrentUserAction::class,
 
-            'get-social-links' => [
+            'getSocialLinks' => [
                 'class' => CollectorAction::class,
                 'collectorClass' => SocialLinkCollector::class,
             ],

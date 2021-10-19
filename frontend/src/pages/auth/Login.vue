@@ -2,9 +2,11 @@
   <div class="login block column">
     <h3 class="caption">Вход в LinkToMe</h3>
 
-    <a v-for="socialLink in socialLinks" :key="socialLink.alias" :href="socialLink.value">
-      {{ socialLink.alias }}
-    </a>
+    <div class="social-auth">
+      <a class="social-network" v-for="socialLink in socialLinks" :key="socialLink.alias" :href="socialLink.value">
+        <img class="logo" :src="`/assets/social/${socialLink.alias}.svg`" />
+      </a>
+    </div>
 
     <div class="links">
       <router-link class="link" to="/auth/register">регистрация</router-link>

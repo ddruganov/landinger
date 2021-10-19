@@ -12,16 +12,14 @@ return [
     ],
     'hosts' => $hosts,
     'links' => [
-        'api' => [
-            'auth' => [
-                'social' => [
-                    'vk' => $hosts['api'] . '/auth/social/vk'
-                ]
-            ]
-        ],
         'admin' => [
             'home' => $hosts['admin'],
-            'login' => $hosts['admin'] . '/auth/login'
+            'login' => $hosts['admin'] . '/auth/login',
+            'auth' => [
+                'social' => [
+                    'vk' => $hosts['admin'] . '/auth/social/vk'
+                ]
+            ]
         ]
     ],
     'socialNetworkApi' => require __DIR__ . '/socialNetworkApi.php',

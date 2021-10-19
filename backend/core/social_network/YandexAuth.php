@@ -16,7 +16,7 @@ class YandexAuth implements SocialNetworkAuthInterface
         $base_link = 'https://oauth.yandex.ru/authorize?';
 
         $query_params = [
-            'response_type' => 'token',
+            'response_type' => 'code',
             'client_id' => Yii::$app->params['socialNetworkApi']['yandex']['main']['id'],
         ];
 

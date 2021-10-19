@@ -37,6 +37,10 @@ const routes: Array<RouteRecordRaw> = [
         path: "/auth/logout",
         component: () => import("@/pages/auth/Logout.vue"),
       },
+      {
+        path: "/auth/social/:socialNetworkAlias",
+        component: () => import("@/pages/auth/SocialNetwork.vue"),
+      },
     ],
   },
 ];

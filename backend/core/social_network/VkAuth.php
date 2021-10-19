@@ -16,7 +16,7 @@ class VkAuth implements SocialNetworkAuthInterface
         return 'https://oauth.vk.com/authorize?' . http_build_query([
             'client_id' => Yii::$app->params['socialNetworkApi']['vk']['main']['id'],
             'display' => 'page',
-            'redirect_uri' => Yii::$app->params['links']['api']['auth']['social']['vk'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['vk'],
             'scope' => 'email',
             'response_type' => 'code',
             'v' => Yii::$app->params['socialNetworkApi']['vk']['main']['v'],
@@ -61,7 +61,7 @@ class VkAuth implements SocialNetworkAuthInterface
         $url = 'https://oauth.vk.com/access_token?' . http_build_query([
             'client_id' => Yii::$app->params['socialNetworkApi']['vk']['main']['id'],
             'client_secret' => Yii::$app->params['socialNetworkApi']['vk']['main']['secret'],
-            'redirect_uri' => Yii::$app->params['links']['api']['auth']['social']['vk'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['vk'],
             'code' => $code
         ]);
 

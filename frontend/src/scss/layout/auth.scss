@@ -17,11 +17,14 @@
           margin-bottom: 1rem !important;
           text-align: center;
         }
-        & > .input-wrapper {
+        & > .social-auth {
           margin-bottom: 1rem;
-        }
-        & > button.login {
-          margin-bottom: 1rem;
+          & > .social-network {
+            & > .logo {
+              width: 3rem;
+              height: 3rem;
+            }
+          }
         }
         & > .links {
           width: 100%;
