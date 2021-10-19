@@ -7,12 +7,7 @@
       </div>
       <div class="settings block column mb-3">
         <form-input class="mb-3" v-model="landing.name" label="Название" />
-        <div class="alias">
-          <form-input v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
-          <a class="button white fc" :href="`http://localhost:8005/${landing.alias}`" target="_blank">
-            <i class="fas fa-external-link-alt" />
-          </a>
-        </div>
+        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
         <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
       </div>
       <button class="button secondary smooth mb-2" modal-trigger="addEntity">

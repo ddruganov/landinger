@@ -11,7 +11,7 @@ use core\components\helpers\DateHelper;
  * @property int $id
  * @property int $landingId
  * @property string $datetime
- * @property string $ip
+ * @property int $count
  */
 class LandingVisit extends ExtendedActiveRecord implements CreatableInterface
 {
@@ -23,25 +23,33 @@ class LandingVisit extends ExtendedActiveRecord implements CreatableInterface
     public function rules()
     {
         return [
-            [['landingId', 'datetime'], 'required'],
-            [['landingId'], 'integer'],
-            [['datetime', 'ip'], 'string'],
+            [['landingId', 'datetime', 'count'], 'required'],
+            [['landingId', 'count'], 'integer'],
+            [['datetime'], 'string'],
             [['datetime'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['ip'], 'ip']
         ];
     }
 
     public static function create(array $attributes): ExecutionResult
     {
-        $model = new self([
+        $searchAttributes = [
             'landingId' => $attributes['landingId'],
-            'datetime' => DateHelper::now(),
-            'ip' => $attributes['ip']
-        ]);
+            'datetime' => DateHelper::now('Y-m-d H:i:00')
+        ];
+
+        $model = self::findOne($searchAttributes) ?? new self($searchAttributes);
+        $model->increment();
 
         return new ExecutionResult(
             $model->save(),
             $model->getFirstErrors(),
         );
+    }
+
+    public function increment(): static
+    {
+        $this->count ??= 0;
+        $this->count++;
+        return $this;
     }
 }

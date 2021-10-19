@@ -26,7 +26,7 @@ class EntityDisplayWidget {
 
             const classMap = {
                 'false': 'fa-chevron-down',
-                'true': 'fa-chevron-left'
+                'true': 'fa-chevron-right'
             };
             toggleArrow.classList.remove(classMap[String(childrenAreHidden)]);
             toggleArrow.classList.add(classMap[String(!childrenAreHidden)]);

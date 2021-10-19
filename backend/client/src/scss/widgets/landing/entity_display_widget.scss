@@ -8,30 +8,30 @@
   }
 
   & > .entity-group,
-  & > .entity-link {
+  & > .entity-link,
+  & > .entity-image {
     background: $white;
     border: 1px solid $white;
     border-radius: $border-radius-smooth;
     padding: 1rem;
-    &:hover {
-      border-color: $dark-primary;
-    }
   }
 
   & > .entity-group {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    cursor: default;
     cursor: pointer;
+    &:hover {
+      border-color: $dark-primary;
+    }
 
     & > .arrow {
       color: $primary;
       transition: 0.25s all linear;
-
-      &:hover {
-        border-color: $dark-primary;
-      }
+      width: 1rem;
+      height: 1rem;
+    }
+    & > .name {
+      margin-left: 1rem;
     }
   }
 
@@ -39,8 +39,24 @@
     cursor: pointer;
     color: $primary !important;
     text-decoration: none !important;
+    & > .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+    & > .name {
+      margin-left: 1rem;
+    }
     &:hover {
       color: $dark-primary !important;
+      border-color: $dark-primary;
+    }
+  }
+
+  & > .entity-image {
+    display: flex;
+    & > img {
+      border-radius: $border-radius-smooth;
+      width: 100%;
     }
   }
 

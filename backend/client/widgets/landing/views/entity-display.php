@@ -33,12 +33,16 @@ if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) {
 
     <?php if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) : ?>
         <div class="entity-group">
+            <i class="arrow fas fa-chevron-right"></i>
             <span class="name"><?= $entity['name'] ?></span>
-            <i class="arrow fas fa-chevron-left"></i>
+        </div>
+    <?php elseif ($entity['modelTypeId'] === ModelType::LANDING_IMAGE) : ?>
+        <div class="entity-image">
+            <img src="<?= $entity['url'] ?>">
         </div>
     <?php else : ?>
         <a class="entity-link" href="<?= $entity['value'] ?>">
-            <i class="fas fa-link me-3"></i>
+            <i class="icon fas fa-link"></i>
             <span class="name">
                 <?= $entity['name'] ?>
             </span>

@@ -2,7 +2,7 @@
 
 /**
  * @var \yii\web\View $this
- * @var array $landing_data [
+ * @var array $landingData [
  *   int $id
  *   string $name
  *   string $alias
@@ -28,11 +28,11 @@ EntityDisplayAsset::register($this);
 
 ?>
 
-<div class="landing" style="background:<?= $landing_data['background']['value'] ?>">
+<div class="landing" style="background:<?= $landingData['background']['value'] ?>">
     <div class="container">
-        <h1 class="page-title"><?= $landing_data['name'] ?></h1>
+        <h1 class="page-title"><?= $landingData['name'] ?></h1>
 
-        <?php foreach ($landing_data['entities'] as $entity) : ?>
+        <?php foreach ($landingData['entities'] as $entity) : ?>
             <?= EntityDisplayWidget::widget([
                 'entity' => $entity
             ]) ?>
