@@ -166,7 +166,7 @@ class LandingMutations extends Mutations<LandingState> {
   }
 
   [ADD_LANDING](payload: Landing): void {
-    this.state.landings.push(payload);
+    this.state.landings.unshift(payload);
   }
 
   [DELETE_LANDING](payload: number): void {

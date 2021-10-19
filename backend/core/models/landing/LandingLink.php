@@ -5,13 +5,14 @@ namespace core\models\landing;
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
+use core\components\SaveableInterface;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $value
  */
-class LandingLink extends ExtendedActiveRecord implements CreatableInterface
+class LandingLink extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
     public static function tableName()
     {
@@ -46,5 +47,15 @@ class LandingLink extends ExtendedActiveRecord implements CreatableInterface
             $model->save(),
             $model->getFirstErrors()
         );
+    }
+
+    public function saveFromAttributes(array $attributes): ExecutionResult
+    {
+        $this->setAttributes([
+            'name' => $attributes['name'],
+            'value' => $attributes['value'],
+        ]);
+
+        return new ExecutionResult($this->save(), $this->getFirstErrors());
     }
 }

@@ -5,12 +5,13 @@ namespace core\models\landing;
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
+use core\components\SaveableInterface;
 
 /**
  * @property int $id
  * @property string $name
  */
-class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface
+class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
     public static function tableName()
     {
@@ -36,6 +37,26 @@ class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterfac
             $model->save(),
             $model->getFirstErrors()
         );
+    }
+
+    public function saveFromAttributes(array $attributes): ExecutionResult
+    {
+        $this->setAttributes([
+            'name' => $attributes['name'],
+        ]);
+
+        if (!$this->save()) {
+            return new ExecutionResult(false, $this->getFirstErrors());
+        }
+
+        foreach ($attributes['children'] as $child) {
+            $childSaveRes = LandingEntity::findOne($child['id'])->saveFromAttributes($child);
+            if (!$childSaveRes->isSuccessful()) {
+                return $childSaveRes;
+            }
+        }
+
+        return new ExecutionResult(true);
     }
 
     public function delete()

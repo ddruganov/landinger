@@ -7,6 +7,9 @@ use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
+use core\components\SaveableInterface;
+use core\models\user\behaviors\UserLandingBehavior;
+use core\models\user\User;
 
 /**
  * @property int $id
@@ -15,11 +18,8 @@ use core\components\helpers\DateHelper;
  * @property string $name
  * @property string $alias
  */
-class Landing extends ExtendedActiveRecord implements CreatableInterface
+class Landing extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
-    public array $entities = [];
-    public array $background = [];
-
     public static function tableName()
     {
         return 'landing.landing';
@@ -32,57 +32,68 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
             [['name', 'alias'], 'string'],
             [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['creatorId'], 'integer'],
-            [['entities'], 'filter', 'filter' => [$this, 'saveEntities']],
-            [['background'], 'filter', 'filter' => [$this, 'saveBackground']]
         ];
-    }
-
-    public function saveEntities(array $entities)
-    {
-        foreach ($entities as $entity) {
-            $model = LandingEntity::findOne($entity['id']);
-            $saveRes = $model->saveAttributes($entity);
-
-            !$saveRes->isSuccessful() && $this->addError('entities', @reset($saveRes->getErrors()));
-        }
-
-        return [];
-    }
-
-    public function saveBackground()
-    {
-        $background = LandingBackground::findOne($this->id) ?? new LandingBackground(['id' => $this->id]);
-        $background->setAttributes([
-            'value' => $this->background['value'],
-            'params' => $this->background['params'] ?? ''
-        ]);
-        if (!$background->save()) {
-            $this->addError('background', @reset($background->getFirstErrors()));
-        }
-
-        return [];
     }
 
     public static function create(array $attributes): ExecutionResult
     {
+        $user = User::findOne($attributes['userId']);
+        $user->attachBehavior('UserLandingBehavior', new UserLandingBehavior());
+        if (!$user->canCreateLanding()) {
+            return new ExecutionResult(false, ['exception' => 'Вы не можете создать больше лендингов']);
+        }
+
         $model = new self([
             'name' => 'Новый лендинг',
             'alias' => md5(microtime() . rand()),
             'creationDate' => DateHelper::now(),
             'creatorId' => $attributes['userId'],
-            'background' => [
-                'value' => LandingBackground::DEFAULT_VALUE,
-                'params' => LandingBackground::DEFAULT_PARAMS
-            ]
         ]);
 
+        if (!$model->save()) {
+            return new ExecutionResult(false, $model->getFirstErrors());
+        }
+
+        $backgroundCreateRes = LandingBackground::create([
+            'id' => $model->id
+        ]);
+        if (!$backgroundCreateRes->isSuccessful()) {
+            return $backgroundCreateRes;
+        }
+
         return new ExecutionResult(
-            $model->save(),
-            $model->getFirstErrors(),
+            true,
+            [],
             (new LandingAllCollector())
                 ->setParam('ids', [$model->id])
                 ->one()
         );
+    }
+
+    public function saveFromAttributes(array $attributes): ExecutionResult
+    {
+        $background = $attributes['background'];
+        $entities = $attributes['entities'];
+        unset($attributes['background'], $attributes['entities']);
+
+        $this->setAttributes($attributes);
+        if (!$this->save()) {
+            return new ExecutionResult(false, $this->getFirstErrors());
+        }
+
+        $backgroundSaveRes = $this->getBackground()->saveFromAttributes($background);
+        if (!$backgroundSaveRes->isSuccessful()) {
+            return $backgroundSaveRes;
+        }
+
+        foreach ($entities as $entity) {
+            $entitySaveRes = LandingEntity::findOne($entity['id'])->saveFromAttributes($entity);
+            if (!$entitySaveRes->isSuccessful()) {
+                return $entitySaveRes;
+            }
+        }
+
+        return new ExecutionResult(true);
     }
 
     public function delete()
@@ -94,7 +105,18 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface
             }
         }
 
+        $background = LandingBackground::findOne($this->id);
+        if ($background->delete() === false) {
+            $this->addErrors($background->getFirstErrors());
+            return false;
+        }
+
         return parent::delete();
+    }
+
+    public function getBackground(): LandingBackground
+    {
+        return LandingBackground::findOne($this->id);
     }
 
     /**

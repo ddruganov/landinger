@@ -1,7 +1,5 @@
 <?php
 
-use core\components\ErrorLog;
-
 $exception = Yii::$app->getErrorHandler()->exception;
 
 ?>

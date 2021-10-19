@@ -4,14 +4,14 @@ namespace api\controllers\actions\generic;
 
 use core\components\ExecutionResult;
 use api\controllers\actions\ApiAction;
+use core\components\SaveableInterface;
 use Throwable;
 use Yii;
-use yii\db\ActiveRecord;
 
 class SaveAction extends ApiAction
 {
     public string $modelClass;
-    private ActiveRecord $model;
+    private SaveableInterface $model;
 
     public function run()
     {
@@ -19,13 +19,11 @@ class SaveAction extends ApiAction
         try {
             $this->model = $this->modelClass::findOne($this->getData('id'));
 
-            $this->model->setAttributes($this->getData());
+            $res = $this->model->saveFromAttributes($this->getData());
 
-            $success = $this->model->save();
+            $res->isSuccessful() ? $transaction->commit() : $transaction->rollBack();
 
-            $success ? $transaction->commit() : $transaction->rollBack();
-
-            return $this->apiResponse(new ExecutionResult($success, $this->model->getFirstErrors()));
+            return $this->apiResponse($res);
         } catch (Throwable $t) {
             $transaction->rollBack();
             return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));

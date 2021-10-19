@@ -39,4 +39,9 @@ class LandingEntityCollector extends AbstractDataCollector
 
         return TreeBuilder::run($query->all());
     }
+
+    public function one(): array
+    {
+        return @reset($this->get());
+    }
 }

@@ -7,6 +7,7 @@ use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
+use core\components\SaveableInterface;
 use core\models\common\ModelType;
 use yii\db\Query;
 
@@ -19,7 +20,7 @@ use yii\db\Query;
  * @property int $modelTypeId
  * @property int $weight
  */
-class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
+class LandingEntity extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
     public array $children = [];
 
@@ -63,7 +64,7 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
             'creationDate' => DateHelper::now(),
             'creatorId' => $attributes['userId'],
             'parentId' => $attributes['parentId'] ?? null,
-            'landingId' => $attributes['landingId'],
+            'landingId' => $landingId,
             'modelTypeId' => $modelTypeId,
             'weight' => $weight
         ]);
@@ -84,18 +85,23 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
                 'landingId' => $landingId,
                 'ids' => [$model->id]
             ])
-            ->get();
+            ->one();
 
-        return new ExecutionResult(true, [], @reset($entityData));
+        return new ExecutionResult(true, [], $entityData);
     }
 
-    public function saveAttributes(array $attributes): ExecutionResult
+    public function saveFromAttributes(array $attributes): ExecutionResult
     {
-        $this->setAttributes($attributes);
-        $boundModel = $this->getBoundModel();
-        $boundModel->setAttributes($attributes);
+        unset($attributes['id']);
+        $entityKeys = array_flip(['creationDate', 'creatorId', 'parentId', 'landingId', 'modelTypeId', 'weight']);
 
-        return new ExecutionResult($this->save() && $boundModel->save(), array_merge($this->getFirstErrors(), $boundModel->getFirstErrors()));
+        $this->setAttributes(array_intersect_key($attributes, $entityKeys));
+
+        if (!$this->save()) {
+            return new ExecutionResult(false, $this->getFirstErrors());
+        }
+
+        return $this->getBoundModel()->saveFromAttributes(array_diff_key($attributes, $entityKeys));
     }
 
     public function delete()

@@ -18,7 +18,9 @@ class LandingAllCollector extends AbstractDataCollector
             ->where(['creator_id' => $this->getParam('userId')])
             ->orderBy(['id' => SORT_DESC]);
 
-        $this->getParam('ids') && $query->where(['in', 'id', $this->getParam('ids')]);
+        if ($ids = $this->getParam('ids')) {
+            $query->where(['in', 'id', $ids]);
+        }
 
         $landings = $query->all();
 
