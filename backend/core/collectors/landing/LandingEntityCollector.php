@@ -10,7 +10,7 @@ use core\models\landing\LandingLink;
 use core\models\landing\LandingLinkGroup;
 use yii\db\Query;
 
-class LandingLinkCollector extends AbstractDataCollector
+class LandingEntityCollector extends AbstractDataCollector
 {
     public function get(): array
     {
@@ -30,6 +30,12 @@ class LandingLinkCollector extends AbstractDataCollector
             ->leftJoin(['li' => LandingImage::tableName()], 'li.id = le.id')
             ->where(['le.landing_id' => $this->getParam('landingId')])
             ->orderBy(['le.weight' => SORT_ASC]);
+
+        if ($ids = $this->getParam('ids')) {
+            $query->andWhere([
+                'in', 'le.id', $ids
+            ]);
+        }
 
         return TreeBuilder::run($query->all());
     }

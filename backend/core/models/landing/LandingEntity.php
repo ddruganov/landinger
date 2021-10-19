@@ -2,6 +2,7 @@
 
 namespace core\models\landing;
 
+use core\collectors\landing\LandingEntityCollector;
 use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
@@ -78,7 +79,14 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface
             return $boundModelCreateRes;
         }
 
-        return new ExecutionResult(true, [], array_merge($model->getAttributes(), $model->getBoundModel()->getAttributes()));
+        $entityData = (new LandingEntityCollector())
+            ->setParams([
+                'landingId' => $landingId,
+                'ids' => [$model->id]
+            ])
+            ->get();
+
+        return new ExecutionResult(true, [], @reset($entityData));
     }
 
     public function saveAttributes(array $attributes): ExecutionResult

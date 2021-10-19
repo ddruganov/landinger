@@ -3,6 +3,7 @@
 $hosts = [
     'api' => 'http://localhost:8001',
     'admin' => 'http://localhost:8080',
+    'client' => 'http://localhost:8005'
 ];
 
 return [

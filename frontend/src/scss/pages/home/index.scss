@@ -3,7 +3,6 @@
   justify-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
-  height: 100%;
   margin-top: 3rem;
   padding: 1rem;
 
@@ -17,6 +16,47 @@
         & > .icon {
           font-size: 5rem;
         }
+      }
+    }
+  }
+
+  .landing-card {
+    transition: 0.25s all linear;
+    * {
+      transition: 0.25s all linear;
+    }
+    background: $white;
+    border-radius: $border-radius-smooth;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    & > .header {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      width: 100%;
+    }
+    &:hover {
+      & > .header {
+        top: 1rem;
+        transform: none;
+      }
+      & > .controls {
+        opacity: 1;
+      }
+    }
+    & > .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: auto;
+      opacity: 0;
+      & > .button {
+        margin: 0.5rem;
+        font-size: 2rem;
       }
     }
   }

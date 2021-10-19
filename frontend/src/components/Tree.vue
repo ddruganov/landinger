@@ -10,7 +10,7 @@
   >
     <template v-for="(item, i) in items" :key="i">
       <div class="subtree-middle" :draggable="true">
-        <div class="spacer top fas" :data-spacer-item-id="item.id" :data-insert-after="-1" />
+        <div class="spacer top" :data-spacer-item-id="item.id" :data-insert-after="-1" />
         <div class="block" :data-item-id="item.id">
           <slot v-if="item.children.length" name="fold" :value="isItemFolded(item)" :click="() => toggleFold(item)" />
           <slot name="item" :item="item" />
@@ -26,7 +26,7 @@
             <slot name="item" :item="item" />
           </template>
         </tree>
-        <div class="spacer bottom fas" :data-spacer-item-id="item.id" :data-insert-after="1" />
+        <div class="spacer bottom" :data-spacer-item-id="item.id" :data-insert-after="1" />
       </div>
     </template>
   </div>

@@ -1,5 +1,4 @@
 <template>
-  <button ref="trigger" modal-trigger="promptModal" class="d-none">prompt trigger</button>
   <modal-window id="promptModal">
     <template #title>
       <span>Подтвердите действие</span>

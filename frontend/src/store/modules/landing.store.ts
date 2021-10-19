@@ -184,7 +184,7 @@ class LandingMutations extends Mutations<LandingState> {
       throw new Error(`Landing #${payload.landingId} not found`);
     }
 
-    landing.entities.push({ ...payload.entity, children: [] });
+    landing.entities.push(payload.entity);
   }
 }
 

@@ -16,6 +16,10 @@ const routes: Array<RouteRecordRaw> = [
         path: "/landing/:id/edit",
         component: () => import("@/pages/landing/Edit.vue"),
       },
+      {
+        path: "/landing/:id/stats",
+        component: () => import("@/pages/landing/Stats.vue"),
+      },
     ]
   },
   /* AUTHENTICATION */

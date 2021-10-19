@@ -5,28 +5,19 @@
         <go-back link="/" />
         <button class="button wfc" @click="() => save()">Сохранить</button>
       </div>
-      <div class="block column mb-3">
+      <div class="settings block column mb-3">
         <form-input class="mb-3" v-model="landing.name" label="Название" />
-        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
-        <div class="d-flex w-100">
-          <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
-          <a :href="`http://localhost:8005/${landing.alias}`" class="button fc ms-auto" target="_blank">Перейти</a>
+        <div class="alias">
+          <form-input v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
+          <a class="button white fc" :href="`http://localhost:8005/${landing.alias}`" target="_blank">
+            <i class="fas fa-external-link-alt" />
+          </a>
         </div>
+        <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
       </div>
-      <div class="block controls">
-        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK)">
-          <i class="icon fas fa-plus" />
-          <div class="header">Создать ссылку</div>
-        </button>
-        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK_GROUP)">
-          <i class="icon fas fa-plus" />
-          <div class="header">Создать группу</div>
-        </button>
-        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_IMAGE)">
-          <i class="icon fas fa-plus" />
-          <div class="header">Добавить фото</div>
-        </button>
-      </div>
+      <button class="button secondary smooth mb-2" modal-trigger="addEntity">
+        <i class="icon fas fa-plus" style="font-size: 2rem" />
+      </button>
       <div class="entities">
         <tree v-model="landing.entities" @change="++reloadKey">
           <template #fold="{value, click}">
@@ -58,6 +49,24 @@
     </div>
   </div>
   <background-editor v-model="landing.background" @change="++reloadKey" />
+  <modal-window id="addEntity" hide-footer>
+    <template #title>
+      Добавление блоков
+    </template>
+    <template #body>
+      <div class="add-entity-controls">
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK)">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK_GROUP)">
+          <i class="far fa-folder-open"></i>
+        </button>
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_IMAGE)">
+          <i class="far fa-image"></i>
+        </button>
+      </div>
+    </template>
+  </modal-window>
 </template>
 
 <script lang="ts">
@@ -75,9 +84,10 @@ import CornerIcon from "@/components/CornerIcon.vue";
 import BackgroundEditor from "@/components/BackgroundEditor.vue";
 import Tree from "@/components/Tree.vue";
 import ModelType from "@/common/service/model.type";
+import ModalWindow from "@/components/ModalWindow.vue";
 
 @Options({
-  components: { FormInput, FormGroup, GoBack, CornerIcon, BackgroundEditor, Tree },
+  components: { FormInput, FormGroup, GoBack, CornerIcon, BackgroundEditor, Tree, ModalWindow },
 })
 export default class LandingEdit extends Vue {
   private reloadKey: number = 0;

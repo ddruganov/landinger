@@ -32,8 +32,11 @@
       }
     }
     .block {
-      cursor: grab !important;
+      cursor: grab;
       margin: 0.5rem 0;
+      & > .link-icon {
+        cursor: pointer;
+      }
 
       .block-container {
         width: 100%;

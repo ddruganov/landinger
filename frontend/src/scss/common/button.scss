@@ -3,12 +3,19 @@ button.button {
   background: $primary;
   color: $white;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   border: 1px solid $primary;
   border-radius: $border-radius;
   transition: 0.25s all linear;
   text-decoration: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.smooth {
+    border-radius: $border-radius-smooth !important;
+  }
 
   &:hover {
     color: $white;
@@ -39,14 +46,42 @@ button.button {
     }
   }
 
+  &.secondary {
+    background: $white;
+    color: $gray !important;
+    * {
+      color: $gray;
+    }
+    border-color: $white;
+    &:hover {
+      border-color: $primary;
+      color: $primary;
+      * {
+        color: $primary;
+      }
+    }
+    &:active {
+      border-color: $darker-primary;
+    }
+  }
+
   &.white {
     background: $white;
     color: $primary;
+    * {
+      color: $primary;
+    }
+    border-color: $white;
     &:hover {
+      border-color: $primary;
       background: $primary;
       color: $white;
+      * {
+        color: $white;
+      }
     }
     &:active {
+      border-color: $darker-primary;
       background: $darker-primary;
     }
   }

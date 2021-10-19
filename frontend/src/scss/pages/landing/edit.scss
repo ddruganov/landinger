@@ -10,6 +10,17 @@
       align-items: center;
       justify-content: space-between;
     }
+    & > .settings {
+      & > .alias {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        & > .button {
+          margin-left: 1rem;
+        }
+      }
+    }
     & > .controls {
       margin-bottom: 0.5rem;
       .button {
@@ -41,7 +52,6 @@
         & > .block {
           position: relative;
           width: 100%;
-          // flex-direction: column;
           transition: 0.25s all linear;
           .input-container {
             display: flex;
@@ -94,6 +104,20 @@
     justify-content: flex-end;
     .button:last-child {
       margin-left: 1rem;
+    }
+  }
+}
+
+#addEntity {
+  .add-entity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > .button {
+      width: 100px !important;
+      height: 100px !important;
+      margin: 1rem;
+      font-size: 3rem;
     }
   }
 }
