@@ -1,3 +1,4 @@
+a.button,
 button.button {
   background: $primary;
   color: $white;
@@ -7,8 +8,10 @@ button.button {
   border-radius: $border-radius;
   transition: 0.25s all linear;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
+    color: $white;
     border: 1px solid $dark-primary;
     background: $dark-primary;
   }

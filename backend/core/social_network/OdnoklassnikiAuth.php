@@ -19,7 +19,7 @@ class OdnoklassnikiAuth implements SocialNetworkAuthInterface
             'client_id' => Yii::$app->params['socialNetworkApi']['odnoklassniki']['main']['id'],
             'scope' => join(';', ['VALUABLE_ACCESS', 'GET_EMAIL', 'PIC190X190']),
             'response_type' => 'code',
-            'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['ok']
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['ok']
         ];
 
         return $base_link . http_build_query($query_params);
@@ -45,7 +45,7 @@ class OdnoklassnikiAuth implements SocialNetworkAuthInterface
         $get_params = [
             'client_id' => Yii::$app->params['socialNetworkApi']['odnoklassniki']['main']['id'],
             'client_secret' => Yii::$app->params['socialNetworkApi']['odnoklassniki']['main']['secret_key'],
-            'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['ok'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['ok'],
             'grant_type' => 'authorization_code',
             'code' => $code
         ];

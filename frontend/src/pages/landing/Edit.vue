@@ -8,7 +8,10 @@
       <div class="block column mb-3">
         <form-input class="mb-3" v-model="landing.name" label="Название" />
         <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
-        <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
+        <div class="d-flex w-100">
+          <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
+          <a :href="`http://localhost:8005/${landing.alias}`" class="button fc ms-auto" target="_blank">Перейти</a>
+        </div>
       </div>
       <div class="block controls">
         <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_LINK)">

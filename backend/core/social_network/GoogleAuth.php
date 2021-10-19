@@ -19,7 +19,7 @@ class GoogleAuth implements SocialNetworkAuthInterface
             'response_type' => 'code',
             'scope' => 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
             'include_granted_scopes' => 'false',
-            'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['google'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['google'],
             'client_id' => Yii::$app->params['socialNetworkApi']['google']['main']['client_id'],
         ];
 
@@ -59,7 +59,7 @@ class GoogleAuth implements SocialNetworkAuthInterface
                 'client_secret' => Yii::$app->params['socialNetworkApi']['google']['main']['client_secret'],
                 'code' => $code,
                 'grant_type' => 'authorization_code',
-                'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['google']
+                'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['google']
             ]
         ]);
 

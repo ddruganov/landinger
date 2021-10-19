@@ -10,7 +10,7 @@ use yii\base\Action;
 class ApiAction extends Action
 {
     private const SAFE_ACTIONS = [
-        'get-social-links',
+        'getSocialLinks',
         'social',
         'logout',
     ];

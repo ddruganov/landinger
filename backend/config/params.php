@@ -17,7 +17,10 @@ return [
             'login' => $hosts['admin'] . '/auth/login',
             'auth' => [
                 'social' => [
-                    'vk' => $hosts['admin'] . '/auth/social/vk'
+                    'vk' => $hosts['admin'] . '/auth/social/vk',
+                    'yandex' => $hosts['admin'] . '/auth/social/yandex',
+                    'google' => $hosts['admin'] . '/auth/social/google',
+                    'facebook' => $hosts['admin'] . '/auth/social/facebook',
                 ]
             ]
         ]

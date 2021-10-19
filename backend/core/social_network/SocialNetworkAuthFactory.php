@@ -26,10 +26,10 @@ class SocialNetworkAuthFactory
     {
         return [
             VkAuth::getAlias() => new VkAuth(),
-            // YandexAuth::getAlias() =>  new YandexAuth(),
+            YandexAuth::getAlias() =>  new YandexAuth(),
             // OdnoklassnikiAuth::getAlias() => new OdnoklassnikiAuth(),
-            // GoogleAuth::getAlias() => new GoogleAuth(),
-            // FacebookAuth::getAlias() => new FacebookAuth()
+            GoogleAuth::getAlias() => new GoogleAuth(),
+            FacebookAuth::getAlias() => new FacebookAuth()
         ];
     }
 }

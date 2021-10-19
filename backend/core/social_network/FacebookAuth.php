@@ -17,7 +17,7 @@ class FacebookAuth implements SocialNetworkAuthInterface
 
         $query_params = [
             'client_id' => Yii::$app->params['socialNetworkApi']['facebook']['main']['client_id'],
-            'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['facebook'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['facebook'],
             'scope' => join(',', ['email']),
         ];
 
@@ -55,7 +55,7 @@ class FacebookAuth implements SocialNetworkAuthInterface
         $url = 'https://graph.facebook.com/v12.0/oauth/access_token?' . http_build_query([
             'client_id' => Yii::$app->params['socialNetworkApi']['facebook']['main']['client_id'],
             'client_secret' => Yii::$app->params['socialNetworkApi']['facebook']['main']['client_secret'],
-            'redirect_uri' => Yii::$app->params['links']['store']['auth']['social']['facebook'],
+            'redirect_uri' => Yii::$app->params['links']['admin']['auth']['social']['facebook'],
             'code' => $code,
         ]);
 

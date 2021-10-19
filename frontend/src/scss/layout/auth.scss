@@ -20,6 +20,7 @@
         & > .social-auth {
           margin-bottom: 1rem;
           & > .social-network {
+            margin: 0 0.5rem;
             & > .logo {
               width: 3rem;
               height: 3rem;
@@ -30,7 +31,7 @@
           width: 100%;
           display: flex;
           align-items: center;
-          justify-content: stretch;
+          justify-content: center;
         }
       }
     }
