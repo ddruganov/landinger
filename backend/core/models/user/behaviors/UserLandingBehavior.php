@@ -7,7 +7,7 @@ use yii\base\Behavior;
 
 class UserLandingBehavior extends Behavior
 {
-    public const MAX_LANDINGS_PER_USER = 3;
+    public const MAX_LANDINGS_PER_USER = 1;
 
     public function getLandings(): array
     {

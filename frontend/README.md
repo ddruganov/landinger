@@ -1,4 +1,4 @@
-# admin.pacc
+# admin.linktome
 
 ## Project setup
 ```
