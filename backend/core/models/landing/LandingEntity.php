@@ -20,10 +20,8 @@ use yii\db\Query;
  * @property int $modelTypeId
  * @property int $weight
  */
-class LandingEntity extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
+class LandingEntity extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
 {
-    public array $children = [];
-
     public static function tableName()
     {
         return 'landing.landing_entity';
@@ -35,19 +33,7 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface, 
             [['creationDate', 'creatorId', 'landingId', 'modelTypeId', 'weight'], 'required'],
             [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['creatorId', 'landingId', 'modelTypeId', 'weight', 'parentId'], 'integer'],
-            [['children'], 'filter', 'filter' => [$this, 'saveChildren']],
         ];
-    }
-
-    public function saveChildren(array $children)
-    {
-        foreach ($children as $child) {
-            $model = self::findOne($child['id']);
-            $model->saveAttributes($child);
-            !$model->save() && $this->addError('children', @reset($model->getFirstErrors()));
-        }
-
-        return [];
     }
 
     public static function create(array $attributes): ExecutionResult
@@ -120,8 +106,20 @@ class LandingEntity extends ExtendedActiveRecord implements CreatableInterface, 
         return ModelType::getModelClassById($this->modelTypeId);
     }
 
-    public function getBoundModel(): LandingLink|LandingLinkGroup|LandingImage
+    public function getBoundModel(): ExtendedActiveRecord|LandingEntityInterface
     {
         return $this->getBoundModelClass()::findOne($this->id);
+    }
+
+    public function getData(): array
+    {
+        $boundModelData = $this->getBoundModel()->getData();
+        return array_merge([
+            'id' => $this->id,
+            'modelTypeId' => $this->modelTypeId,
+            'parentId' => $this->parentId,
+            'weight' => $this->weight,
+            'children' => []
+        ], $boundModelData);
     }
 }

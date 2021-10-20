@@ -12,7 +12,7 @@ use core\components\SaveableInterface;
  * @property string $name
  * @property string $value
  */
-class LandingLink extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
+class LandingLink extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
 {
     public static function tableName()
     {
@@ -57,5 +57,13 @@ class LandingLink extends ExtendedActiveRecord implements CreatableInterface, Sa
         ]);
 
         return new ExecutionResult($this->save(), $this->getFirstErrors());
+    }
+
+    public function getData(): array
+    {
+        return [
+            'name' => $this->name,
+            'value' => $this->value,
+        ];
     }
 }

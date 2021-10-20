@@ -27,7 +27,8 @@ return [
             ]
         ],
         'service' => [
-            'uploadFolder' => $hosts['service'] . '/upload/image'
+            'uploadFolder' => $hosts['service'] . '/upload/image',
+            'defaultImage' => $hosts['service'] . '/images/default.svg',
         ]
     ],
     'socialNetworkApi' => require __DIR__ . '/socialNetworkApi.php',

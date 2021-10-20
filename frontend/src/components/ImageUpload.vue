@@ -1,10 +1,7 @@
 <template>
-  <div :id="id" class="image-uploader">
-    <div v-if="modelValue.id" class="position-relative">
-      <img class="logo border" :src="modelValue.url" />
-      <div class="delete bg-danger text-white border" @click="remove()" role="button">
-        <i class="far fa-trash-alt m-auto text-white" />
-      </div>
+  <div :id="id" class="image-upload">
+    <div v-if="modelValue.id" class="uploaded-image-wrapper">
+      <img class="value" :src="modelValue.url" />
     </div>
     <div
       v-else
@@ -16,61 +13,22 @@
       @drop.prevent="(e) => uploadDroppedImage(e)"
     >
       <input type="file" class="actual-input d-none" @input="(e) => uploadSelectedImage(e)" />
-      <i class="upload-icon fas fa-cloud-upload-alt text-muted" />
-      <span class="text-muted text-center">Перетащите фото сюда или нажмите, чтобы выбрать</span>
+      <i class="upload-icon fas fa-cloud-upload-alt" />
+      <span class="caption">Перетащите фото сюда или нажмите, чтобы выбрать</span>
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.image-uploader {
-  .logo {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 1rem;
-  }
-  .delete {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 4px 0;
-    display: flex;
-  }
-  .dropzone {
-    width: 200px;
-    height: 200px;
-    border: 3px solid #eee;
-    border-style: dashed;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    .upload-icon {
-      font-size: 2rem;
-    }
-    * {
-      pointer-events: none;
-    }
-    &.drag-over {
-      background: #eee;
-    }
-  }
-}
-</style>
 
 <script lang="ts">
 import Api from "@/common/api/index";
 import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Image from "@/types/image/Image";
+import config from "@/config";
 
 export default class ImageUpload extends Vue {
   @Prop(Object) readonly modelValue!: Image;
-  id = "ImageUploader_" + Math.random();
+  id = "ImageUploader_" + Date.now();
   get actualImageInput(): HTMLInputElement {
     return document.getElementById(this.id)!.querySelector(".actual-input")!;
   }
@@ -93,7 +51,7 @@ export default class ImageUpload extends Vue {
   remove() {
     this.$emit("update:modelValue", {
       id: null,
-      url: "http://localhost:8007/images/default.svg",
+      url: config.hosts.service + "/images/default.svg",
     });
   }
 

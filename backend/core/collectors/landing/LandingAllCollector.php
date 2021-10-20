@@ -25,7 +25,13 @@ class LandingAllCollector extends AbstractDataCollector
         $landings = $query->all();
 
         foreach ($landings as $idx => $landing) {
-            $landings[$idx]['entities'] = (new LandingEntityCollector())->setParam('landingId', $landing['id'])->get();
+            $landings[$idx]['entities'] = (new LandingEntityCollector())
+                ->setParams([
+                    'landingId' => $landing['id'],
+                    'excludeEmpty' => $this->getParam('excludeEmptyEntities', false)
+                ])
+                ->setParam('landingId', $landing['id'])
+                ->get();
 
             $landings[$idx]['background'] = (new Query())
                 ->select(['value', 'params'])

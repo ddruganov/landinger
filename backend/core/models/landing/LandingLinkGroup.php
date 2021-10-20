@@ -11,7 +11,7 @@ use core\components\SaveableInterface;
  * @property int $id
  * @property string $name
  */
-class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
+class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
 {
     public static function tableName()
     {
@@ -77,5 +77,13 @@ class LandingLinkGroup extends ExtendedActiveRecord implements CreatableInterfac
     public function getChildren(): array
     {
         return LandingEntity::findAll(['parent_id' => $this->id]);
+    }
+
+    public function getData(): array
+    {
+        return [
+            'name' => $this->name,
+            'children' => array_map(fn (LandingEntityInterface $landingEntityInterface) => $landingEntityInterface->getData(), $this->getChildren())
+        ];
     }
 }

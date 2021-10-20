@@ -12,6 +12,7 @@
  *     ?int parentId
  *     string $name
  *     string $value
+ *     array $image [ int $id, string $url ]
  *     int $weight
  *     entity[] children
  *   ]]

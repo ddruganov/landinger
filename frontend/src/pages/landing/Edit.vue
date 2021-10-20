@@ -33,8 +33,7 @@
                 <form-input v-model="item.value" class="mt-3" label="Значение" />
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
-                <form-input v-model="item.url" label="Изображение" />
-                <img class="landing-image" :src="item.url" />
+                <image-upload v-model="item.image" />
               </template>
               <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
             </div>
@@ -80,9 +79,10 @@ import BackgroundEditor from "@/components/BackgroundEditor.vue";
 import Tree from "@/components/Tree.vue";
 import ModelType from "@/common/service/model.type";
 import ModalWindow from "@/components/ModalWindow.vue";
+import ImageUpload from "@/components/ImageUpload.vue";
 
 @Options({
-  components: { FormInput, FormGroup, GoBack, CornerIcon, BackgroundEditor, Tree, ModalWindow },
+  components: { FormInput, FormGroup, GoBack, CornerIcon, BackgroundEditor, Tree, ModalWindow, ImageUpload },
 })
 export default class LandingEdit extends Vue {
   private reloadKey: number = 0;

@@ -6,15 +6,14 @@ use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\SaveableInterface;
+use core\models\service\Image;
 
 /**
  * @property int $id
- * @property string $url
+ * @property int $imageId
  */
-class LandingImage extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
+class LandingImage extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
 {
-    public const DEFAULT_URL = 'https://picsum.photos/200';
-
     public static function tableName()
     {
         return 'landing.landing_image';
@@ -23,16 +22,30 @@ class LandingImage extends ExtendedActiveRecord implements CreatableInterface, S
     public function rules()
     {
         return [
-            [['url'], 'required'],
-            [['url'], 'string'],
+            [['id'], 'required'],
+            [['id', 'imageId'], 'integer'],
         ];
+    }
+
+    public function delete()
+    {
+        if (parent::delete() === false) {
+            return false;
+        }
+
+        $image = Image::findOne($this->imageId);
+        if ($image && $image->delete() === false) {
+            $this->addErrors($image->getErrors());
+            return false;
+        }
+
+        return true;
     }
 
     public static function create(array $attributes): ExecutionResult
     {
         $model = new self([
             'id' => $attributes['id'],
-            'url' => self::DEFAULT_URL
         ]);
 
         return new ExecutionResult(
@@ -44,9 +57,26 @@ class LandingImage extends ExtendedActiveRecord implements CreatableInterface, S
     public function saveFromAttributes(array $attributes): ExecutionResult
     {
         $this->setAttributes([
-            'url' => $attributes['url'],
+            'imageId' => $attributes['image']['id']
         ]);
 
         return new ExecutionResult($this->save(), $this->getFirstErrors());
+    }
+
+    public function getImage(): Image
+    {
+        return Image::findOne($this->imageId) ?? new Image();
+    }
+
+    public function getData(): array
+    {
+        $image = $this->getImage();
+
+        return [
+            'image' => [
+                'id' => $image->id,
+                'url' => $image->getUrl()
+            ]
+        ];
     }
 }

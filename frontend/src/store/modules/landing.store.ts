@@ -110,7 +110,7 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
 
         this.commit(ADD_ENTITY, { landingId: landingId, entity: response.data });
       })
-      .catch((e) => appInstance.$notifications.error(e.message, "Ошибка создания ссылки"))
+      .catch((e) => appInstance.$notifications.error(e.message, "Ошибка создания блока"))
   }
 
   [DELETE_LANDING_ENTITY]({ landingId, id }: { landingId: number; id: number }): Promise<boolean> {
@@ -122,12 +122,12 @@ class LandingActions extends Actions<LandingState, LandingGetters, LandingMutati
           }
 
           this.commit(DELETE_LANDING_ENTITY, { landingId: landingId, id: id });
-          appInstance.$notifications.success("Ссылка успешно удалена")
+          appInstance.$notifications.success("Блок успешно удалён")
           resolve(true);
         })
         .catch((e) => {
           resolve(false);
-          appInstance.$notifications.error(e.message, "Ошибка удаления ссылки")
+          appInstance.$notifications.error(e.message, "Ошибка удаления блока")
         });
     });
   }
@@ -181,7 +181,7 @@ class LandingMutations extends Mutations<LandingState> {
   [ADD_ENTITY](payload: { landingId: number, entity: LandingEntity }): void {
     const landing = this.state.landings.find(l => l.id === payload.landingId);
     if (!landing) {
-      throw new Error(`Landing #${payload.landingId} not found`);
+      throw new Error(`Лендинг #${payload.landingId} не найден`);
     }
 
     landing.entities.push(payload.entity);

@@ -4,40 +4,51 @@ namespace core\collectors\landing;
 
 use core\collectors\AbstractDataCollector;
 use core\components\TreeBuilder;
+use core\models\common\ModelType;
 use core\models\landing\LandingEntity;
-use core\models\landing\LandingImage;
-use core\models\landing\LandingLink;
-use core\models\landing\LandingLinkGroup;
-use yii\db\Query;
+use core\models\landing\LandingEntityInterface;
 
 class LandingEntityCollector extends AbstractDataCollector
 {
     public function get(): array
     {
-        $query = (new Query())
-            ->select([
-                'le.id',
-                'modelTypeId' => 'le.model_type_id',
-                'parentId' => 'le.parent_id',
-                'name' => 'coalesce(llg.name, ll.name)',
-                'll.value',
-                'li.url',
-                'le.weight'
+        $query = LandingEntity::find()
+            ->where([
+                'landing_id' => $this->getParam('landingId')
             ])
-            ->from(['le' => LandingEntity::tableName()])
-            ->leftJoin(['llg' => LandingLinkGroup::tableName()], 'llg.id = le.id')
-            ->leftJoin(['ll' => LandingLink::tableName()], 'll.id = le.id')
-            ->leftJoin(['li' => LandingImage::tableName()], 'li.id = le.id')
-            ->where(['le.landing_id' => $this->getParam('landingId')])
-            ->orderBy(['le.weight' => SORT_ASC]);
+            ->orderBy(['weight' => SORT_ASC]);
 
         if ($ids = $this->getParam('ids')) {
             $query->andWhere([
-                'in', 'le.id', $ids
+                'in', 'id', $ids
             ]);
         }
 
-        return TreeBuilder::run($query->all());
+        $data = array_map(fn (LandingEntityInterface $landingEntityInterface) => $landingEntityInterface->getData(), $query->all());
+
+        if ($this->getParam('excludeEmpty')) {
+            foreach ($data as $key => $value) {
+                switch ($value['modelTypeId']) {
+                    case ModelType::LANDING_LINK_GROUP:
+                        if (!$value['children']) {
+                            unset($data[$key]);
+                        }
+                        break;
+                    case ModelType::LANDING_LINK:
+                        if (!$value['value']) {
+                            unset($data[$key]);
+                        }
+                        break;
+                    case ModelType::LANDING_IMAGE:
+                        if (!$value['image']['id']) {
+                            unset($data[$key]);
+                        }
+                        break;
+                }
+            }
+        }
+
+        return TreeBuilder::run($data);
     }
 
     public function one(): array

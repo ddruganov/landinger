@@ -7,6 +7,7 @@ use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\CookieHelper;
 use core\components\helpers\DateHelper;
+use core\models\service\Image;
 use core\models\token\TokenGroupGenerator;
 use Yii;
 
@@ -18,6 +19,7 @@ use Yii;
  * @property string $email
  * @property string $password
  * @property string $creationDate
+ * @property int $imageId
  */
 class User extends ExtendedActiveRecord implements CreatableInterface
 {
@@ -32,6 +34,7 @@ class User extends ExtendedActiveRecord implements CreatableInterface
             [['name', 'email', 'creationDate', 'password'], 'required'],
             [['name', 'email', 'creationDate', 'password'], 'string'],
             [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['imageId'], 'integer']
         ];
     }
 
@@ -58,5 +61,10 @@ class User extends ExtendedActiveRecord implements CreatableInterface
         CookieHelper::setCookie(TokenGroupGenerator::REFRESH_TOKEN_NAME, $tokens['refresh']['token'], $tokens['refresh']['expirationDate']);
 
         return true;
+    }
+
+    public function getImage(): Image
+    {
+        return Image::findOne($this->imageId) ?? new Image();
     }
 }

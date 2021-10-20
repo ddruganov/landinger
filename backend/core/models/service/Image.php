@@ -30,8 +30,17 @@ class Image extends ExtendedActiveRecord
         ];
     }
 
+    public function getRelativePath()
+    {
+        return '/' . $this->creationDate . '/' . $this->hash . '.' . $this->extension;
+    }
+
     public function getUrl(): string
     {
-        return Yii::$app->params['links']['service']['uploadFolder'] . '/' . $this->creationDate . '/' . $this->hash . '.' . $this->extension;
+        if (!$this->id) {
+            return Yii::$app->params['links']['service']['defaultImage'];
+        }
+
+        return Yii::$app->params['links']['service']['uploadFolder'] . $this->getRelativePath();
     }
 }

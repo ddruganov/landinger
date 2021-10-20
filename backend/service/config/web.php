@@ -1,7 +1,5 @@
 <?php
 
-Yii::setAlias('@imageUpload', '@service/web/upload/image');
-
 $params = require __DIR__ . '/params.php';
 
 $config = [

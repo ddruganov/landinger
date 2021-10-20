@@ -28,7 +28,8 @@ class ActionView extends Action
         $landingData = (new LandingAllCollector())
             ->setParams([
                 'userId' => $landing->creatorId,
-                'ids' => $landing->id
+                'ids' => $landing->id,
+                'excludeEmptyEntities' => true,
             ])->one();
 
         return $this->controller->render('index', [

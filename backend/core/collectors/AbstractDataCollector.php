@@ -32,7 +32,7 @@ abstract class AbstractDataCollector
         return [];
     }
 
-    protected function getParam(string $paramName): mixed
+    protected function getParam(string $paramName, mixed $default = null): mixed
     {
         $nestedParams = explode('.', $paramName);
         $value = $this->params;
@@ -40,7 +40,7 @@ abstract class AbstractDataCollector
             if (isset($value[$param])) {
                 $value = $value[$param];
             } else {
-                $value = null;
+                $value = $default;
                 break;
             }
         }
