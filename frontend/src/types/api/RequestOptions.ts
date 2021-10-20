@@ -1,6 +1,9 @@
+import config from "@/config";
+
 export default class RequestOptions {
   private _stringify: boolean = true;
   private _ignoredByState: boolean = true;
+  private _baseUrl: string = config.hosts.api;
 
   get stringify() {
     return this._stringify;
@@ -10,6 +13,10 @@ export default class RequestOptions {
     return this._ignoredByState;
   }
 
+  get baseUrl() {
+    return this._baseUrl;
+  }
+
   setStringify(value: boolean): this {
     this._stringify = value;
     return this;
@@ -17,6 +24,11 @@ export default class RequestOptions {
 
   setIgnoredByState(value: boolean): this {
     this._ignoredByState = value;
+    return this;
+  }
+
+  setBaseUrl(value: string): this {
+    this._baseUrl = value;
     return this;
   }
 }

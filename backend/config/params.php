@@ -3,7 +3,8 @@
 $hosts = [
     'api' => 'http://localhost:8001',
     'admin' => 'http://localhost:8080',
-    'client' => 'http://localhost:8005'
+    'client' => 'http://localhost:8005',
+    'service' => 'http://localhost:8007'
 ];
 
 return [
@@ -24,6 +25,9 @@ return [
                     'facebook' => $hosts['admin'] . '/auth/social/facebook',
                 ]
             ]
+        ],
+        'service' => [
+            'uploadFolder' => $hosts['service'] . '/upload/image'
         ]
     ],
     'socialNetworkApi' => require __DIR__ . '/socialNetworkApi.php',

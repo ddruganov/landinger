@@ -155,8 +155,7 @@ export default class BackgroundEditor extends Vue {
         this.handleGradientChange(1, "0,0,0");
         break;
       case "image": {
-        const svg =
-          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 100 84'%3E%3Cpath fill='%23017ac8' d='M90.2 0h-16a2 2 0 1 0 0 3.9h16c3.3 0 5.9 2.6 5.9 5.8V64L64.4 32.4a2 2 0 0 0-2.8 0L41 53l-4.9-5a2 2 0 0 0-2.8 0L4.5 76.8c-.4-.8-.6-1.6-.6-2.5V9.7A5.8 5.8 0 0 1 9.8 4h49.6a2 2 0 1 0 0-3.9H9.8A9.8 9.8 0 0 0 0 9.7v64.6a9.7 9.7 0 0 0 3 7A9.8 9.8 0 0 0 9.8 84h80.4c5.4 0 9.8-4.4 9.8-9.7V9.7c0-5.3-4.4-9.7-9.8-9.7zm0 80.1H9.8c-1 0-1.8-.2-2.6-.6l27.5-27.3 5 4.9L52 69.4c.8.8 2 .8 2.8 0 .8-.7.8-2 0-2.7l-11-11L63 36.6l33 32.8v4.9c0 3.2-2.5 5.8-5.8 5.8z'/%3E%3C/svg%3E";
+        const svg = "http://localhost:8007/images/default.svg";
         this.background = {
           value: `url("${svg}")`,
           params: svg,

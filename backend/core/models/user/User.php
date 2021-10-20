@@ -31,6 +31,7 @@ class User extends ExtendedActiveRecord implements CreatableInterface
         return [
             [['name', 'email', 'creationDate', 'password'], 'required'],
             [['name', 'email', 'creationDate', 'password'], 'string'],
+            [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
         ];
     }
 

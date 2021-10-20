@@ -1,4 +1,3 @@
-import config from "@/config";
 import { stringify as dataToQueryString } from "querystring";
 
 import router from "@/router/index";
@@ -66,7 +65,7 @@ export default class Requestor {
     !options.ignoredByState &&
       requestStore.context(store).dispatch(BEGIN_HTTP_REQUEST, { id: url, cancelToken: undefined });
 
-    return fetch(config.host + url, params)
+    return fetch(options.baseUrl + url, params)
       .then((response) => response.json())
       .then((response: ApiResponse) => {
         if (Object.prototype.hasOwnProperty.call(response, "code")) {

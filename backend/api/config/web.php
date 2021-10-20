@@ -3,7 +3,7 @@
 $params = require __DIR__ . '/params.php';
 
 $config = [
-    'id' => 'api.flinq',
+    'id' => 'api.linktome',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
     'params' => $params,

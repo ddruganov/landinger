@@ -3,7 +3,7 @@
 $params = require __DIR__ . '/params.php';
 
 $config = [
-    'id' => 'client.flinq',
+    'id' => 'client.linktome',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'client\controllers',
     'params' => $params,

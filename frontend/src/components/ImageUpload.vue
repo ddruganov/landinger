@@ -3,7 +3,7 @@
     <div v-if="modelValue.id" class="position-relative">
       <img class="logo border" :src="modelValue.url" />
       <div class="delete bg-danger text-white border" @click="remove()" role="button">
-        <i class="far fa-trash-alt m-auto" />
+        <i class="far fa-trash-alt m-auto text-white" />
       </div>
     </div>
     <div
@@ -28,7 +28,7 @@
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 1rem;
   }
   .delete {
     position: absolute;
@@ -68,9 +68,9 @@ import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Image from "@/types/image/Image";
 
-export default class ImageUploader extends Vue {
+export default class ImageUpload extends Vue {
   @Prop(Object) readonly modelValue!: Image;
-  id = "imageUploader_" + Math.random();
+  id = "ImageUploader_" + Math.random();
   get actualImageInput(): HTMLInputElement {
     return document.getElementById(this.id)!.querySelector(".actual-input")!;
   }
@@ -79,7 +79,7 @@ export default class ImageUploader extends Vue {
     let formData = new FormData();
     formData.append("image", toUpload);
 
-    Api.image.upload(formData).then((response) => {
+    Api.multimedia.image.upload(formData).then((response) => {
       if (!response.success) {
         return;
       }
@@ -93,7 +93,7 @@ export default class ImageUploader extends Vue {
   remove() {
     this.$emit("update:modelValue", {
       id: null,
-      url: "http://localhost:8007/images/default/no_image.svg",
+      url: "http://localhost:8007/images/default.svg",
     });
   }
 

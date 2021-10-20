@@ -1,0 +1,1 @@
+cd service/web && php -S localhost:8007
