@@ -2,6 +2,7 @@
 
 namespace core\models\user\behaviors;
 
+use core\components\Telegram;
 use core\models\user\UserSocial;
 use core\models\user\UserSocialType;
 use yii\base\Behavior;
@@ -23,16 +24,16 @@ class UserSocialBehavior extends Behavior
         return $this->getSocialValue(UserSocialType::GOOGLE);
     }
 
-    public function getSocialValue(int $social_type_id): ?string
+    public function getSocialValue(int $socialTypeId): ?string
     {
-        return $this->getUserSocial($social_type_id)->getValue();
+        return $this->getUserSocial($socialTypeId)->getValue();
     }
 
-    private function getUserSocial(int $social_type_id): UserSocial
+    private function getUserSocial(int $socialTypeId): UserSocial
     {
         $params = [
             'userId' => $this->owner->id,
-            'typeId' => $social_type_id
+            'typeId' => $socialTypeId
         ];
         return UserSocial::findOne($params) ?? new UserSocial($params);
     }
@@ -52,9 +53,11 @@ class UserSocialBehavior extends Behavior
         return $this->saveSocialValue(UserSocialType::GOOGLE, $value);
     }
 
-    public function saveSocialValue(int $social_type_id, string $value): bool
+    public function saveSocialValue(int $socialTypeId, string $value): bool
     {
-        $model = $this->getUserSocial($social_type_id);
+        (new Telegram())->setTitle('saving user social #' . $socialTypeId)->setMessage($value)->send();
+
+        $model = $this->getUserSocial($socialTypeId);
         $model->value = $value;
         return $model->save();
     }
