@@ -42,7 +42,7 @@ class LandingAllCollector extends AbstractDataCollector
             $landings[$idx]['image'] = (new Landing(['imageId' => $landing['imageId']]))->getImage()->getData();
             unset($landings[$idx]['imageId']);
 
-            $landings[$idx]['link'] = Yii::$app->params['hosts']['client'] . '/' . $landing['alias'];
+            $landings[$idx]['link'] = Yii::$app->params['hosts']['main'] . '/' . $landing['alias'];
         }
 
         return $landings;

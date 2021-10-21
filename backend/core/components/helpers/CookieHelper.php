@@ -2,18 +2,21 @@
 
 namespace core\components\helpers;
 
+use Yii;
+
 class CookieHelper
 {
     public static function setCookie(string $name, string $value, int $expirationDate)
     {
         $name = self::filterCookieName($name);
-        $cookieOptions = array(
+        $cookieOptions = [
             'expires' => $expirationDate,
             'path' => '/',
+            'domain' => YII_DEBUG ? '' : Yii::$app->params['token']['domain'],
             'secure' => !YII_DEBUG,
             'httponly' => true,
             'samesite' => 'Lax'
-        );
+        ];
         setcookie($name, $value, $cookieOptions);
         $_COOKIE[$name] = $value;
     }

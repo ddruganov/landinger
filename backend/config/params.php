@@ -9,15 +9,16 @@ $finalParams = ArrayHelper::merge([
     'hosts' => [
         'api' => 'https://api.linktome.site',
         'admin' => 'https://admin.linktome.site',
-        'client' => 'https://client.linktome.site',
-        'service' => 'https://service.linktome.site'
+        'service' => 'https://service.linktome.site',
+        'main' => 'https://linktome.site',
     ]
 ], $paramsLocal);
 
 return [
     'token' => [
         'accessTTL' => 1800, // 30 minutes
-        'refreshTTL' => 2592000 // 30 days
+        'refreshTTL' => 2592000, // 30 days
+        'domain' => '.linktome.site'
     ],
     'hosts' => $finalParams['hosts'],
     'links' => [

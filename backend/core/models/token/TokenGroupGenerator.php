@@ -21,7 +21,7 @@ class TokenGroupGenerator
         // generate access token
         $accessToken = JWT::encode([
             'issuer' => Yii::$app->params['hosts']['admin'],
-            'audience' => Yii::$app->params['hosts']['admin'],
+            'audience' => Yii::$app->params['token']['domain'],
             'userId' => $user->id,
             'issueDate' => date('Y-m-d H:i:s', $issueDate),
             'expirationDate' => date('Y-m-d H:i:s', $accessTokenExpirationDate)
@@ -34,7 +34,6 @@ class TokenGroupGenerator
         if (!$accessTokenAr->save()) {
             return null;
         }
-
 
         // generate refresh token
         $refreshToken = $this->generateRefreshToken($accessToken);
