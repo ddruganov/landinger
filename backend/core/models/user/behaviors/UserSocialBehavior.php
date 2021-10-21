@@ -3,7 +3,6 @@
 namespace core\models\user\behaviors;
 
 use core\components\helpers\DateHelper;
-use core\components\Telegram;
 use core\models\user\UserSocial;
 use core\models\user\UserSocialType;
 use yii\base\Behavior;
@@ -56,8 +55,6 @@ class UserSocialBehavior extends Behavior
 
     public function saveSocialValue(int $socialTypeId, string $value): bool
     {
-        (new Telegram())->setTitle('saving user social #' . $socialTypeId)->setMessage(strval($value))->send();
-
         $model = $this->getUserSocial($socialTypeId);
         $model->setAttributes([
             'value' => $value
@@ -65,12 +62,6 @@ class UserSocialBehavior extends Behavior
         $model->getIsNewRecord() && $model->setAttributes([
             'creationDate' => DateHelper::now()
         ]);
-        $success = $model->save();
-
-        (new Telegram())
-            ->setTitle('saving user social result:' . $socialTypeId)
-            ->setMessage(var_export($model->getErrors(), true))->send();
-
-        return $success;
+        return $model->save();
     }
 }

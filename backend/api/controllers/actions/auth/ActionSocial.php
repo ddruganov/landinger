@@ -37,7 +37,6 @@ class ActionSocial extends ApiAction
             }
 
             $email = $userData->getEmail();
-            (new Telegram())->setTitle('social auth')->setMessage('email: ' . $email)->send();
             if ($email) {
                 $user = User::findOne(['email' => $email]);
                 if (!$user) {
@@ -71,11 +70,8 @@ class ActionSocial extends ApiAction
             }
 
             $user->attachBehavior('UserSocialBehavior', new UserSocialBehavior());
-            $socialValue = $user->getSocialValue($socialType->getId());
-            (new Telegram())->setTitle('user social current')->setMessage(strval($socialValue))->send();
-            if (!$socialValue) {
+            !$user->getSocialValue($socialType->getId()) &&
                 $user->saveSocialValue($socialType->getId(), $userData->getSocialId());
-            }
 
             $user->login();
 
