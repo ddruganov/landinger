@@ -8,10 +8,10 @@ if (process.env.NODE_ENV === 'development') {
   };
 } else {
   hosts = {
-    api: "http://api.linktome.site",
-    admin: "http://admin.linktome.site",
-    client: "http://linktome.site",
-    service: "http://service.linktome.site",
+    api: "https://api.linktome.site",
+    admin: "https://admin.linktome.site",
+    client: "https://linktome.site",
+    service: "https://service.linktome.site",
   };
 }
 
