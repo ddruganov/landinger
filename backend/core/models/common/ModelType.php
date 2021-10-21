@@ -9,6 +9,7 @@ use core\models\landing\LandingEntity;
 use core\models\landing\LandingImage;
 use core\models\landing\LandingLink;
 use core\models\landing\LandingLinkGroup;
+use core\models\landing\LandingText;
 
 /**
  * This is the model class for table "public.model_type".
@@ -27,6 +28,7 @@ class ModelType extends ExtendedActiveRecord
     public const LANDING_LINK_GROUP = 4;
     public const LANDING_LINK = 5;
     public const LANDING_IMAGE = 6;
+    public const LANDING_TEXT = 7;
 
     public static function tableName()
     {
@@ -56,6 +58,8 @@ class ModelType extends ExtendedActiveRecord
                 return LandingLink::class;
             case self::LANDING_IMAGE:
                 return LandingImage::class;
+            case self::LANDING_TEXT:
+                return LandingText::class;
         }
     }
 }

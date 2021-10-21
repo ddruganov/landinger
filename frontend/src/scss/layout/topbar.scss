@@ -8,5 +8,18 @@ header.topbar {
     .brand {
       color: $white;
     }
+
+    & > .dropdown-menu-wrapper {
+      & > .button {
+        border-radius: 0;
+        background: transparent;
+        border: none;
+      }
+      &:hover {
+        & > .button {
+          background: $primary;
+        }
+      }
+    }
   }
 }

@@ -5,13 +5,13 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 2rem !important;
+  height: 2rem !important;
   padding: 0.25rem;
   cursor: pointer;
   transition: 0.5s all ease;
   background-color: $primary;
-  border-radius: 0 $border-radius-smooth 0 $border-radius-smooth;
+  border-radius: 0 $border-radius-smooth 0 $border-radius-smooth !important;
   &:hover {
     background-color: $dark-primary;
   }

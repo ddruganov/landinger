@@ -1,7 +1,11 @@
 <template>
   <div :id="id" class="image-upload">
+    <span class="label" v-if="label">
+      {{ label }}
+    </span>
     <div v-if="modelValue.id" class="uploaded-image-wrapper">
       <img class="value" :src="modelValue.url" />
+      <corner-icon v-if="showDeleteButton" class="danger" icon="far fa-trash-alt" @click="() => remove()" />
     </div>
     <div
       v-else
@@ -21,20 +25,27 @@
 
 <script lang="ts">
 import Api from "@/common/api/index";
-import { Vue } from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Image from "@/types/image/Image";
 import config from "@/config";
+import CornerIcon from "./CornerIcon.vue";
 
+@Options({
+  components: { CornerIcon },
+})
 export default class ImageUpload extends Vue {
   @Prop(Object) readonly modelValue!: Image;
-  id = "ImageUploader_" + Date.now();
+  @Prop({ type: String, required: false }) readonly label!: string;
+  @Prop({ type: Boolean, default: false }) readonly showDeleteButton!: boolean;
+
+  private id = "ImageUploader_" + Date.now();
   get actualImageInput(): HTMLInputElement {
     return document.getElementById(this.id)!.querySelector(".actual-input")!;
   }
 
   upload(toUpload: File) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("image", toUpload);
 
     Api.multimedia.image.upload(formData).then((response) => {
@@ -46,6 +57,7 @@ export default class ImageUpload extends Vue {
         id: response.data.id,
         url: response.data.url,
       });
+      this.$emit("change");
     });
   }
   remove() {
@@ -53,6 +65,7 @@ export default class ImageUpload extends Vue {
       id: null,
       url: config.hosts.service + "/images/default.svg",
     });
+    this.$emit("change");
   }
 
   onDragover(e: DragEvent) {

@@ -72,7 +72,7 @@ class ActionUploadImage extends ApiAction
             }
 
             $transaction->commit();
-            return $this->apiResponse(new ExecutionResult(true, [], ['id' => $image->id, 'url' => $image->getUrl()]));
+            return $this->apiResponse(new ExecutionResult(true, [], $image->getData()));
         } catch (Throwable $t) {
             $transaction->rollBack();
             unlink($fullPath);

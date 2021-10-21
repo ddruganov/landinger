@@ -10,4 +10,8 @@ export default class ModelType {
     public static get LANDING_IMAGE() {
         return 6;
     }
+
+    public static get LANDING_TEXT() {
+        return 7;
+    }
 }

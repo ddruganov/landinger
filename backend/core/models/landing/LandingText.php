@@ -6,40 +6,25 @@ use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\SaveableInterface;
-use core\models\service\Image;
 
 /**
  * @property int $id
- * @property int $imageId
+ * @property string $content
  */
-class LandingImage extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
+class LandingText extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface, LandingEntityInterface
 {
     public static function tableName()
     {
-        return 'landing.landing_image';
+        return 'landing.landing_text';
     }
 
     public function rules()
     {
         return [
             [['id'], 'required'],
-            [['id', 'imageId'], 'integer'],
+            [['id'], 'integer'],
+            [['content'], 'string'],
         ];
-    }
-
-    public function delete()
-    {
-        if (parent::delete() === false) {
-            return false;
-        }
-
-        $image = Image::findOne($this->imageId);
-        if ($image && $image->delete() === false) {
-            $this->addErrors($image->getErrors());
-            return false;
-        }
-
-        return true;
     }
 
     public static function create(array $attributes): ExecutionResult
@@ -57,21 +42,16 @@ class LandingImage extends ExtendedActiveRecord implements CreatableInterface, S
     public function saveFromAttributes(array $attributes): ExecutionResult
     {
         $this->setAttributes([
-            'imageId' => $attributes['image']['id']
+            'content' => $attributes['content'],
         ]);
 
         return new ExecutionResult($this->save(), $this->getFirstErrors());
     }
 
-    public function getImage(): Image
-    {
-        return Image::findOne($this->imageId) ?? new Image();
-    }
-
     public function getData(): array
     {
         return [
-            'image' => $this->getImage()->getData()
+            'content' => $this->content,
         ];
     }
 }

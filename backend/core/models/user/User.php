@@ -7,6 +7,7 @@ use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\CookieHelper;
 use core\components\helpers\DateHelper;
+use core\components\SaveableInterface;
 use core\models\service\Image;
 use core\models\token\TokenGroupGenerator;
 use Yii;
@@ -21,7 +22,7 @@ use Yii;
  * @property string $creationDate
  * @property int $imageId
  */
-class User extends ExtendedActiveRecord implements CreatableInterface
+class User extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
     public static function tableName()
     {
@@ -48,6 +49,15 @@ class User extends ExtendedActiveRecord implements CreatableInterface
         ]);
 
         return new ExecutionResult($user->save(), $user->getFirstErrors(), ['id' => $user->id]);
+    }
+
+    public function saveFromAttributes(array $attributes): ExecutionResult
+    {
+        $this->setAttributes([
+            'imageId' => $attributes['image']['id']
+        ]);
+
+        return new ExecutionResult($this->save(), $this->getFirstErrors());
     }
 
     public function login(?array $tokens = null): bool

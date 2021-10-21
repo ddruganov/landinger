@@ -1,6 +1,7 @@
 .background-editor {
   & > .backdrop {
     & > .content-wrapper {
+      min-width: 500px;
       & > .body {
         & > .tabs {
           & > .body {

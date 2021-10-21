@@ -10,6 +10,16 @@
       align-items: center;
       justify-content: space-between;
     }
+    & > .settings {
+      & > .main-settings {
+        & > .image-upload {
+          width: 200px;
+          min-width: 200px;
+          height: 200px;
+          min-height: 200px;
+        }
+      }
+    }
     & > .controls {
       margin-bottom: 0.5rem;
       .button {

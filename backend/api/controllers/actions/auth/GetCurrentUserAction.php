@@ -13,7 +13,7 @@ class GetCurrentUserAction extends ApiAction
         $user = UserHelper::get();
 
         return $this->apiResponse(new ExecutionResult(true, [], [
-            'user' => $user->getAttributes(['id', 'name']),
+            'user' => $user->getAttributes(['id', 'name', 'email']) + ['image' => $user->getImage()->getData()],
         ]));
     }
 }

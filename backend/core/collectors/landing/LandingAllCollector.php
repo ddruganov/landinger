@@ -13,7 +13,7 @@ class LandingAllCollector extends AbstractDataCollector
     public function get(): array
     {
         $query = (new Query())
-            ->select(['id', 'name', 'alias'])
+            ->select(['id', 'name', 'alias', 'imageId' => 'image_id'])
             ->from(Landing::tableName())
             ->where(['creator_id' => $this->getParam('userId')])
             ->orderBy(['id' => SORT_DESC]);
@@ -38,6 +38,9 @@ class LandingAllCollector extends AbstractDataCollector
                 ->from(LandingBackground::tableName())
                 ->where(['id' => $landing['id']])
                 ->one();
+
+            $landings[$idx]['image'] = (new Landing(['imageId' => $landing['imageId']]))->getImage()->getData();
+            unset($landings[$idx]['imageId']);
 
             $landings[$idx]['link'] = Yii::$app->params['hosts']['client'] . '/' . $landing['alias'];
         }

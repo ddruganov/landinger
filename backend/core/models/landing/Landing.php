@@ -8,6 +8,7 @@ use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
 use core\components\SaveableInterface;
+use core\models\service\Image;
 use core\models\user\behaviors\UserLandingBehavior;
 use core\models\user\User;
 
@@ -17,6 +18,7 @@ use core\models\user\User;
  * @property int $creatorId
  * @property string $name
  * @property string $alias
+ * @property int $imageId
  */
 class Landing extends ExtendedActiveRecord implements CreatableInterface, SaveableInterface
 {
@@ -31,7 +33,7 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface, Saveab
             [['creationDate', 'creatorId', 'name', 'alias'], 'required'],
             [['name', 'alias'], 'string'],
             [['creationDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['creatorId'], 'integer'],
+            [['creatorId', 'imageId'], 'integer'],
         ];
     }
 
@@ -40,7 +42,7 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface, Saveab
         $user = User::findOne($attributes['userId']);
         $user->attachBehavior('UserLandingBehavior', new UserLandingBehavior());
         if (!$user->canCreateLanding()) {
-            return new ExecutionResult(false, ['exception' => 'Вы не можете создать больше лендингов']);
+            return new ExecutionResult(false, ['exception' => 'В бета-версии можно создать только один лендинг']);
         }
 
         $model = new self([
@@ -76,7 +78,11 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface, Saveab
         $entities = $attributes['entities'];
         unset($attributes['background'], $attributes['entities']);
 
-        $this->setAttributes($attributes);
+        $this->setAttributes([
+            'name' => $attributes['name'],
+            'alias' => $attributes['alias'],
+            'imageId' => $attributes['image']['id']
+        ]);
         if (!$this->save()) {
             return new ExecutionResult(false, $this->getFirstErrors());
         }
@@ -125,5 +131,10 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface, Saveab
     public function getEntities(): array
     {
         return LandingEntity::findAll(['landing_id' => $this->id]);
+    }
+
+    public function getImage(): Image
+    {
+        return Image::findOne($this->imageId) ?? new Image();
     }
 }

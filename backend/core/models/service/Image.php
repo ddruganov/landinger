@@ -43,4 +43,12 @@ class Image extends ExtendedActiveRecord
 
         return Yii::$app->params['links']['service']['uploadFolder'] . $this->getRelativePath();
     }
+
+    public function getData(): array
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->getUrl(),
+        ];
+    }
 }

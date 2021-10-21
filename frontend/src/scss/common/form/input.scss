@@ -6,7 +6,15 @@ $label-offset-focus: -9px;
   flex-direction: column;
   position: relative;
   width: 100%;
-  .input {
+
+  &[disabled] {
+    pointer-events: none;
+    & > .input {
+      color: $gray;
+    }
+  }
+
+  & > .input {
     padding: 0.5rem 1rem;
     border: 1px solid $light-gray;
     border-radius: $border-radius;

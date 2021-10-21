@@ -20,6 +20,12 @@ const routes: Array<RouteRecordRaw> = [
         path: "/landing/:id/stats",
         component: () => import("@/pages/landing/Stats.vue"),
       },
+
+      /* SETTINGS */
+      {
+        path: "/settings",
+        component: () => import("@/pages/settings/Index.vue"),
+      }
     ]
   },
   /* AUTHENTICATION */

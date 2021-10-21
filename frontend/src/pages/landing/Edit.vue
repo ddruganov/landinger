@@ -6,9 +6,14 @@
         <button class="button wfc" @click="() => save()">Сохранить</button>
       </div>
       <div class="settings block column mb-3">
-        <form-input class="mb-3" v-model="landing.name" label="Название" />
-        <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
-        <button class="button fc me-auto" modal-trigger="chooseBackground">Выбрать фон</button>
+        <div class="main-settings d-flex w-100">
+          <image-upload showDeleteButton v-model="landing.image" label="Логотип" />
+          <div class="d-flex flex-column ms-3 w-100">
+            <form-input class="mb-3" v-model="landing.name" label="Название" />
+            <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
+            <button class="button" modal-trigger="chooseBackground">Выбрать фон</button>
+          </div>
+        </div>
       </div>
       <button class="button secondary smooth mb-2" modal-trigger="addEntity">
         <i class="icon fas fa-plus" style="font-size: 2rem" />
@@ -35,6 +40,9 @@
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
                 <image-upload v-model="item.image" />
               </template>
+              <template v-else-if="item.modelTypeId === modelTypes.LANDING_TEXT">
+                <form-input type="textarea" v-model="item.content" label="Содержимое" />
+              </template>
               <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
             </div>
           </template>
@@ -57,6 +65,9 @@
         </button>
         <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_IMAGE)">
           <i class="far fa-image"></i>
+        </button>
+        <button class="button create fc" @click="() => createEntity(modelTypes.LANDING_TEXT)">
+          <i class="fas fa-font" />
         </button>
       </div>
     </template>

@@ -19,6 +19,10 @@
  *   array $background [
  *     string $value
  *   ]
+ *   array $image [
+ *     int|null $id
+ *     string $url
+ *   ]
  * ]
  */
 

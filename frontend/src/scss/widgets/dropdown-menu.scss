@@ -1,0 +1,28 @@
+.dropdown-menu-wrapper {
+  position: relative;
+
+  &.open {
+    & > .dropdown-wrapper {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  & > .button {
+    width: 100%;
+  }
+
+  & > .dropdown-wrapper {
+    transition: 0.25s all linear;
+    z-index: 2;
+    width: 100vw;
+    max-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    flex-direction: column;
+    align-items: flex-end;
+    position: absolute;
+    right: 0;
+    top: 100%;
+  }
+}

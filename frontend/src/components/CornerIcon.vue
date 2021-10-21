@@ -1,7 +1,7 @@
 <template>
-  <div class="corner-icon">
+  <button class="button corner-icon">
     <i class="icon" :class="icon" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts">

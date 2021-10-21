@@ -3,7 +3,7 @@ button.button {
   background: $primary;
   color: $white;
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid $primary;
   border-radius: $border-radius;
   transition: 0.25s all linear;
@@ -12,6 +12,10 @@ button.button {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.square {
+    padding: 0.5rem !important;
+  }
 
   &.smooth {
     border-radius: $border-radius-smooth !important;
