@@ -4,6 +4,7 @@ Yii::setAlias('@root', dirname(__DIR__));
 
 Yii::setAlias('@api', Yii::getAlias('@root/api'));
 Yii::setAlias('@client', Yii::getAlias('@root/client'));
+Yii::setAlias('@console', Yii::getAlias('@root/console'));
 Yii::setAlias('@core', Yii::getAlias('@root/core'));
 
 Yii::setAlias('@service', Yii::getAlias('@root/service'));

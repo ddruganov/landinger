@@ -13,10 +13,15 @@ $config = [
         ],
         'urlManager' => [
             'rules' => require __DIR__ . '/routes.php',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false
         ],
         'assetManager' => [
             'forceCopy' => true
-        ]
+        ],
+        'request' => [
+            'enableCsrfValidation' => false,
+        ],
     ],
     'defaultRoute' => 'landing/view',
 ];
