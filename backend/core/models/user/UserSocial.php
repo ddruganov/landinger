@@ -2,10 +2,7 @@
 
 namespace core\models\user;
 
-use core\components\CreatableInterface;
-use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
-use core\components\helpers\DateHelper;
 
 /**
  * This is the model class for table "user.user_social".
@@ -16,7 +13,7 @@ use core\components\helpers\DateHelper;
  * @property string $typeId
  * @property string $value
  */
-class UserSocial extends ExtendedActiveRecord implements CreatableInterface
+class UserSocial extends ExtendedActiveRecord
 {
     public static function tableName()
     {
@@ -30,18 +27,6 @@ class UserSocial extends ExtendedActiveRecord implements CreatableInterface
             [['userId', 'typeId'], 'integer'],
             [['value', 'creationDate'], 'string']
         ];
-    }
-
-    public static function create(array $attributes): ExecutionResult
-    {
-        $user = new self([
-            'userId' => $attributes['userId'],
-            'creationDate' => DateHelper::now(),
-            'typeId' => $attributes['typeId'],
-            'value' => $attributes['value']
-        ]);
-
-        return new ExecutionResult($user->save(), $user->getFirstErrors(), ['id' => $user->id]);
     }
 
     public function getUserId(): int
