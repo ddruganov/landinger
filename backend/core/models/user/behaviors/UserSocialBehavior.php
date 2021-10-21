@@ -2,6 +2,7 @@
 
 namespace core\models\user\behaviors;
 
+use core\components\helpers\DateHelper;
 use core\components\Telegram;
 use core\models\user\UserSocial;
 use core\models\user\UserSocialType;
@@ -58,7 +59,12 @@ class UserSocialBehavior extends Behavior
         (new Telegram())->setTitle('saving user social #' . $socialTypeId)->setMessage(strval($value))->send();
 
         $model = $this->getUserSocial($socialTypeId);
-        $model->value = $value;
+        $model->setAttributes([
+            'value' => $value
+        ]);
+        $model->isNewRecord && $model->setAttributes([
+            'creationDate' => DateHelper::now()
+        ]);
         $success = $model->save();
 
         (new Telegram())
