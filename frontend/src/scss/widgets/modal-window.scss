@@ -11,7 +11,9 @@
   }
 
   .backdrop {
-    // background: rgba($black, 0.25);
+    & > .visible {
+      background: rgba($black, 0.25);
+    }
     display: flex;
     align-items: center;
     justify-content: center;
