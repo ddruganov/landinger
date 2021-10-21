@@ -11,8 +11,6 @@ class SocialNetworkAuthFactory
                 return new VkAuth();
             case YandexAuth::getAlias():
                 return new YandexAuth();
-            case OdnoklassnikiAuth::getAlias():
-                return new OdnoklassnikiAuth();
             case GoogleAuth::getAlias():
                 return new GoogleAuth();
             case FacebookAuth::getAlias():
@@ -27,7 +25,6 @@ class SocialNetworkAuthFactory
         return [
             VkAuth::getAlias() => new VkAuth(),
             YandexAuth::getAlias() =>  new YandexAuth(),
-            // OdnoklassnikiAuth::getAlias() => new OdnoklassnikiAuth(),
             GoogleAuth::getAlias() => new GoogleAuth(),
             FacebookAuth::getAlias() => new FacebookAuth()
         ];
