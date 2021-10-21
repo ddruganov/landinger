@@ -48,6 +48,9 @@
     justify-content: center;
     flex-direction: column;
     transition: 0.25s all linear;
+    * {
+      transition: 0.25s all linear;
+    }
     & > .upload-icon {
       font-size: 5rem;
       color: $light-gray;
@@ -61,7 +64,11 @@
       pointer-events: none;
     }
     &.drag-over {
-      background: #eee;
+      background: $light-gray;
+      border-color: $primary;
+      & > .upload-icon {
+        color: $gray;
+      }
     }
 
     &:hover {

@@ -13,9 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+$indexLocalPath = __DIR__ . '/index-local.php';
+$indexLocal = file_exists($indexLocalPath) ? require($indexLocalPath) : [];
+
 // comment out the following two lines when deployed to production
-defined('YII_DEBUG') or define('YII_DEBUG', false);
-defined('YII_ENV') or define('YII_ENV', 'dev');
+defined('YII_DEBUG') or define('YII_DEBUG', $indexLocal['YII_DEBUG'] ?? false);
+defined('YII_ENV') or define('YII_ENV', $indexLocal['YII_ENV'] ?? 'prod');
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';

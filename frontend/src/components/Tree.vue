@@ -85,7 +85,7 @@ export default class Tree extends Vue {
   }
 
   private onDragOver(e: DragEvent) {
-    if (!this.isTopLevel) {
+    if (e.dataTransfer?.items.length || e.dataTransfer?.files.length || !this.isTopLevel) {
       return;
     }
 
