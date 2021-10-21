@@ -72,7 +72,7 @@ class ActionSocial extends ApiAction
 
             $user->attachBehavior('UserSocialBehavior', new UserSocialBehavior());
             $socialValue = $user->getSocialValue($socialType->getId());
-            (new Telegram())->setTitle('user social current')->setMessage($socialValue)->send();
+            (new Telegram())->setTitle('user social current')->setMessage(strval($socialValue))->send();
             if (!$socialValue) {
                 $user->saveSocialValue($socialType->getId(), $userData->getSocialId());
             }

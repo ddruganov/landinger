@@ -55,7 +55,7 @@ class UserSocialBehavior extends Behavior
 
     public function saveSocialValue(int $socialTypeId, string $value): bool
     {
-        (new Telegram())->setTitle('saving user social #' . $socialTypeId)->setMessage($value)->send();
+        (new Telegram())->setTitle('saving user social #' . $socialTypeId)->setMessage(strval($value))->send();
 
         $model = $this->getUserSocial($socialTypeId);
         $model->value = $value;
