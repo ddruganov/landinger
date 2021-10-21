@@ -25,7 +25,12 @@ class YandexAuth implements SocialNetworkAuthInterface
 
     public function getClientData(array $params): ?SocialNetworkAuthClientData
     {
-        $access_token = $params['access_token'] ?? null;
+        $code = $params['code'] ?? null;
+        if (!$code) {
+            return null;
+        }
+
+        $access_token = $this->getAccessToken($code);
         if (!$access_token) {
             return null;
         }
@@ -48,5 +53,25 @@ class YandexAuth implements SocialNetworkAuthInterface
             ->setEmail($data['default_email'])
             ->setName($data['real_name'])
             ->setPhotoLink('https://avatars.yandex.net/get-yapic/' . $data['default_avatar_id'] . '/islands-200');
+    }
+
+    private function getAccessToken(string $code): ?string
+    {
+        $ch = curl_init('https://oauth.yandex.ru/token');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => [
+                'grant_type' => 'authorization_code',
+                'code' => $code,
+                'client_id' => Yii::$app->params['socialNetworkApi']['yandex']['main']['client_id'],
+                'client_secret' => Yii::$app->params['socialNetworkApi']['yandex']['main']['client_secret'],
+            ]
+        ]);
+
+        $json = curl_exec($ch);
+        $decoded = json_decode($json, true);
+
+        return $decoded['access_token'] ?? null;
     }
 }
