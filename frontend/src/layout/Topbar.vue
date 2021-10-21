@@ -5,9 +5,9 @@
 
       <dropdown-menu class="ms-auto">
         <template #caption>
-          <div class="d-flex align-items-center">
-            <span class="me-3">{{ authenticatedUser.name }}</span>
-            <img :src="authenticatedUser.image.url" width="40" height="40" style="border-radius: 100%" />
+          <div class="content-container">
+            <span class="username">{{ authenticatedUser.name }}</span>
+            <img class="avatar" :src="authenticatedUser.image.url" />
           </div>
         </template>
         <template #content>
