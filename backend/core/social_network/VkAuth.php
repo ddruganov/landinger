@@ -30,13 +30,13 @@ class VkAuth implements SocialNetworkAuthInterface
             return null;
         }
 
-        $access_token_data = $this->getAccessTokenData($code);
-        if (!$access_token_data) {
+        $accessTokenData = $this->getAccessTokenData($code);
+        if (!$accessTokenData) {
             return null;
         }
 
         $url = 'https://api.vk.com/method/users.get?' . http_build_query([
-            'access_token' => $access_token_data['access_token'],
+            'access_token' => $accessTokenData['access_token'],
             'fields' => join(',', ['photo_200_orig']),
             'v' => Yii::$app->params['socialNetworkApi']['vk']['main']['v']
         ]);
@@ -51,7 +51,7 @@ class VkAuth implements SocialNetworkAuthInterface
 
         return (new SocialNetworkAuthClientData())
             ->setSocialId(strval($data['id']))
-            ->setEmail($access_token_data['email'])
+            ->setEmail($accessTokenData['email'])
             ->setName(join(' ', [$data['first_name'], $data['last_name']]))
             ->setPhotoLink($data['photo_200_orig']);
     }

@@ -13,14 +13,14 @@ class YandexAuth implements SocialNetworkAuthInterface
 
     public function getAuthLink(array $params = []): string
     {
-        $base_link = 'https://oauth.yandex.ru/authorize?';
+        $baseLink = 'https://oauth.yandex.ru/authorize?';
 
-        $query_params = [
+        $queryParams = [
             'response_type' => 'code',
             'client_id' => Yii::$app->params['socialNetworkApi']['yandex']['main']['id'],
         ];
 
-        return $base_link . http_build_query($query_params);
+        return $baseLink . http_build_query($queryParams);
     }
 
     public function getClientData(array $params): ?SocialNetworkAuthClientData
@@ -30,8 +30,8 @@ class YandexAuth implements SocialNetworkAuthInterface
             return null;
         }
 
-        $access_token = $this->getAccessToken($code);
-        if (!$access_token) {
+        $accessToken = $this->getAccessToken($code);
+        if (!$accessToken) {
             return null;
         }
 
@@ -39,7 +39,7 @@ class YandexAuth implements SocialNetworkAuthInterface
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => [
-                'Authorization: OAuth ' . $access_token
+                'Authorization: OAuth ' . $accessToken
             ]
         ]);
         $json = curl_exec($ch);
@@ -64,8 +64,8 @@ class YandexAuth implements SocialNetworkAuthInterface
             CURLOPT_POSTFIELDS => [
                 'grant_type' => 'authorization_code',
                 'code' => $code,
-                'client_id' => Yii::$app->params['socialNetworkApi']['yandex']['main']['client_id'],
-                'client_secret' => Yii::$app->params['socialNetworkApi']['yandex']['main']['client_secret'],
+                'client_id' => Yii::$app->params['socialNetworkApi']['yandex']['main']['id'],
+                'client_secret' => Yii::$app->params['socialNetworkApi']['yandex']['main']['password'],
             ]
         ]);
 
