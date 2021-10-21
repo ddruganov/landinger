@@ -13,12 +13,12 @@ class ActionView extends Action
     public function run(string $alias)
     {
         if (!$alias) {
-            throw new UserException('Такой страницы не существует');
+            throw new UserException('Такой страницы не существует', 404);
         }
 
         $landing = Landing::findOne(['alias' => $alias]);
         if (!$landing) {
-            throw new UserException('Такого лендинга не существует');
+            throw new UserException('Такого лендинга не существует', 401);
         }
 
         LandingVisit::create([

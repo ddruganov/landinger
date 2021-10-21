@@ -43,4 +43,8 @@ EntityDisplayAsset::register($this);
             ]) ?>
         <?php endforeach ?>
     </div>
+
+    <footer class="footer">
+        <span>Сделано на платформе</span> <a href="https://admin.linktome.site">LinkToMe</a>
+    </footer>
 </div>

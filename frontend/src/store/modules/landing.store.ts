@@ -2,7 +2,6 @@ import Api from "@/common/api";
 import appInstance from "@/main";
 import Landing from "@/types/landing/Landing";
 import LandingEntity from "@/types/landing/LandingEntity";
-import LandingLink from "@/types/landing/LandingEntity";
 import { Getters, Mutations, Actions, Module } from "vuex-smart-module";
 
 type LandingCommon = {

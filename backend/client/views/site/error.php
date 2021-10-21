@@ -4,6 +4,11 @@ $exception = Yii::$app->getErrorHandler()->exception;
 
 ?>
 
-<div class="container w-100 h-100 d-flex align-items-center justify-content-center">
-    <h1><?= $exception->getMessage() ?></h1>
+<div class="error container">
+    <h1>Ошибка!</h1>
+    <i class="icon far fa-frown"></i>
+    <h3><?= $exception->getMessage() ?></h3>
+    <?php if (!in_array($exception->getCode(), [404])) : ?>
+        <div>Мы уже знаем об ошибке и скоро всё исправим!</div>
+    <?php endif; ?>
 </div>

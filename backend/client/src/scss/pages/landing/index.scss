@@ -1,20 +1,32 @@
 .landing {
-  width: 100%;
   display: flex;
+  align-items: center;
   flex-direction: column;
   flex: 1;
-  padding: 1rem;
   background-size: cover !important;
 
   & > .container {
-    width: 100%;
+    width: calc(100% - 2rem);
     max-width: 768px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    padding: 0 1rem;
 
     & > .page-title {
       margin: 3rem auto;
+    }
+  }
+
+  & > footer.footer {
+    padding: 1rem 0;
+    background: $white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > a {
+      margin-left: 0.25rem;
     }
   }
 }
