@@ -4,8 +4,6 @@ use yii\helpers\ArrayHelper;
 
 if (isset(getallheaders()['Origin'])) {
     header('Access-Control-Allow-Origin: ' . getallheaders()['Origin']);
-} else {
-    header('Access-Control-Allow-Origin: https://admin.linktome.site/');
 }
 header('Access-Control-Allow-Methods: POST, PATCH, DELETE, PUT, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Accept, Authorization, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, OrganizationId');
