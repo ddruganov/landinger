@@ -6,7 +6,7 @@ $paramsLocalPath = __DIR__ . '/params-local.php';
 $paramsLocal = file_exists($paramsLocalPath) ? require $paramsLocalPath : [];
 
 $finalParams = ArrayHelper::merge([
-    $finalParams['hosts'] = [
+    $hosts => [
         'api' => 'https://api.linktome.site',
         'admin' => 'https://admin.linktome.site',
         'client' => 'https://client.linktome.site',
