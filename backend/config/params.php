@@ -40,4 +40,5 @@ return [
         ]
     ],
     'socialNetworkApi' => require __DIR__ . '/socialNetworkApi.php',
+    'telegram' => require __DIR__ . '/telegram.php',
 ];

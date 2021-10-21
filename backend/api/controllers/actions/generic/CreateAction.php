@@ -6,6 +6,7 @@ use core\components\CreatableInterface;
 use core\components\ExecutionResult;
 use core\components\helpers\UserHelper;
 use api\controllers\actions\ApiAction;
+use core\components\Telegram;
 use Exception;
 use Throwable;
 use Yii;
@@ -39,6 +40,12 @@ class CreateAction extends ApiAction
 
             return $this->apiResponse(new ExecutionResult($success, $saveRes->getErrors(), $saveRes->getData()));
         } catch (Throwable $t) {
+            (new Telegram())
+                ->setTitle('Ошибка создания ' . $this->modelClass)
+                ->setMessage($t->getMessage())
+                ->setTrace($t->getTraceAsString())
+                ->send();
+
             $transaction->rollBack();
             return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }

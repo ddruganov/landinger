@@ -6,6 +6,7 @@ use core\collectors\AbstractDataCollector;
 use core\components\ExecutionResult;
 use core\components\helpers\UserHelper;
 use api\controllers\actions\ApiAction;
+use core\components\Telegram;
 use Throwable;
 use Yii;
 
@@ -40,6 +41,12 @@ class CollectorAction extends ApiAction
 
             return $this->apiResponse(new ExecutionResult(true, [], $this->collector->get()));
         } catch (Throwable $t) {
+            (new Telegram())
+                ->setTitle('Ошибка сбора данных через ' . $this->collectorClass)
+                ->setMessage($t->getMessage())
+                ->setTrace($t->getTraceAsString())
+                ->send();
+
             return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
     }

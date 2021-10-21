@@ -5,6 +5,7 @@ namespace api\controllers\actions\generic;
 use core\components\ExecutionResult;
 use api\controllers\actions\ApiAction;
 use core\components\SaveableInterface;
+use core\components\Telegram;
 use Throwable;
 use Yii;
 
@@ -25,6 +26,12 @@ class SaveAction extends ApiAction
 
             return $this->apiResponse($res);
         } catch (Throwable $t) {
+            (new Telegram())
+                ->setTitle('Ошибка сохранения ' . $this->modelClass . ' #' . $this->getData('id'))
+                ->setMessage($t->getMessage())
+                ->setTrace($t->getTraceAsString())
+                ->send();
+
             $transaction->rollBack();
             return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }

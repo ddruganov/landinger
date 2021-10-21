@@ -4,6 +4,7 @@ namespace api\controllers\actions\auth;
 
 use api\controllers\actions\ApiAction;
 use core\components\ExecutionResult;
+use core\components\Telegram;
 use core\models\user\User;
 use core\social_network\SocialNetworkAuthFactory;
 use Exception;
@@ -20,20 +21,15 @@ class ActionSocial extends ApiAction
             return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Неизвестная социальная сеть']));
         }
 
-        $user_data = null;
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $user_data = $socialNetwork->getClientData($this->getData());
             if (!$user_data) {
                 throw new Exception('Ошибка получения данных о клиенте');
             }
-        } catch (Throwable $t) {
-            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
-        }
 
-        $user = User::findOne(['email' => $user_data->getEmail()]);
-        if (!$user) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
+            $user = User::findOne(['email' => $user_data->getEmail()]);
+            if (!$user) {
                 $userCreateRes = User::create([
                     'email' => $user_data->getEmail(),
                     'name' => $user_data->getName(),
@@ -42,15 +38,21 @@ class ActionSocial extends ApiAction
                     throw new Exception('Ошибка регистрации через соцсеть');
                 }
                 $user = User::findOne($userCreateRes->getData('id'));
-                $transaction->commit();
-            } catch (Throwable $t) {
-                $transaction->rollBack();
-                return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
             }
+
+            $user->login();
+
+            $transaction->commit();
+            return $this->apiResponse(new ExecutionResult(true));
+        } catch (Throwable $t) {
+            (new Telegram())
+                ->setTitle('Ошибка авторизации через ' . $this->getData('alias'))
+                ->setMessage($t->getMessage())
+                ->setTrace($t->getTraceAsString())
+                ->send();
+
+            $transaction->rollBack();
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => $t->getMessage()]));
         }
-
-        $user->login();
-
-        return $this->apiResponse(new ExecutionResult(true));
     }
 }
