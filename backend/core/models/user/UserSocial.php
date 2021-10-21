@@ -49,7 +49,7 @@ class UserSocial extends ExtendedActiveRecord implements CreatableInterface
         return $this->userId;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }

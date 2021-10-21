@@ -33,7 +33,7 @@ class m211021_184555_create_user_social_table extends Migration
                 (" . UserSocialType::VK . ", '" . VkAuth::getAlias() . "'),
                 (" . UserSocialType::YANDEX . ", '" . YandexAuth::getAlias() . "'),
                 (" . UserSocialType::GOOGLE . ", '" . GoogleAuth::getAlias() . "'),
-                (" . UserSocialType::FACEBOOK . ", '" . FacebookAuth::getAlias() . "'),
+                (" . UserSocialType::FACEBOOK . ", '" . FacebookAuth::getAlias() . "');
         ");
         } catch (Throwable $t) {
         }
