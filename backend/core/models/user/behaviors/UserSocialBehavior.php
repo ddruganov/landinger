@@ -62,7 +62,7 @@ class UserSocialBehavior extends Behavior
         $model->setAttributes([
             'value' => $value
         ]);
-        $model->isNewRecord && $model->setAttributes([
+        $model->getIsNewRecord() && $model->setAttributes([
             'creationDate' => DateHelper::now()
         ]);
         $success = $model->save();
