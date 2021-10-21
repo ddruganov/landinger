@@ -87,7 +87,7 @@ class Telegram
 
     public function setTitle(string $value)
     {
-        $this->message = $value;
+        $this->title = $value;
         return $this;
     }
 
