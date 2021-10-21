@@ -8,27 +8,22 @@
       <a class="button secondary fc square" :href="landing.link" target="_blank">
         <i class="fas fa-external-link-alt" />
       </a>
-      <router-link class="button secondary fc" square :to="`/landing/${landing.id}/stats`">
+      <router-link class="button secondary fc square" :to="`/landing/${landing.id}/stats`">
         <i class="fas fa-chart-bar" />
       </router-link>
       <button class="button secondary fc square" @click="() => deleteLanding(landing.id)">
         <i class="far fa-trash-alt" />
       </button>
     </div>
-    <!-- <corner-icon icon="fas fa-times"  /> -->
   </div>
 </template>
 
 <script lang="ts">
 import Landing from "@/types/landing/Landing";
-import { Options, Vue } from "vue-class-component";
+import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
-import CornerIcon from "@/components/CornerIcon.vue";
 import { DELETE_LANDING, landingStore } from "@/store/modules/landing.store";
 
-@Options({
-  components: { CornerIcon },
-})
 export default class LandingCard extends Vue {
   @Prop(Object) readonly landing!: Landing;
 
