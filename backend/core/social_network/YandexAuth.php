@@ -50,7 +50,7 @@ class YandexAuth implements SocialNetworkAuthInterface
 
         return (new SocialNetworkAuthClientData())
             ->setSocialId(strval($data['id']))
-            ->setEmail($data['default_email'])
+            ->setEmail($data['default_email'] ?? null)
             ->setName($data['real_name'])
             ->setPhotoLink('https://avatars.yandex.net/get-yapic/' . $data['default_avatar_id'] . '/islands-200');
     }

@@ -43,7 +43,7 @@ class GoogleAuth implements SocialNetworkAuthInterface
 
         return (new SocialNetworkAuthClientData())
             ->setSocialId(strval($data['id']))
-            ->setEmail($data['email'])
+            ->setEmail($data['email'] ?? null)
             ->setName($data['name'] ?? null)
             ->setPhotoLink($data['picture'] ?? null);
     }

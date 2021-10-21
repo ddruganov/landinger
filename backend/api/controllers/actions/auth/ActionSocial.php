@@ -5,7 +5,10 @@ namespace api\controllers\actions\auth;
 use api\controllers\actions\ApiAction;
 use core\components\ExecutionResult;
 use core\components\Telegram;
+use core\models\user\behaviors\UserSocialBehavior;
 use core\models\user\User;
+use core\models\user\UserSocial;
+use core\models\user\UserSocialType;
 use core\social_network\SocialNetworkAuthFactory;
 use Exception;
 use Throwable;
@@ -21,23 +24,55 @@ class ActionSocial extends ApiAction
             return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Неизвестная социальная сеть']));
         }
 
+        $socialType = UserSocialType::fromAlias($socialNetwork->getAlias());
+        if (!$socialType) {
+            return $this->apiResponse(new ExecutionResult(false, ['exception' => 'Неизвестная социальная сеть']));
+        }
+
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $user_data = $socialNetwork->getClientData($this->getData());
-            if (!$user_data) {
+            $userData = $socialNetwork->getClientData($this->getData());
+            if (!$userData) {
                 throw new Exception('Ошибка получения данных о клиенте');
             }
 
-            $user = User::findOne(['email' => $user_data->getEmail()]);
-            if (!$user) {
-                $userCreateRes = User::create([
-                    'email' => $user_data->getEmail(),
-                    'name' => $user_data->getName(),
-                ]);
-                if (!$userCreateRes->isSuccessful()) {
-                    throw new Exception('Ошибка регистрации через соцсеть');
+            $email = $userData->getEmail();
+            if ($email) {
+                $user = User::findOne(['email' => $email]);
+                if (!$user) {
+                    $userCreateRes = User::create([
+                        'email' => $email,
+                        'name' => $userData->getName(),
+                    ]);
+                    if (!$userCreateRes->isSuccessful()) {
+                        throw new Exception('Ошибка регистрации через соцсеть');
+                    }
+                    $user = User::findOne($userCreateRes->getData('id'));
                 }
-                $user = User::findOne($userCreateRes->getData('id'));
+            } else {
+                $userSocial = UserSocial::findOne([
+                    'typeId' => $socialType->getId(),
+                    'value' => $userData->getSocialId()
+                ]);
+                if ($userSocial) {
+                    $user = User::findOne($userSocial->getUserId());
+                } else {
+                    $email = 'user' . substr(md5(microtime()), 0, 8) . '@linktome.site';
+                    $userCreateRes = User::create([
+                        'email' => $email,
+                        'name' => $userData->getName(),
+                    ]);
+                    if (!$userCreateRes->isSuccessful()) {
+                        throw new Exception('Ошибка регистрации через соцсеть');
+                    }
+                    $user = User::findOne($userCreateRes->getData('id'));
+                }
+            }
+
+            $user->attachBehavior('UserSocialBehavior', new UserSocialBehavior());
+            $socialValue = $user->getSocialValue($socialType->getId());
+            if (!$socialValue) {
+                $user->saveSocialValue($socialType->getId(), $userData->getSocialId());
             }
 
             $user->login();

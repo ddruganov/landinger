@@ -5,7 +5,7 @@ namespace core\social_network;
 class SocialNetworkAuthClientData
 {
     private string $social_id;
-    private string $email;
+    private ?string $email = null;
     private ?string $name = null;
     private ?string $photo_link = null;
 
@@ -19,11 +19,11 @@ class SocialNetworkAuthClientData
         return $this;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
-    public function setEmail(string $value): self
+    public function setEmail(?string $value): self
     {
         $this->email = $value;
         return $this;

@@ -51,7 +51,7 @@ class VkAuth implements SocialNetworkAuthInterface
 
         return (new SocialNetworkAuthClientData())
             ->setSocialId(strval($data['id']))
-            ->setEmail($accessTokenData['email'])
+            ->setEmail($accessTokenData['email'] ?? null)
             ->setName(join(' ', [$data['first_name'], $data['last_name']]))
             ->setPhotoLink($data['photo_200_orig']);
     }

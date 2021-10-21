@@ -45,7 +45,7 @@ class FacebookAuth implements SocialNetworkAuthInterface
 
         return (new SocialNetworkAuthClientData())
             ->setSocialId(strval($data['id']))
-            ->setEmail($data['email'])
+            ->setEmail($data['email'] ?? null)
             ->setName($data['name'])
             ->setPhotoLink($data['picture']['data']['url']);
     }
