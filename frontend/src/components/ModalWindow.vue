@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="isShowing" :id="id" @click="(e) => close(e)" class="mw" :class="{ show: isShowing }">
-      <div class="backdrop" :class="{ [modalClass]: modalClass }">
+      <div class="backdrop container" :class="{ [modalClass]: modalClass }">
         <div class="content-wrapper">
           <div v-if="!hideHeader" class="header">
             <div class="header-wrapper">
