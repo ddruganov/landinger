@@ -20,10 +20,10 @@ class Telegram
     public function send(): bool
     {
         try {
-            $token = Yii::$app->params['telegram_bot'][$this->type]['token'];
+            $token = Yii::$app->params['telegram']['api'][$this->type]['token'];
 
             $url = "https://api.telegram.org/bot$token/sendMessage?" . http_build_query([
-                'chat_id' => Yii::$app->params['telegram_bot'][$this->type]['chatId'],
+                'chat_id' => Yii::$app->params['telegram']['api'][$this->type]['chatId'],
                 'parse_mode' => 'html',
                 'text' => $this->formatMessage()
             ]);
