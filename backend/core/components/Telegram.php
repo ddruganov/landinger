@@ -55,6 +55,13 @@ class Telegram
             $text .= PHP_EOL;
         }
 
+        if ($request = Yii::$app->request->absoluteUrl) {
+            $text .= '<b>Request: </b>';
+            $text .= $request;
+            $text .= PHP_EOL;
+            $text .= PHP_EOL;
+        }
+
         if ($get_query_data = $_GET) {
             $text .= '<b>GET params: </b>';
             $text .= var_export($get_query_data, true);
