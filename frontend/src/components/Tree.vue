@@ -63,6 +63,10 @@ export default class Tree extends Vue {
   private draggedOverItemId: number | undefined = undefined;
   private insertAfter: number = 0;
 
+  private get isDragging() {
+    return this.draggedItemId !== undefined;
+  }
+
   private items: TreeItem[] = [];
   mounted() {
     this.items = this.modelValue;
@@ -73,7 +77,8 @@ export default class Tree extends Vue {
       return;
     }
 
-    const container = (e.target as HTMLDivElement).querySelector("[data-item-id]") as HTMLDivElement;
+    const target = e.target as HTMLDivElement;
+    const container = (target.closest("[data-item-id]") || target.querySelector("[data-item-id]")) as HTMLDivElement;
     this.draggedItemId = Number(container.dataset.itemId);
 
     const dragImage = document.createElement("div");
@@ -85,7 +90,7 @@ export default class Tree extends Vue {
   }
 
   private onDragOver(e: DragEvent) {
-    if (e.dataTransfer?.items.length || e.dataTransfer?.files.length || !this.isTopLevel) {
+    if (!this.isDragging || !this.isTopLevel) {
       return;
     }
 
@@ -95,18 +100,19 @@ export default class Tree extends Vue {
     this.lastDragOverTimestamp = Date.now();
 
     const target = (e.target as HTMLDivElement).closest("[data-item-id]") as HTMLDivElement;
-    if (!target) {
+    const container = (target.closest("[data-item-id]") || target.querySelector("[data-item-id]")) as HTMLDivElement;
+    if (!container) {
       return;
     }
-    const draggedOverItemId = Number(target.dataset.itemId);
+    const draggedOverItemId = Number(container.dataset.itemId);
 
-    const boundingRect = target.getBoundingClientRect();
+    const boundingRect = container.getBoundingClientRect();
     const percent = (e.y - boundingRect.y) / boundingRect.height;
     let newValue = 0;
-    const margin = 0.33;
-    if (percent < margin) {
+    const threshold = 0.33;
+    if (percent < threshold) {
       newValue = -1;
-    } else if (percent > 1 - margin) {
+    } else if (percent > 1 - threshold) {
       newValue = 1;
     }
 

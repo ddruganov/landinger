@@ -2,7 +2,7 @@
   <transition name="fade">
     <div v-if="isOpened" :id="id" @click="(e) => onOutsideClick(e)" class="mw" :class="{ show: isOpened }">
       <div class="backdrop container" :class="{ [modalClass]: modalClass }">
-        <div class="content-wrapper">
+        <div ref="contentWrapper" class="content-wrapper">
           <div v-if="!hideHeader" class="header">
             <div class="header-wrapper">
               <slot name="title" />
@@ -38,11 +38,16 @@ import { Vue } from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 
 export default class ModalWindowComponent extends Vue {
-  private isOpened = false;
   @Prop(Boolean) readonly hideFooter!: boolean;
   @Prop(Boolean) readonly hideHeader!: boolean;
   @Prop(String) readonly modalClass = String("modal_" + Date.now());
   @Prop(String) readonly id!: string;
+
+  private isOpened = false;
+
+  private get contentWrapper() {
+    return this.$refs.contentWrapper as HTMLDivElement;
+  }
 
   mounted() {
     const body = document.querySelector("body")!;
@@ -68,13 +73,18 @@ export default class ModalWindowComponent extends Vue {
   }
 
   onOutsideClick(e: MouseEvent) {
-    const containsModalClass = (e.target as HTMLElement).classList.contains(this.modalClass);
-    const containsCloseIcon = (e.target as HTMLElement).classList.contains("close-icon");
-    if (!containsModalClass && !containsCloseIcon) {
+    const target = e.target as HTMLDivElement;
+
+    if (target.classList.contains("close-icon")) {
+      this.forceClose(true);
       return;
     }
 
-    this.forceClose(containsCloseIcon);
+    // clicked outside
+    if (!this.contentWrapper.contains(target)) {
+      this.forceClose(false);
+      return;
+    }
   }
 
   forceClose(graceful: boolean) {
