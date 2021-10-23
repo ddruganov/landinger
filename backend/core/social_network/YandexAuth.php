@@ -23,7 +23,7 @@ class YandexAuth implements SocialNetworkAuthInterface
         return $baseLink . http_build_query($queryParams);
     }
 
-    public function getClientData(array $params): ?SocialNetworkAuthClientData
+    public function getClientData(array $params): ?SocialNetworkAuthUserData
     {
         $code = $params['code'] ?? null;
         if (!$code) {
@@ -48,7 +48,7 @@ class YandexAuth implements SocialNetworkAuthInterface
             return null;
         }
 
-        return (new SocialNetworkAuthClientData())
+        return (new SocialNetworkAuthUserData())
             ->setSocialId(strval($data['id']))
             ->setEmail($data['default_email'] ?? null)
             ->setName($data['real_name'])

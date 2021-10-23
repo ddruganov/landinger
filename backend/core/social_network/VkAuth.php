@@ -23,7 +23,7 @@ class VkAuth implements SocialNetworkAuthInterface
         ]);
     }
 
-    public function getClientData(array $params): ?SocialNetworkAuthClientData
+    public function getClientData(array $params): ?SocialNetworkAuthUserData
     {
         $code = $params['code'] ?? null;
         if (!$code) {
@@ -49,7 +49,7 @@ class VkAuth implements SocialNetworkAuthInterface
             return null;
         }
 
-        return (new SocialNetworkAuthClientData())
+        return (new SocialNetworkAuthUserData())
             ->setSocialId(strval($data['id']))
             ->setEmail($accessTokenData['email'] ?? null)
             ->setName(join(' ', [$data['first_name'], $data['last_name']]))

@@ -2,7 +2,7 @@
 
 namespace core\social_network;
 
-class SocialNetworkAuthClientData
+class SocialNetworkAuthUserData
 {
     private string $social_id;
     private ?string $email = null;

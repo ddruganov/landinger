@@ -24,7 +24,7 @@ class FacebookAuth implements SocialNetworkAuthInterface
         return $baseLink . http_build_query($queryParams);
     }
 
-    public function getClientData(array $params): ?SocialNetworkAuthClientData
+    public function getClientData(array $params): ?SocialNetworkAuthUserData
     {
         $code = $params['code'] ?? null;
         if (!$code) {
@@ -43,7 +43,7 @@ class FacebookAuth implements SocialNetworkAuthInterface
         $json = file_get_contents($url);
         $data = json_decode($json, true);
 
-        return (new SocialNetworkAuthClientData())
+        return (new SocialNetworkAuthUserData())
             ->setSocialId(strval($data['id']))
             ->setEmail($data['email'] ?? null)
             ->setName($data['name'])

@@ -26,7 +26,7 @@ class GoogleAuth implements SocialNetworkAuthInterface
         return $base_link . http_build_query($query_params);
     }
 
-    public function getClientData(array $params): ?SocialNetworkAuthClientData
+    public function getClientData(array $params): ?SocialNetworkAuthUserData
     {
         $code = $params['code'] ?? null;
         if (!$code) {
@@ -41,7 +41,7 @@ class GoogleAuth implements SocialNetworkAuthInterface
         $json = file_get_contents('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $access_token);
         $data = json_decode($json, true);
 
-        return (new SocialNetworkAuthClientData())
+        return (new SocialNetworkAuthUserData())
             ->setSocialId(strval($data['id']))
             ->setEmail($data['email'] ?? null)
             ->setName($data['name'] ?? null)
