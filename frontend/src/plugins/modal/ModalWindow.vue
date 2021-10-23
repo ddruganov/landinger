@@ -1,12 +1,12 @@
 <template>
   <transition name="fade">
-    <div v-if="isShowing" :id="id" @click="(e) => close(e)" class="mw" :class="{ show: isShowing }">
+    <div v-if="isOpened" :id="id" @click="(e) => onOutsideClick(e)" class="mw" :class="{ show: isOpened }">
       <div class="backdrop container" :class="{ [modalClass]: modalClass }">
         <div class="content-wrapper">
           <div v-if="!hideHeader" class="header">
             <div class="header-wrapper">
               <slot name="title" />
-              <i class="close-icon fas fa-times" @click="(e) => close(e)" />
+              <i class="close-icon fas fa-times" @click="(e) => onOutsideClick(e)" />
             </div>
           </div>
           <div class="body">
@@ -35,25 +35,23 @@
 
 <script lang="ts">
 import { Vue } from "vue-class-component";
-import { Prop, Watch } from "vue-property-decorator";
+import { Prop } from "vue-property-decorator";
 
 export default class ModalWindowComponent extends Vue {
-  isShowing = false;
+  private isOpened = false;
   @Prop(Boolean) readonly hideFooter!: boolean;
   @Prop(Boolean) readonly hideHeader!: boolean;
   @Prop(String) readonly modalClass = String("modal_" + Date.now());
   @Prop(String) readonly id!: string;
-  @Prop(Number) readonly reload!: number;
-  @Watch("reload") onReload() {
-    this.load();
-  }
 
   mounted() {
     const body = document.querySelector("body")!;
     const app = body.querySelector("#app")!;
     body.insertBefore(this.$el, app);
 
-    this.load();
+    window.addEventListener(`modal.${this.id}.open`, () => {
+      this.open();
+    });
 
     window.addEventListener(`modal.${this.id}.close`, () => {
       this.forceClose(true);
@@ -64,21 +62,12 @@ export default class ModalWindowComponent extends Vue {
     document.querySelector("body")!.removeChild(this.$el);
   }
 
-  load() {
-    const trigger = document.querySelector(`[modal-trigger="${this.id}"]`);
-    if (!trigger) {
-      throw new Error(`Modal trigger for ${this.id} was not found`);
-    }
-    trigger.removeEventListener("click", () => this.show());
-    trigger.addEventListener("click", () => this.show());
+  open() {
+    this.isOpened = true;
+    this.$emit("open");
   }
 
-  show() {
-    this.isShowing = true;
-    this.$emit("show");
-  }
-
-  close(e: MouseEvent) {
+  onOutsideClick(e: MouseEvent) {
     const containsModalClass = (e.target as HTMLElement).classList.contains(this.modalClass);
     const containsCloseIcon = (e.target as HTMLElement).classList.contains("close-icon");
     if (!containsModalClass && !containsCloseIcon) {
@@ -89,7 +78,7 @@ export default class ModalWindowComponent extends Vue {
   }
 
   forceClose(graceful: boolean) {
-    this.isShowing = false;
+    this.isOpened = false;
     this.$emit("close", graceful);
   }
 }

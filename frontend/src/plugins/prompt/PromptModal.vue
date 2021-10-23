@@ -1,5 +1,6 @@
 <template>
-  <modal-window id="promptModal">
+  <button ref="promptModalTrigger" class="d-none" @click="() => showModal()" />
+  <modal-window :id="id">
     <template #title>
       <span>Подтвердите действие</span>
     </template>
@@ -16,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import ModalWindow from "@/components/ModalWindow.vue";
+import ModalWindow from "@/plugins/modal/ModalWindow.vue";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
@@ -24,12 +25,14 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class PromptModal extends Vue {
   private text!: string;
+  private id: string = "promptModal";
 
   mounted() {
     this.text = "";
+
     window.addEventListener("prompt.init", (event: Event) => {
       this.text = (event as CustomEvent).detail.text;
-      (document.querySelector('[modal-trigger="promptModal"]') as HTMLButtonElement).click();
+      (this.$refs.promptModalTrigger as HTMLButtonElement).click();
     });
   }
   acceptPrompt() {
@@ -40,9 +43,13 @@ export default class PromptModal extends Vue {
     this.resolvePrompt(0);
   }
 
+  showModal() {
+    this.$modal.open(this.id);
+  }
+
   resolvePrompt(result: number) {
     window.dispatchEvent(new CustomEvent("prompt.choice", { detail: { result: result } }));
-    window.dispatchEvent(new CustomEvent("modal.promptModal.close"));
+    this.$modal.close(this.id);
   }
 }
 </script>

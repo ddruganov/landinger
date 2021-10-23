@@ -11,11 +11,13 @@
           <div class="d-flex flex-column ms-3 w-100">
             <form-input class="mb-3" v-model="landing.name" label="Название" />
             <form-input class="mb-3" v-model="landing.alias" label="Алиас" prefix="linktome.site/" />
-            <button class="button" modal-trigger="chooseBackground">Выбрать фон</button>
+            <button class="button" @click="() => $modal.open('chooseBackground')">
+              Выбрать фон
+            </button>
           </div>
         </div>
       </div>
-      <button class="button secondary smooth mb-2" modal-trigger="addEntity">
+      <button class="button secondary smooth mb-2" @click="() => $modal.open('addEntity')">
         <i class="icon fas fa-plus" style="font-size: 2rem" />
       </button>
       <div class="entities">
@@ -89,7 +91,7 @@ import CornerIcon from "@/components/CornerIcon.vue";
 import BackgroundEditor from "@/components/BackgroundEditor.vue";
 import Tree from "@/components/Tree.vue";
 import ModelType from "@/common/service/model.type";
-import ModalWindow from "@/components/ModalWindow.vue";
+import ModalWindow from "@/plugins/modal/ModalWindow.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
 
 @Options({

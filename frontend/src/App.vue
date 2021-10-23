@@ -1,7 +1,6 @@
 <template>
   <router-view />
   <notifications />
-  <button modal-trigger="promptModal" class="d-none">Open Prompt Modal Window</button>
   <prompt-modal />
 </template>
 

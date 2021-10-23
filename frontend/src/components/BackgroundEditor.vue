@@ -2,7 +2,7 @@
   <modal-window
     id="chooseBackground"
     class="background-editor"
-    @show="() => resetBackground()"
+    @open="() => resetBackground()"
     @close="(graceful) => !graceful && resetBackground()"
   >
     <template #title>Выберите фон лендинга</template>
@@ -63,7 +63,7 @@
 import { Options, Vue } from "vue-class-component";
 import Tabs from "@/components/Tabs.vue";
 import ColorPicker from "@/components/ColorPicker.vue";
-import ModalWindow from "@/components/ModalWindow.vue";
+import ModalWindow from "@/plugins/modal/ModalWindow.vue";
 import { Prop } from "vue-property-decorator";
 import LandingBackground from "@/types/landing/LandingBackground";
 import Tab from "@/types/tabs/Tab";
@@ -104,7 +104,7 @@ export default class BackgroundEditor extends Vue {
   }
 
   private applyBackground() {
-    window.dispatchEvent(new CustomEvent("modal.chooseBackground.close"));
+    this.$modal.close("chooseBackground");
   }
 
   private resetBackground() {
