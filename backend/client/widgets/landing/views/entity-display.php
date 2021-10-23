@@ -32,25 +32,25 @@ if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) {
 <div id="<?= $id ?>" class="entity-display-widget" style="padding-left: <?= $depth * 2 ?>rem">
 
     <?php if ($entity['modelTypeId'] === ModelType::LANDING_LINK_GROUP) : ?>
-        <?php if ($entity['children']) : ?>
-            <div class="entity-group">
-                <i class="arrow fas fa-chevron-right"></i>
-                <span class="name"><?= $entity['name'] ?></span>
-            </div>
-        <?php endif ?>
-    <?php elseif ($entity['modelTypeId'] === ModelType::LANDING_IMAGE) : ?>
-        <?php if ($entity['image']['id']) : ?>
-            <div class="entity-image">
-                <img src="<?= $entity['image']['url'] ?>">
-            </div>
-        <?php endif ?>
-    <?php else : ?>
+        <div class="entity-group">
+            <i class="arrow fas fa-chevron-right"></i>
+            <span class="name"><?= $entity['name'] ?></span>
+        </div>
+    <?php elseif ($entity['modelTypeId'] === ModelType::LANDING_LINK) :  ?>
         <a class="entity-link" href="<?= $entity['value'] ?>">
             <i class="icon fas fa-link"></i>
             <span class="name">
                 <?= $entity['name'] ?>
             </span>
         </a>
+    <?php elseif ($entity['modelTypeId'] === ModelType::LANDING_IMAGE) : ?>
+        <div class="entity-image">
+            <img src="<?= $entity['image']['url'] ?>">
+        </div>
+    <?php elseif ($entity['modelTypeId'] === ModelType::LANDING_TEXT) : ?>
+        <div class="entity-text">
+            <?= $entity['content'] ?>
+        </div>
     <?php endif ?>
 
     <?php if ($entity['children']) : ?>

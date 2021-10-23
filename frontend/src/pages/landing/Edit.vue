@@ -35,13 +35,13 @@
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_LINK">
                 <form-input v-model="item.name" label="Текст" />
-                <form-input v-model="item.value" class="mt-3" label="Значение" />
+                <form-input v-model="item.value" class="mt-3" label="Ссылка" />
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
                 <image-upload v-model="item.image" />
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_TEXT">
-                <form-input type="textarea" v-model="item.content" label="Содержимое" />
+                <form-input type="textarea" v-model="item.content" label="Текст" />
               </template>
               <corner-icon icon="far fa-trash-alt" @click="() => deleteLink(item.id)" />
             </div>
