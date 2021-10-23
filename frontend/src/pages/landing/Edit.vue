@@ -40,7 +40,7 @@
                 <form-input v-model="item.value" class="mt-3" label="Ссылка" />
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_IMAGE">
-                <image-upload v-model="item.image" />
+                <image-upload v-model="item.image" label="Изображение" />
               </template>
               <template v-else-if="item.modelTypeId === modelTypes.LANDING_TEXT">
                 <form-input type="textarea" v-model="item.content" label="Текст" />
