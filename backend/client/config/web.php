@@ -23,7 +23,7 @@ $config = [
             'enableCsrfValidation' => false,
         ],
     ],
-    'defaultRoute' => 'landing/view',
+    'defaultRoute' => 'site/index',
 ];
 
 return $config;

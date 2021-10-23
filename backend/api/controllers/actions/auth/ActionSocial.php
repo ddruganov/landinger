@@ -57,7 +57,7 @@ class ActionSocial extends ApiAction
                 if ($userSocial) {
                     $user = User::findOne($userSocial->getUserId());
                 } else {
-                    $email = 'user' . substr(md5(microtime()), 0, 8) . '@linktome.site';
+                    $email = 'user_' . substr(md5(microtime()), 0, 8) . '@linktome.site';
                     $userCreateRes = User::create([
                         'email' => $email,
                         'name' => $userData->getName(),

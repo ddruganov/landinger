@@ -18,6 +18,10 @@ class UserLandingBehavior extends Behavior
 
     public function canCreateLanding(): bool
     {
+        if ($this->owner->getId() === SUPERUSER_ID) {
+            return true;
+        }
+
         return count($this->getLandings()) < self::MAX_LANDINGS_PER_USER;
     }
 }

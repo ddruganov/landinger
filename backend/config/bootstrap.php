@@ -13,3 +13,5 @@ Yii::setAlias('@imageUpload', '@service/web/upload/image');
 Yii::setAlias('@vendor', Yii::getAlias('@root/vendor'));
 Yii::setAlias('@bower', Yii::getAlias('@vendor/bower-asset'));
 Yii::setAlias('@npm', Yii::getAlias('@vendor/npm-asset'));
+
+define('SUPERUSER_ID', 2);

@@ -73,6 +73,11 @@ class User extends ExtendedActiveRecord implements CreatableInterface, SaveableI
         return true;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
     public function getImage(): Image
     {
         return Image::findOne($this->imageId) ?? new Image();
