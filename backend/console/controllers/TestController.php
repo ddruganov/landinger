@@ -19,14 +19,6 @@ class TestController extends Controller
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            $services = (new ServiceAllCollector())->get();
-            ErrorLog::log($services);
-
-            foreach ($services as $service) {
-                ErrorLog::log('durations for service #', $service['id']);
-                ErrorLog::log((new ServiceDurationAllCollector())->setParam('serviceId', $service['id'])->get());
-            }
-
             $serviceDuration = ServiceDuration::findOne(4);
             $superUser = User::findOne(SUPERUSER_ID);
 
@@ -35,7 +27,40 @@ class TestController extends Controller
                 'serviceDurationId' => $serviceDuration->getId()
             ]);
 
-            ErrorLog::log('paid service create res:', $paidServiceCreateRes);
+            $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+            $invoice = $paidService->getInvoice();
+            ErrorLog::log('paid service invoice:', $invoice->getAttributes());
+            ErrorLog::log('is paid service paid?', $paidService->isPaid());
+            ErrorLog::log('is invoice paid?', $invoice->isPaid());
+
+            $invoicePayRes = $invoice->pay([
+                'acquiringSystemId' => 1,
+                'income' => $invoice->getPaymentAmount() * (1 - (2.9 / 100))
+            ]);
+            ErrorLog::log('invoice pay res:', $invoicePayRes);
+            ErrorLog::log('invoice after payment', $invoice->getAttributes());
+
+            ErrorLog::log('is paid service paid?', $invoice->getBoundModel()->isPaid());
+            ErrorLog::log('is invoice paid?', $invoice->isPaid());
+        } catch (Throwable $t) {
+            ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
+        }
+
+        $transaction->rollBack();
+    }
+
+    public function actionServiceCollectors()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $services = (new ServiceAllCollector())->get();
+            ErrorLog::log($services);
+
+            foreach ($services as $service) {
+                ErrorLog::log('durations for service #', $service['id']);
+                ErrorLog::log((new ServiceDurationAllCollector())->setParam('serviceId', $service['id'])->get());
+            }
         } catch (Throwable $t) {
             ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
         }

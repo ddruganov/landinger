@@ -14,10 +14,10 @@ use core\models\common\ModelType;
  * @property int $userId
  * @property int $modelId
  * @property int $modelTypeId
- * @property string $paymentDate
+ * @property string|null $paymentDate
  * @property int|null $acquiringSystemId
  * @property float $paymentAmount
- * @property float $income
+ * @property float|null $income
  */
 class Invoice extends ExtendedActiveRecord implements CreatableInterface
 {
@@ -50,6 +50,28 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
         return new ExecutionResult($model->save(), $model->getFirstErrors());
     }
 
+    public function pay(array $attributes): ExecutionResult
+    {
+        $acquiringSystemId = $attributes['acquiringSystemId'] ?? null;
+        $income = $attributes['income'] ?? null;
+
+        if (!$acquiringSystemId || !$income) {
+            return new ExecutionResult(false, ['exception' => 'Отсутствуют входные данные для оплаты счёта']);
+        }
+
+        $this->setAttributes([
+            'paymentDate' => DateHelper::now(),
+            'acquiringSystemId' => $acquiringSystemId,
+            'income' => $income
+        ]);
+
+        if (!$this->save()) {
+            return new ExecutionResult(false, $this->getFirstErrors());
+        }
+
+        return $this->getBoundModel()->onInvoicePaid();
+    }
+
     public function getBoundModel(): InvoiceBoundModelInterface
     {
         return ModelType::getModelClassById($this->getModelTypeId())::findOne($this->getModelId());
@@ -63,5 +85,25 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
     public function getModelId(): int
     {
         return $this->modelId;
+    }
+
+    public function getPaymentDate(): ?string
+    {
+        return $this->paymentDate;
+    }
+
+    public function getAcquiringSystemId(): ?int
+    {
+        return $this->acquiringSystemId;
+    }
+
+    public function getPaymentAmount(): float
+    {
+        return $this->paymentAmount;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->getPaymentDate() && $this->getAcquiringSystemId();
     }
 }

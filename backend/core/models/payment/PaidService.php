@@ -58,7 +58,7 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
         return $invoiceCreateRes->appendData(['id' => $model->getId()]);
     }
 
-    public function onInvoicePaid(): bool
+    public function onInvoicePaid(): ExecutionResult
     {
         $serviceDuration = $this->getServiceDuration();
 
@@ -66,7 +66,7 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
             'expirationDate' => DateHelper::addDays($serviceDuration->getDuration())
         ]);
 
-        return $this->save();
+        return new ExecutionResult($this->save(), $this->getFirstErrors());
     }
 
     public function getId(): int
@@ -79,14 +79,19 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
         return $this->userId;
     }
 
-    public function getUser(): User
+    public function getExpirationDate(): ?string
     {
-        return User::findOne($this->getUserId());
+        return $this->expirationDate;
     }
 
     public function getServiceDurationId(): int
     {
         return $this->serviceDurationId;
+    }
+
+    public function getUser(): User
+    {
+        return User::findOne($this->getUserId());
     }
 
     public function getInvoice(): Invoice
@@ -100,5 +105,10 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
     public function getServiceDuration(): ServiceDuration
     {
         return ServiceDuration::findOne($this->getServiceDurationId());
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->getExpirationDate() && $this->getInvoice()->isPaid();
     }
 }
