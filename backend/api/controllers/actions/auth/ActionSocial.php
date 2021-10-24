@@ -37,36 +37,23 @@ class ActionSocial extends ApiAction
             }
 
             $email = $userData->getEmail();
-            if ($email) {
-                $user = User::findOne(['email' => $email]);
-                if (!$user) {
-                    $userCreateRes = User::create([
-                        'email' => $email,
-                        'name' => $userData->getName(),
-                    ]);
-                    if (!$userCreateRes->isSuccessful()) {
-                        throw new Exception('Ошибка регистрации через соцсеть');
-                    }
-                    $user = User::findOne($userCreateRes->getData('id'));
-                }
-            } else {
-                $userSocial = UserSocial::findOne([
+
+            $user = User::findOne(['email' => $email])
+                ?? UserSocial::findOne([
                     'typeId' => $socialType->getId(),
                     'value' => $userData->getSocialId()
+                ])?->getUser();
+
+            if (!$user) {
+                $email ??= 'user_' . substr(md5(microtime()), 0, 8) . '@linktome.site';
+                $userCreateRes = User::create([
+                    'email' => $email,
+                    'name' => $userData->getName(),
                 ]);
-                if ($userSocial) {
-                    $user = User::findOne($userSocial->getUserId());
-                } else {
-                    $email = 'user_' . substr(md5(microtime()), 0, 8) . '@linktome.site';
-                    $userCreateRes = User::create([
-                        'email' => $email,
-                        'name' => $userData->getName(),
-                    ]);
-                    if (!$userCreateRes->isSuccessful()) {
-                        throw new Exception('Ошибка регистрации через соцсеть');
-                    }
-                    $user = User::findOne($userCreateRes->getData('id'));
+                if (!$userCreateRes->isSuccessful()) {
+                    throw new Exception('Ошибка регистрации через соцсеть');
                 }
+                $user = User::findOne($userCreateRes->getData('id'));
             }
 
             $user->attachBehavior('UserSocialBehavior', new UserSocialBehavior());

@@ -38,4 +38,9 @@ class UserSocial extends ExtendedActiveRecord
     {
         return $this->value;
     }
+
+    public function getUser(): ?User
+    {
+        return User::findOne($this->getUserId());
+    }
 }

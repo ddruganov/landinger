@@ -48,7 +48,13 @@ class User extends ExtendedActiveRecord implements CreatableInterface, SaveableI
             'creationDate' => DateHelper::now()
         ]);
 
-        return new ExecutionResult($user->save(), $user->getFirstErrors(), ['id' => $user->id]);
+        if (!$user->save()) {
+            return new ExecutionResult(false, $user->getFirstErrors());
+        }
+
+        // bind free paid service
+
+        return new ExecutionResult(true, [], ['id' => $user->id]);
     }
 
     public function saveFromAttributes(array $attributes): ExecutionResult
