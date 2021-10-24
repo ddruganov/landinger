@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use core\collectors\payment\PaidServiceAllCollector;
 use core\collectors\payment\ServiceAllCollector;
 use core\collectors\payment\ServiceDurationAllCollector;
 use core\components\ErrorLog;
@@ -105,6 +106,8 @@ class TestController extends Controller
             ErrorLog::log('has app access?', $user->hasAppAccess());
             ErrorLog::log('can create landings?', $user->canCreateLanding());
             ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+
+            ErrorLog::log((new PaidServiceAllCollector())->setParam('userId', $user->getId())->get());
         } catch (Throwable $t) {
             ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
         }

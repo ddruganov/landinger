@@ -2,7 +2,6 @@
 
 namespace core\models\user\behaviors;
 
-use core\components\ErrorLog;
 use core\components\helpers\DateHelper;
 use core\models\payment\PaidService;
 use core\models\payment\Resource;
