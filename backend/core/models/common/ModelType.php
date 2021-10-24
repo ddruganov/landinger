@@ -30,6 +30,14 @@ class ModelType extends ExtendedActiveRecord
     public const LANDING_IMAGE = 6;
     public const LANDING_TEXT = 7;
 
+    public const INVOICE = 100;
+    public const SERVICE = 101;
+    public const SERVICE_DURATION = 102;
+    public const RESOURCE_TYPE = 103;
+    public const RESOURCE = 104;
+    public const SERVICE_RESOURCE = 105;
+    public const PAID_SERVICE = 106;
+
     public static function tableName()
     {
         return 'public.model_type';
