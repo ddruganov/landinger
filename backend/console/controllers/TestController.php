@@ -6,7 +6,10 @@ use core\collectors\payment\ServiceAllCollector;
 use core\collectors\payment\ServiceDurationAllCollector;
 use core\components\ErrorLog;
 use core\models\payment\PaidService;
+use core\models\payment\ResourceType;
+use core\models\payment\Service;
 use core\models\payment\ServiceDuration;
+use core\models\user\behaviors\UserPaidServiceBehavior;
 use core\models\user\User;
 use Throwable;
 use Yii;
@@ -14,7 +17,136 @@ use yii\console\Controller;
 
 class TestController extends Controller
 {
-    public function actionIndex()
+    public function actionPlusOneLanding()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+
+            $user = User::findOne(SUPERUSER_ID);
+            $user->attachBehavior('UserPaidServiceBehavior', new UserPaidServiceBehavior());
+
+            $serviceDuration = ServiceDuration::findOne([
+                'serviceId' => Service::BASE_ACCESS,
+                'duration' => ServiceDuration::THREE_MONTHS
+            ]);
+            $paidServiceCreateRes = PaidService::create([
+                'userId' => $user->getId(),
+                'serviceDurationId' => $serviceDuration->getId()
+            ]);
+            $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+            $invoice = $paidService->getInvoice();
+            $invoice->pay([
+                'acquiringSystemId' => 1,
+                'income' => $invoice->getPaymentAmount() * (1 - (2.9 / 100))
+            ]);
+
+            ErrorLog::log('has app access?', $user->hasAppAccess());
+            ErrorLog::log('can create landings?', $user->canCreateLanding());
+            ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+
+            ErrorLog::log('adding one more landing');
+            $serviceDuration = ServiceDuration::findOne([
+                'serviceId' => Service::PLUS_ONE_LANDING,
+                'duration' => ServiceDuration::THREE_MONTHS
+            ]);
+            $paidServiceCreateRes = PaidService::create([
+                'userId' => $user->getId(),
+                'serviceDurationId' => $serviceDuration->getId()
+            ]);
+            $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+            $invoice = $paidService->getInvoice();
+
+            ErrorLog::log('before invoice is paid');
+            ErrorLog::log('has app access?', $user->hasAppAccess());
+            ErrorLog::log('can create landings?', $user->canCreateLanding());
+            ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+
+            $invoice->pay([
+                'acquiringSystemId' => 1,
+                'income' => $invoice->getPaymentAmount() * (1 - (2.9 / 100))
+            ]);
+
+            ErrorLog::log('after invoice is paid');
+            ErrorLog::log('has app access?', $user->hasAppAccess());
+            ErrorLog::log('can create landings?', $user->canCreateLanding());
+            ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+        } catch (Throwable $t) {
+            ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
+        }
+
+        $transaction->rollBack();
+    }
+
+    public function actionBaseAccess()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+
+            $user = User::findOne(SUPERUSER_ID);
+            $user->attachBehavior('UserPaidServiceBehavior', new UserPaidServiceBehavior());
+
+            $serviceDuration = ServiceDuration::findOne([
+                'serviceId' => Service::BASE_ACCESS,
+                'duration' => ServiceDuration::THREE_MONTHS
+            ]);
+            $paidServiceCreateRes = PaidService::create([
+                'userId' => $user->getId(),
+                'serviceDurationId' => $serviceDuration->getId()
+            ]);
+            $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+            $invoice = $paidService->getInvoice();
+            $invoice->pay([
+                'acquiringSystemId' => 1,
+                'income' => $invoice->getPaymentAmount() * (1 - (2.9 / 100))
+            ]);
+
+            ErrorLog::log('has app access?', $user->hasAppAccess());
+            ErrorLog::log('can create landings?', $user->canCreateLanding());
+            ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+        } catch (Throwable $t) {
+            ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
+        }
+
+        $transaction->rollBack();
+    }
+
+    public function actionDemoAccess()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+
+            $user = User::findOne(SUPERUSER_ID);
+            $user->attachBehavior('UserPaidServiceBehavior', new UserPaidServiceBehavior());
+
+            $serviceDuration = ServiceDuration::findOne([
+                'serviceId' => Service::DEMO_ACCESS,
+                'duration' => ServiceDuration::TWO_WEEKS
+            ]);
+            $paidServiceCreateRes = PaidService::create([
+                'userId' => $user->getId(),
+                'serviceDurationId' => $serviceDuration->getId()
+            ]);
+            $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+            $invoice = $paidService->getInvoice();
+            $invoice->pay([
+                'acquiringSystemId' => 1,
+                'income' => 0
+            ]);
+
+            ErrorLog::log('has app access?', $user->hasAppAccess());
+            ErrorLog::log('can create landings?', $user->canCreateLanding());
+            ErrorLog::log('how many?', $user->getAllowedResourceAmount(ResourceType::LANDING));
+        } catch (Throwable $t) {
+            ErrorLog::log('error:', $t->getMessage(), $t->getTraceAsString());
+        }
+
+        $transaction->rollBack();
+    }
+
+    public function actionInvoicePay()
     {
         $transaction = Yii::$app->db->beginTransaction();
 

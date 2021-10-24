@@ -8,6 +8,10 @@ use core\components\ExtendedActiveRecord;
 use core\components\helpers\CookieHelper;
 use core\components\helpers\DateHelper;
 use core\components\SaveableInterface;
+use core\models\landing\Landing;
+use core\models\payment\PaidService;
+use core\models\payment\Service;
+use core\models\payment\ServiceDuration;
 use core\models\service\Image;
 use core\models\token\TokenGroupGenerator;
 use Yii;
@@ -41,20 +45,34 @@ class User extends ExtendedActiveRecord implements CreatableInterface, SaveableI
 
     public static function create(array $attributes): ExecutionResult
     {
-        $user = new self([
+        $model = new self([
             'name' => $attributes['name'],
             'email' => $attributes['email'],
             'password' => Yii::$app->getSecurity()->generatePasswordHash(md5(microtime())),
             'creationDate' => DateHelper::now()
         ]);
 
-        if (!$user->save()) {
-            return new ExecutionResult(false, $user->getFirstErrors());
+        if (!$model->save()) {
+            return new ExecutionResult(false, $model->getFirstErrors());
         }
 
         // bind free paid service
+        $serviceDuration = ServiceDuration::findOne([
+            'serviceId' => Service::DEMO_ACCESS,
+            'duration' => ServiceDuration::TWO_WEEKS
+        ]);
+        $paidServiceCreateRes = PaidService::create([
+            'userId' => $model->getId(),
+            'serviceDurationId' => $serviceDuration->getId()
+        ]);
+        $paidService = PaidService::findOne($paidServiceCreateRes->getData('id'));
+        $invoice = $paidService->getInvoice();
+        $invoicePayRes = $invoice->pay([
+            'acquiringSystemId' => 1,
+            'income' => 0
+        ]);
 
-        return new ExecutionResult(true, [], ['id' => $user->id]);
+        return $invoicePayRes->appendData(['id' => $model->getId()]);
     }
 
     public function saveFromAttributes(array $attributes): ExecutionResult
@@ -87,5 +105,15 @@ class User extends ExtendedActiveRecord implements CreatableInterface, SaveableI
     public function getImage(): Image
     {
         return Image::findOne($this->imageId) ?? new Image();
+    }
+
+    /**
+     * @return \core\models\landing\Landing[]
+     */
+    public function getLandings(): array
+    {
+        return Landing::findAll([
+            'creatorId' => $this->owner->id
+        ]);
     }
 }

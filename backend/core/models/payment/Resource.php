@@ -27,4 +27,24 @@ class Resource extends ExtendedActiveRecord
             [['id', 'typeId', 'amount'], 'integer'],
         ];
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTypeId(): int
+    {
+        return $this->typeId;
+    }
+
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return ResourceType::findOne($this->getTypeId());
+    }
 }

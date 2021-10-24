@@ -34,6 +34,11 @@ class ServiceDuration extends ExtendedActiveRecord
         return $this->id;
     }
 
+    public function getServiceId(): int
+    {
+        return $this->serviceId;
+    }
+
     public function getDuration(): int
     {
         return $this->duration;
@@ -42,5 +47,10 @@ class ServiceDuration extends ExtendedActiveRecord
     public function getPrice(): int
     {
         return $this->price;
+    }
+
+    public function getService(): Service
+    {
+        return Service::findOne($this->getServiceId());
     }
 }

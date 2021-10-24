@@ -9,7 +9,7 @@ use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
 use core\components\SaveableInterface;
 use core\models\service\Image;
-use core\models\user\behaviors\UserLandingBehavior;
+use core\models\user\behaviors\UserPaidServiceBehavior;
 use core\models\user\User;
 
 /**
@@ -40,9 +40,9 @@ class Landing extends ExtendedActiveRecord implements CreatableInterface, Saveab
     public static function create(array $attributes): ExecutionResult
     {
         $user = User::findOne($attributes['userId']);
-        $user->attachBehavior('UserLandingBehavior', new UserLandingBehavior());
+        $user->attachBehavior('UserPaidServiceBehavior', new UserPaidServiceBehavior());
         if (!$user->canCreateLanding()) {
-            return new ExecutionResult(false, ['exception' => 'В бета-версии можно создать только один лендинг']);
+            return new ExecutionResult(false, ['exception' => 'Вы не можете создать больше лендингов на данном тарифе']);
         }
 
         $model = new self([

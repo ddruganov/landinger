@@ -55,7 +55,7 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
         $acquiringSystemId = $attributes['acquiringSystemId'] ?? null;
         $income = $attributes['income'] ?? null;
 
-        if (!$acquiringSystemId || !$income) {
+        if (is_null($acquiringSystemId) || is_null($income)) {
             return new ExecutionResult(false, ['exception' => 'Отсутствуют входные данные для оплаты счёта']);
         }
 

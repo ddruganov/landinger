@@ -28,4 +28,28 @@ class Service extends ExtendedActiveRecord
             [['name'], 'string'],
         ];
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return \core\models\payment\Resource[]
+     */
+    public function getResources(?int $resourceTypeId = null): array
+    {
+        $query = Resource::find()
+            ->alias('r')
+            ->innerJoin(['sr' => ServiceResource::tableName()], 'sr.resource_id = r.id')
+            ->where([
+                'sr.service_id' => $this->getId()
+            ]);
+
+        $resourceTypeId && $query->andWhere([
+            'r.type_id' => $resourceTypeId
+        ]);
+
+        return $query->all();
+    }
 }
