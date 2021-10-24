@@ -10,6 +10,13 @@ use core\models\landing\LandingImage;
 use core\models\landing\LandingLink;
 use core\models\landing\LandingLinkGroup;
 use core\models\landing\LandingText;
+use core\models\payment\Invoice;
+use core\models\payment\PaidService;
+use core\models\payment\Resource;
+use core\models\payment\ResourceType;
+use core\models\payment\Service;
+use core\models\payment\ServiceDuration;
+use core\models\payment\ServiceResource;
 
 /**
  * This is the model class for table "public.model_type".
@@ -68,6 +75,20 @@ class ModelType extends ExtendedActiveRecord
                 return LandingImage::class;
             case self::LANDING_TEXT:
                 return LandingText::class;
+            case self::INVOICE:
+                return Invoice::class;
+            case self::SERVICE:
+                return Service::class;
+            case self::SERVICE_DURATION:
+                return ServiceDuration::class;
+            case self::RESOURCE_TYPE:
+                return ResourceType::class;
+            case self::RESOURCE:
+                return Resource::class;
+            case self::SERVICE_RESOURCE:
+                return ServiceResource::class;
+            case self::PAID_SERVICE:
+                return PaidService::class;
         }
     }
 }

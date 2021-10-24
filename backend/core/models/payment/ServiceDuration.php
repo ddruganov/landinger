@@ -28,4 +28,19 @@ class ServiceDuration extends ExtendedActiveRecord
             [['serviceId', 'duration', 'price'], 'integer'],
         ];
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
 }

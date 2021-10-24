@@ -30,10 +30,11 @@ class m211024_070739_add_payment_models extends Migration
                 (
                     id serial NOT NULL,
                     creation_date timestamp without time zone NOT NULL,
+                    user_id integer NOT NULL,
                     model_id integer not null,
                     model_type_id integer not null,
                     payment_date timestamp without time zone,
-                    acquiring_system_id integer not null,
+                    acquiring_system_id integer,
                     payment_amount numeric(8, 4) not null,
                     income numeric(8, 4),
                     CONSTRAINT invoice_pkey PRIMARY KEY (id)
@@ -47,7 +48,9 @@ class m211024_070739_add_payment_models extends Migration
                 CREATE TABLE IF NOT EXISTS ' . Service::tableName() . '
                 (
                     id integer NOT NULL,
-                    name character varying COLLATE pg_catalog."default" NOT NULL
+                    name character varying COLLATE pg_catalog."default" NOT NULL,
+                    weight integer not null,
+                    CONSTRAINT service_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -61,7 +64,8 @@ class m211024_070739_add_payment_models extends Migration
                     id serial NOT NULL,
                     service_id integer NOT NULL,
                     duration integer NOT NULL,
-                    price integer NOT NULL
+                    price integer NOT NULL,
+                    CONSTRAINT service_duration_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -72,7 +76,8 @@ class m211024_070739_add_payment_models extends Migration
                 CREATE TABLE IF NOT EXISTS ' . ResourceType::tableName() . '
                 (
                     id integer NOT NULL,
-                    name character varying COLLATE pg_catalog."default" NOT NULL
+                    name character varying COLLATE pg_catalog."default" NOT NULL,
+                    CONSTRAINT resource_type_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -84,7 +89,8 @@ class m211024_070739_add_payment_models extends Migration
                 (
                     id integer NOT NULL,
                     type_id integer NOT NULL,
-                    amount integer NOT NULL
+                    amount integer NOT NULL,
+                    CONSTRAINT resource_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -96,7 +102,8 @@ class m211024_070739_add_payment_models extends Migration
                 (
                     id serial NOT NULL,
                     service_id integer NOT NULL,
-                    resource_id integer NOT NULL
+                    resource_id integer NOT NULL,
+                    CONSTRAINT service_resource_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -107,9 +114,11 @@ class m211024_070739_add_payment_models extends Migration
                 CREATE TABLE IF NOT EXISTS ' . PaidService::tableName() . '
                 (
                     id serial NOT NULL,
-                    expiration_date timestamp without time zone NOT NULL,
+                    creation_date timestamp without time zone NOt null,
+                    expiration_date timestamp without time zone,
                     user_id integer NOT NULL,
-                    service_duration_id integer NOT NULL
+                    service_duration_id integer NOT NULL,
+                    CONSTRAINT paid_service_pkey PRIMARY KEY (id)
                 )
             ');
         } catch (Throwable $t) {
@@ -119,11 +128,18 @@ class m211024_070739_add_payment_models extends Migration
         try {
             (new Service([
                 'id' => Service::DEMO_ACCESS,
-                'name' => 'Бесплатный период'
+                'name' => 'Бесплатный период',
+                'weight' => 0,
+            ]))->save();
+            (new Service([
+                'id' => Service::PLUS_ONE_LANDING,
+                'name' => '+ 1 лендинг',
+                'weight' => 10,
             ]))->save();
             (new Service([
                 'id' => Service::BASE_ACCESS,
-                'name' => 'Базовый доступ'
+                'name' => 'Базовый доступ',
+                'weight' => 20,
             ]))->save();
         } catch (Throwable $t) {
         }
@@ -142,6 +158,16 @@ class m211024_070739_add_payment_models extends Migration
             ]))->save();
             (new ServiceDuration([
                 'serviceId' => Service::BASE_ACCESS,
+                'duration' => ServiceDuration::THREE_MONTHS,
+                'price' => 130,
+            ]))->save();
+            (new ServiceDuration([
+                'serviceId' => Service::PLUS_ONE_LANDING,
+                'duration' => ServiceDuration::MONTH,
+                'price' => 50,
+            ]))->save();
+            (new ServiceDuration([
+                'serviceId' => Service::PLUS_ONE_LANDING,
                 'duration' => ServiceDuration::THREE_MONTHS,
                 'price' => 130,
             ]))->save();
@@ -169,6 +195,11 @@ class m211024_070739_add_payment_models extends Migration
                 'amount' => 1
             ]))->save();
             (new Resource([
+                'id' => Resource::ONE_LANDING,
+                'typeId' => ResourceType::LANDING,
+                'amount' => 1
+            ]))->save();
+            (new Resource([
                 'id' => Resource::THREE_LANDINGS,
                 'typeId' => ResourceType::LANDING,
                 'amount' => 3
@@ -193,6 +224,10 @@ class m211024_070739_add_payment_models extends Migration
             (new ServiceResource([
                 'serviceId' => Service::BASE_ACCESS,
                 'resourceId' => Resource::THREE_LANDINGS
+            ]))->save();
+            (new ServiceResource([
+                'serviceId' => Service::PLUS_ONE_LANDING,
+                'resourceId' => Resource::ONE_LANDING
             ]))->save();
         } catch (Throwable $t) {
         }

@@ -38,7 +38,7 @@ class DateHelper
         return $day . 'го ' . self::$monthGenetive[$month] . ' ' . $year;
     }
 
-    public  static function now(string $format = 'Y-m-d H:i:s')
+    public static function now(string $format = 'Y-m-d H:i:s')
     {
         return self::datetimeAsString($format, time());
     }
@@ -46,5 +46,10 @@ class DateHelper
     public static function datetimeAsString(string $format, int $timestamp): string
     {
         return date($format, $timestamp);
+    }
+
+    public static function addDays(int $days): string
+    {
+        return self::datetimeAsString('Y-m-d H:i:s', strtotime("+ $days days"));
     }
 }

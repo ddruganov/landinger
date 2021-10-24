@@ -12,7 +12,8 @@ use core\components\ExtendedActiveRecord;
 class Resource extends ExtendedActiveRecord
 {
     public const APP_ACCESS = 1;
-    public const THREE_LANDINGS = 2;
+    public const ONE_LANDING = 2;
+    public const THREE_LANDINGS = 3;
 
     public static function tableName()
     {

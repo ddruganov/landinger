@@ -26,8 +26,8 @@ class LandingController extends Controller
                     'create' => ['POST'],
                     'save' => ['PATCH'],
                     'delete' => ['DELETE'],
-                    'create_entity' => ['POST'],
-                    'delete_entity' => ['DELETE'],
+                    'createEntity' => ['POST'],
+                    'deleteEntity' => ['DELETE'],
                     '*' => []
                 ],
             ],
@@ -57,11 +57,11 @@ class LandingController extends Controller
                 'class' => DeleteAction::class,
                 'modelClass' => Landing::class
             ],
-            'create_entity' => [
+            'createEntity' => [
                 'class' => CreateAction::class,
                 'modelClass' => LandingEntity::class
             ],
-            'delete_entity' => [
+            'deleteEntity' => [
                 'class' => DeleteAction::class,
                 'modelClass' => LandingEntity::class
             ]

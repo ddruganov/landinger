@@ -7,11 +7,13 @@ use core\components\ExtendedActiveRecord;
 /**
  * @property int $id
  * @property string $name
+ * @property int $weight
  */
 class Service extends ExtendedActiveRecord
 {
     public const DEMO_ACCESS = 1;
     public const BASE_ACCESS = 2;
+    public const PLUS_ONE_LANDING = 3;
 
     public static function tableName()
     {
@@ -21,8 +23,8 @@ class Service extends ExtendedActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name'], 'required'],
-            [['id'], 'integer'],
+            [['id', 'name', 'weight'], 'required'],
+            [['id', 'weight'], 'integer'],
             [['name'], 'string'],
         ];
     }
