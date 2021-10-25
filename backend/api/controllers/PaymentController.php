@@ -3,9 +3,11 @@
 namespace api\controllers;
 
 use api\controllers\actions\generic\CollectorAction;
+use api\controllers\actions\generic\CreateAction;
 use core\collectors\payment\PaidServiceAllCollector;
 use core\collectors\payment\ServiceAllCollector;
 use core\collectors\payment\ServiceDurationAllCollector;
+use core\models\payment\PaidService;
 use yii\web\Controller;
 
 class PaymentController extends Controller
@@ -24,6 +26,10 @@ class PaymentController extends Controller
             'allPaidServices' => [
                 'class' => CollectorAction::class,
                 'collectorClass' => PaidServiceAllCollector::class
+            ],
+            'createPaidService' => [
+                'class' => CreateAction::class,
+                'modelClass' => PaidService::class
             ]
         ];
     }

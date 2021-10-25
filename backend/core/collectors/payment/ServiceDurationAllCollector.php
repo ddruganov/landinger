@@ -22,4 +22,9 @@ class ServiceDurationAllCollector extends AbstractDataCollector
 
         return $query->all();
     }
+
+    public function getDataSource(): string
+    {
+        return self::DATA_SOURCE_GET;
+    }
 }

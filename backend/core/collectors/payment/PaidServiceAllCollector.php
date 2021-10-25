@@ -32,7 +32,11 @@ class PaidServiceAllCollector extends AbstractDataCollector
                 'and',
                 ['ps.user_id' => $this->getParam('userId')],
                 ['i.model_type_id' => ModelType::PAID_SERVICE],
-                ['>', 'ps.expiration_date', DateHelper::now()]
+                [
+                    'or',
+                    ['>', 'ps.expiration_date', DateHelper::now()],
+                    ['is', 'ps.expiration_date', null]
+                ]
             ]);
 
         return $query->all();

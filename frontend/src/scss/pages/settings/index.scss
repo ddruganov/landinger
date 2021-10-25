@@ -1,27 +1,31 @@
 .user-settings {
-  .main-settings {
-    display: flex;
+  .tabs {
     width: 100%;
-    & > .image-upload {
-      width: 200px;
-      min-width: 200px;
-      height: 200px;
-      min-height: 200px;
-    }
-    & > .info-inputs {
+    .main-settings {
       display: flex;
-      flex-direction: column;
-      margin-left: 1rem;
+      margin-top: 1rem;
       width: 100%;
+      & > .image-upload {
+        width: 200px;
+        min-width: 200px;
+        height: 200px;
+        min-height: 200px;
+      }
+      & > .info-inputs {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+        width: 100%;
+      }
     }
-  }
 
-  .payment-settings {
-    margin-top: 1rem;
-    width: 100%;
-    & > .paid-services {
+    .payment-settings {
+      margin-top: 1rem;
       width: 100%;
-      margin-bottom: 1rem;
+      & > .paid-services {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
     }
   }
 }
