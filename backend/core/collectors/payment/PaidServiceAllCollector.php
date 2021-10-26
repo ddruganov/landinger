@@ -20,7 +20,7 @@ class PaidServiceAllCollector extends AbstractDataCollector
                 'ps.id',
                 'creationDate' => "to_char(ps.creation_date, 'DD-MM-YYYY')",
                 'expirationDate' => "to_char(ps.expiration_date, 'DD-MM-YYYY')",
-                'serviceName' => 's.name',
+                'serviceName' => "s.name || ' (' || sd.duration || ' дней)'",
                 'pricePaid' => 'i.payment_amount'
             ])
             ->from(['ps' => PaidService::tableName()])
@@ -32,11 +32,7 @@ class PaidServiceAllCollector extends AbstractDataCollector
                 'and',
                 ['ps.user_id' => $this->getParam('userId')],
                 ['i.model_type_id' => ModelType::PAID_SERVICE],
-                [
-                    'or',
-                    ['>', 'ps.expiration_date', DateHelper::now()],
-                    ['is', 'ps.expiration_date', null]
-                ]
+                ['>', 'ps.expiration_date', DateHelper::now()],
             ]);
 
         return $query->all();

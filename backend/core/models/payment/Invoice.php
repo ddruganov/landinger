@@ -7,6 +7,7 @@ use core\components\ExecutionResult;
 use core\components\ExtendedActiveRecord;
 use core\components\helpers\DateHelper;
 use core\models\common\ModelType;
+use yii\db\ActiveRecord;
 
 /**
  * @property int $id
@@ -50,8 +51,23 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
         return new ExecutionResult($model->save(), $model->getFirstErrors());
     }
 
+    public function delete()
+    {
+        $boundModel = $this->getBoundModel();
+        if ($boundModel && $boundModel->delete() === false) {
+            $this->addErrors($boundModel->getFirstErrors());
+            return false;
+        }
+
+        return parent::delete();
+    }
+
     public function pay(array $attributes): ExecutionResult
     {
+        if (!$this->isPaid()) {
+            return new ExecutionResult(true);
+        }
+
         $acquiringSystemId = $attributes['acquiringSystemId'] ?? null;
         $income = $attributes['income'] ?? null;
 
@@ -72,9 +88,24 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
         return $this->getBoundModel()->onInvoicePaid();
     }
 
-    public function getBoundModel(): InvoiceBoundModelInterface
+    public function getBoundModel(): ActiveRecord|InvoiceBoundModelInterface
     {
         return ModelType::getModelClassById($this->getModelTypeId())::findOne($this->getModelId());
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getCreationDate(string $format = 'Y-m-d H:i:s'): string
+    {
+        return DateHelper::datetimeAsString($format, strtotime($this->creationDate));
+    }
+
+    public function getPaymentDate(string $format = 'Y-m-d H:i:s'): ?string
+    {
+        return DateHelper::datetimeAsString($format, strtotime($this->paymentDate));
     }
 
     public function getModelTypeId(): int
@@ -85,11 +116,6 @@ class Invoice extends ExtendedActiveRecord implements CreatableInterface
     public function getModelId(): int
     {
         return $this->modelId;
-    }
-
-    public function getPaymentDate(): ?string
-    {
-        return $this->paymentDate;
     }
 
     public function getAcquiringSystemId(): ?int

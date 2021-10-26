@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use api\controllers\actions\generic\CollectorAction;
 use api\controllers\actions\generic\CreateAction;
+use core\collectors\payment\InvoiceAllCollector;
 use core\collectors\payment\PaidServiceAllCollector;
 use core\collectors\payment\ServiceAllCollector;
 use core\collectors\payment\ServiceDurationAllCollector;
@@ -30,6 +31,10 @@ class PaymentController extends Controller
             'createPaidService' => [
                 'class' => CreateAction::class,
                 'modelClass' => PaidService::class
+            ],
+            'allInvoices' => [
+                'class' => CollectorAction::class,
+                'collectorClass' => InvoiceAllCollector::class
             ]
         ];
     }

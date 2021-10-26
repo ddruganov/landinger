@@ -34,6 +34,11 @@ class Service extends ExtendedActiveRecord
         return $this->id;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     /**
      * @return \core\models\payment\Resource[]
      */

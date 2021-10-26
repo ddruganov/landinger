@@ -43,8 +43,12 @@ class DateHelper
         return self::datetimeAsString($format, time());
     }
 
-    public static function datetimeAsString(string $format, int $timestamp): string
+    public static function datetimeAsString(string $format, int $timestamp): ?string
     {
+        if (!$timestamp) {
+            return null;
+        }
+
         return date($format, $timestamp);
     }
 

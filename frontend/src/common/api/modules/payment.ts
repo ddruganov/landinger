@@ -11,4 +11,8 @@ export default class PaymentApi {
       create: (serviceDurationId: number) => Requestor.post('/payment/createPaidService', { serviceDurationId: serviceDurationId })
     }
   };
+
+  invoice = {
+    all: () => Requestor.get('/payment/allInvoices')
+  };
 }

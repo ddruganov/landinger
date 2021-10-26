@@ -35,10 +35,35 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
 
     public static function create(array $attributes): ExecutionResult
     {
+        $userId = $attributes['userId'];
+        $serviceDurationId = $attributes['serviceDurationId'];
+
+        $similarServiceDurations = ServiceDuration::findSimilar($serviceDurationId);
+
+        // check if such a paid service already exists
+        $foundModels = self::find()
+            ->alias('ps')
+            ->where([
+                'and',
+                ['ps.user_id' => $userId],
+                ['in', 'ps.service_duration_id', array_map(fn (ServiceDuration $serviceDuration) => $serviceDuration->getId(), $similarServiceDurations)],
+                ['is', 'ps.expiration_date', null],
+                ['is', 'i.payment_date', null],
+                ['i.model_type_id' => ModelType::PAID_SERVICE]
+            ])
+            ->innerJoin(['i' => Invoice::tableName()], 'i.model_id = ps.id')
+            ->all();
+
+        foreach ($foundModels as $foundModel) {
+            if ($foundModel->delete() === false) {
+                return new ExecutionResult(false, $foundModel->getFirstErrors());
+            }
+        }
+
         $model = new self([
             'creationDate' => DateHelper::now(),
-            'userId' => $attributes['userId'],
-            'serviceDurationId' => $attributes['serviceDurationId'],
+            'userId' => $userId,
+            'serviceDurationId' => $serviceDurationId,
         ]);
 
         if (!$model->save()) {
@@ -55,6 +80,17 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
         ]);
 
         return $invoiceCreateRes->appendData(['id' => $model->getId()]);
+    }
+
+    public function delete()
+    {
+        $invoice = $this->getInvoice();
+        if ($invoice->delete() === false) {
+            $this->addErrors($invoice->getFirstErrors());
+            return false;
+        }
+
+        return parent::delete();
     }
 
     public function onInvoicePaid(): ExecutionResult
@@ -109,5 +145,13 @@ class PaidService extends ExtendedActiveRecord implements CreatableInterface, In
     public function isPaid(): bool
     {
         return $this->getExpirationDate() && $this->getInvoice()->isPaid();
+    }
+
+    public function getName(): string
+    {
+        $serviceDuration = $this->getServiceDuration();
+        $serviceName = $serviceDuration->getService()->getName();
+
+        return $serviceName . ' (' . $serviceDuration->getDuration() . ' дней)';
     }
 }

@@ -1,8 +1,14 @@
 .dropdown-menu-wrapper {
   position: relative;
 
-  &.open {
+  &:hover {
+    & > .button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
     & > .dropdown-wrapper {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
       opacity: 1;
       pointer-events: all;
     }
@@ -15,8 +21,7 @@
   & > .dropdown-wrapper {
     transition: 0.25s all linear;
     z-index: 2;
-    width: 100vw;
-    max-width: 200px;
+    width: 100%;
     opacity: 0;
     pointer-events: none;
     flex-direction: column;
@@ -24,5 +29,7 @@
     position: absolute;
     right: 0;
     top: 100%;
+    border: 1px solid $primary;
+    border-top: none;
   }
 }

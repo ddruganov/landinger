@@ -8,4 +8,5 @@ interface InvoiceBoundModelInterface
 {
     public function onInvoicePaid(): ExecutionResult;
     public function isPaid(): bool;
+    public function getName(): string;
 }

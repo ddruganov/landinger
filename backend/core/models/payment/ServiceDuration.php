@@ -53,4 +53,16 @@ class ServiceDuration extends ExtendedActiveRecord
     {
         return Service::findOne($this->getServiceId());
     }
+
+    /**
+     * @return ServiceDuration[]
+     */
+    public static function findSimilar(int $serviceDurationId): array
+    {
+        $serviceDuration = self::findOne($serviceDurationId);
+
+        return self::findAll([
+            'serviceId' => $serviceDuration->getServiceId()
+        ]);
+    }
 }
